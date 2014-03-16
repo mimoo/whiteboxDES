@@ -36,7 +36,47 @@ void before_rounds(uint64_t *data, uint32_t LL, uint64t XX, uint32t rr)
 
 void rounds(uint32_t *LL, uint64_t *XX, uint32_t *rr, int round)
 {
+    //
     // State 1 -> State 2
+    //
+
+    char minibit;
+
+    // YY
+    uint_64t YY = 0;
+
+    for(int ii = 0; ii < 8; ii ++)
+    {
+	minibit = 0;
+	minibit += ((LL << ii * 2) & FIRSTBIT) + 
+	    (((LL << ii * 2 + 1) & FIRSTBIT) >> 1) + 
+	    (((XX << ii * 6) & FIRSTBIT) >> 2) +
+	    (((XX << ii * 6 + 1) & FIRSTBIT) >> 3) +
+	    (((XX << ii * 6 + 2) & FIRSTBIT) >> 4) +
+	    (((XX << ii * 6 + 3) & FIRSTBIT) >> 5) +
+	    (((XX << ii * 6 + 4) & FIRSTBIT) >> 6) +
+	    (((XX << ii * 6 + 5) & FIRSTBIT) >> 7) ;
+
+	YY = lookuptable_state1_YY[minibit];
+    }
+
+    // rr
+    uint32_t rr_1 = 0;
+
+    for(int ii = 0; ii < 4; ii++)
+    {
+	minibit = 0;
+	minibit += (((LL << ii * 4 + 8) & FIRSTBIT)) +
+	    (((LL << ii * 4 + 9) & FIRSTBIT) >> 1) +
+	    (((LL << ii * 4 + 10) & FIRSTBIT) >> 2) +
+	    (((LL << ii * 4 + 11) & FIRSTBIT) >> 3) +
+	    (((rr << ii * 4) & FIRSTBIT) >> 4) +
+	    (((rr << ii * 4 + 1) & FIRSTBIT) >> 5) +
+	    (((rr << ii * 4 + 2) & FIRSTBIT) >> 6) +
+	    (((rr << ii * 4 + 3) & FIRSTBIT) >> 7);
+
+	rr_1 = lookuptable_state1_rr[minibit];
+    }
 
     // State 2 -> State 3
 }
