@@ -57,7 +57,7 @@ void rounds(uint32_t *LL, uint64_t *XX, uint32_t *rr, int round)
 	    (((XX << ii * 6 + 4) & FIRSTBIT) >> 6) +
 	    (((XX << ii * 6 + 5) & FIRSTBIT) >> 7) ;
 
-	YY = lookuptable_state1_YY[minibit];
+	YY = lookuptable_state1_YY[round][minibit];
     }
 
     // rr
@@ -75,8 +75,12 @@ void rounds(uint32_t *LL, uint64_t *XX, uint32_t *rr, int round)
 	    (((rr << ii * 4 + 2) & FIRSTBIT) >> 6) +
 	    (((rr << ii * 4 + 3) & FIRSTBIT) >> 7);
 
-	rr_1 = lookuptable_state1_rr[minibit];
+	rr_1 = lookuptable_state1_rr[round][minibit];
     }
 
+    //
     // State 2 -> State 3
+    //
+
+    
 }
