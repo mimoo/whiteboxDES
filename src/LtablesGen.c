@@ -5,25 +5,29 @@
 
 #include "DES.h"
 
+
+
 //////////////////////////////////////////////////////
 //                 GLOBAL VARIABLES                //
 ////////////////////////////////////////////////////
 
 static FILE * output = NULL;
 
+
+
 //////////////////////////////////////////////////////
 //                 FUNCTIONS                       //
 ////////////////////////////////////////////////////
 
 // Generate Lookuptables between state 1 and state 2
-void st1_to_st2(uint64_t key, char non_linear_tboxes[16][8][256], 
-           char linear_tboxes[16][4][256])
+void st1_to_st2(uint64_t key, unsigned  non_linear_tboxes[16][8][256], 
+           unsigned linear_tboxes[16][4][256])
 {
     uint64_t a_key[16];
     a_key[0] = key;
     uint64_t next_key;
-    char temp_byte;
-    char minibit;
+    unsigned char temp_byte;
+    unsigned char minibit;
     
     // Get the 16 subkeys
     for(int ii = 0; ii < 16; ii++)
@@ -82,8 +86,8 @@ void st1_to_st2(uint64_t key, char non_linear_tboxes[16][8][256],
 int main(/*int argc, char ** argv*/)
 {
     uint64_t key = 8554016168460312; // A RECUPERER DANS LES PARAMETRES NORMALEMENT
-    char non_linear_tboxes[16][8][256]; 
-    char linear_tboxes[16][4][256];
+    unsigned non_linear_tboxes[16][8][256]; 
+    unsigned linear_tboxes[16][4][256];
     
     // Take KEY as argument
 
@@ -116,9 +120,20 @@ int main(/*int argc, char ** argv*/)
         fprintf(output, "    {");
         for(int kk = 0; kk < 256; kk++)
         {
-          fprintf(output, "%d, ", non_linear_tboxes[ii][jj][kk]);
+            if(non_linear_tboxes[ii][jj][kk] < 10)
+                fprintf(output, "  ");
+            else if(non_linear_tboxes[ii][jj][kk] < 100)
+                fprintf(output, " ");
+                
+            if(kk != 255)
+                fprintf(output, "%d, ", non_linear_tboxes[ii][jj][kk]);
+            else
+                fprintf(output, "%d ", non_linear_tboxes[ii][jj][kk]);
+          
+            if((kk + 1) % 16 == 0)
+                fprintf(output, "\n     ");
         }
-        fprintf(output, "},\n");
+        fprintf(output, "},\n\n");
       }
       fprintf(output, "    },\n\n");
     }
@@ -134,9 +149,20 @@ int main(/*int argc, char ** argv*/)
         fprintf(output, "    {");
         for(int kk = 0; kk < 256; kk++)
         {
-          fprintf(output, "%d, ", non_linear_tboxes[ii][jj][kk]);
+            if(linear_tboxes[ii][jj][kk] < 10)
+                fprintf(output, "  ");
+            else if(linear_tboxes[ii][jj][kk] < 100)
+                fprintf(output, " ");
+            
+            if(kk != 255)
+                fprintf(output, "%d, ", linear_tboxes[ii][jj][kk]);
+            else
+                fprintf(output, "%d ", linear_tboxes[ii][jj][kk]);
+          
+            if((kk + 1) % 16 == 0)
+                fprintf(output, "\n     ");
         }
-        fprintf(output, "},\n");
+        fprintf(output, "},\n\n");
       }
       fprintf(output, "    },\n\n");
     }
