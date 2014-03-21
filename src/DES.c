@@ -65,7 +65,7 @@ const int DesExpansion[48] = {
     22, 23, 24, 25, 24, 25, 26, 27,
     28, 29, 28, 29, 30, 31, 32,  1
 }; 
- 
+
 const int DesSbox[8][4][16] = {
    {
    {14,  4, 13,  1,  2, 15, 11,  8,  3, 10,  6, 12,  5,  9,  0,  7},
@@ -263,60 +263,5 @@ void key_schedule(uint64_t* key, uint64_t* next_key, int round)
     //pn Use key in the DES rounds.
     // Use next_key in this function again as the new key to change
 }
-
-void rounds(uint64_t *data, uint64_t key)
-{ 
-    uint64_t right_block = 0;
-    uint64_t right_block_temp = 0;
-  
-  // 1. Block expansion
-  for(int ii = 0; ii < 48; ii++)
-      addbit(&right_block, *data, (DesExpansion[ii] + 31), ii);
-
-  // 2. Xor with the key
-  right_block = right_block ^ key;
-
-  // 3. Substitution
-  int coordx, coordy;
-  uint64_t substitued;
-
-  for(int ii = 0; ii < 8; ii++)
-  {
-      coordx = ((right_block << 6 * ii) & FIRSTBIT) == FIRSTBIT ? 2 : 0;
-      if( ((right_block << (6 * ii + 5)) & FIRSTBIT) == FIRSTBIT)
-	  coordx++;
-
-      coordy = 0;
-      for(int jj = 1; jj < 5; jj++)
-      {
-	  if( ((right_block << (6 * ii + jj)) & FIRSTBIT) == FIRSTBIT)
-	  {
-	      coordy += 2^(4 - jj);
-	  }
-      }
-    
-    substitued = DesSbox[ii][coordx][coordy];
-    substitued = substitued << (60 - (4 * ii));
-    right_block_temp += substitued;
-  }
-  
-  // right_block donen
-  right_block = right_block_temp;
-
-  // 4. Permutation
-  right_block_temp = 0;
-  
-  for(int ii = 0; ii < 32; ii++)
-    addbit(&right_block_temp, right_block, Pbox[ii] - 1, ii);
-  
-  right_block = right_block_temp;
-
-  // 5. Xor with the left block
-  right_block = right_block ^ *data;
-  
-  // Combine the new block and the right block
-  *data = (*data << 32) + (right_block >> 32);
-}
-
 
 // End of file

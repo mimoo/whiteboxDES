@@ -18,6 +18,11 @@
 
 #define FIRSTBIT 0x8000000000000000 // 1000000000...
 
+#include <stdbool.h>
+
+extern const int DesSbox[8][4][16];
+extern const int DesExpansion[48];
+
 //
 //             PROTOTYPES
 //
@@ -44,7 +49,5 @@ bool key_parity_verify(uint64_t key);
 //   * [next_key] is the combined leftkey+rightkey to be used
 //     in the key_schedule for next round
 void key_schedule(uint64_t* key, uint64_t* next_key, int round);
-
-void rounds(uint64_t *data, uint64_t key);
 
 #endif
