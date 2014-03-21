@@ -19,7 +19,7 @@ $(APP): WBDES.o main.o
 main.o: main.c WBDES.h
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
 
-LtablesGen: LtablesGen.o WBDES.o
+LtablesGen: LtablesGen.o 
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 LtablesGen.o: LtablesGen.c WBDES.h
