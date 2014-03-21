@@ -19,11 +19,14 @@ $(APP): WBDES.o main.o
 main.o: main.c WBDES.h
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
 
-LtablesGen: LtablesGen.o 
+LtablesGen: LtablesGen.o DES.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-LtablesGen.o: LtablesGen.c WBDES.h
+LtablesGen.o: LtablesGen.c DES.h
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<	
+
+DES.o: DES.c DES.h
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
 
 WBDES.o: WBDES.c WBDES.h
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c $<
