@@ -19,6 +19,8 @@ int position_from, int position_to)
 	*block += (FIRSTBIT >> position_to);
 }
 
+// THIS FUNCTION SHOULD BE REPLACED BY A MATRIX M_1
+// SEE CHOW ET AL'S PAPER
 void before_rounds(uint64_t *data, uint32_t LL, uint64_t XX, uint32_t rr)
 {
     // L

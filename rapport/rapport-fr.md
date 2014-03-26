@@ -34,7 +34,7 @@ expliquer le pourquoi de chaque concept ! Sinon ca ne sert à rien de balancer u
 
 ## Partial Evaluation and Look up tables
 
-Puisque la clef est fixé, on remplace toutes les opérations qui sont connu lorsque la clef est connu. Commes les substitutions, par des look up tables.
+Puisque la clef est fixé, on remplace toutes les opérations qui sont previsibles lorsque la clef est connu. Commes les substitutions, par des look up tables.
 
 ## Mixing Bijections
 
@@ -57,6 +57,73 @@ Pour éviter qu'on puisse deviner à quel étape de l'algorithme on est, on aggr
 ## Look up tables
 
 toutes les fonctions peuvent être écrite sous forme de Look up table, comment marchent les look up tables ?
+
+# EXEMPLE AVEC DES
+
+## DES
+
+explication courte, voir notre algorithme sur github
+
+## M1
+
+## STATE 1
+
+substitution + xor => lookuptable[round] precomputed with the key
+Magie ! la clef vient de disparaitre.
+
+                 32b               48b              16b
+               ************** ********************* ********
+    state 1:   *     L(r)   * *       X(r)        * * r(r) *
+               ************** ********************* ********
+                     |                |      |         |
+                     |                v      |         |
+                     | *********    .....    |         v
+                     | * sK(r) *--> . + .    |    .-------.
+                     | *********    .....    '-->(  Merge  )
+                     |                |           '-------'
+                     |                v               |
+                     |         .-------------.        |
+                     |          \     S     /         |
+                     |           '---------'          |
+                     |                |               |
+                32b  v                v 32b     32b   v
+               ************** *************** ***************
+    state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
+               ************** *************** ***************
+
+## Look up tables
+
+
+## STATE 2
+
+pour ne pas qu'on puisse comprendre que seule la partie gauche est change, on prend aussi la partie gauche et la partie droite inchange dans les calculs. le by-pass ! comme ca on ne sait pas ce qu'on fait dans cet etape
+
+    ************** *************** ***************
+    state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
+               ************** *************** ***************
+                     |                  |           |
+                     v                  |           |
+                   .....    .--------.  |           |
+                   . + .<---|    P   |<-'           |
+                   .....    '--------'              |
+                    |                               |
+                32b '----------------------------------.
+                                        |           |  |
+                    .-------------------|-----------'  |
+                    |               32b v              v 32b
+                    |               .-------.       .------.
+                    |              /  E-box  \     ( Select )
+                    |  32b        '-----------'     '------'
+                    |                   |              |
+                    v               48b v              v 16b
+               ************** ********************* ********
+    state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
+               ************** ********************* ********
+
+## M2
+
+## M3
+
 
 # CONCLUSION
 
