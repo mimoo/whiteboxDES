@@ -85,6 +85,10 @@ Implementation
 
 toutes les fonctions peuvent être écrite sous forme de Look up table, comment marchent les look up tables ?
 
+Matrix
+------
+![matrix](http://i.imgur.com/xODKAA3.png)
+
 Exemple avec DES
 ================
 
