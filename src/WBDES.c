@@ -37,12 +37,13 @@ void before_rounds(uint64_t *data, uint32_t LL, uint64t XX, uint32t rr)
 void rounds(uint32_t *LL, uint64_t *XX, uint32_t *rr, int round)
 {
     //
-    // State 1 -> State 2
+    // State 1 -> State 2 (Cr)
     //
 
     char minibit;
 
     // YY
+    // non-linear T-boxes
     uint_64t YY = 0;
 
     for(int ii = 0; ii < 8; ii ++)
@@ -61,6 +62,7 @@ void rounds(uint32_t *LL, uint64_t *XX, uint32_t *rr, int round)
     }
 
     // rr
+    // linear T-boxes
     uint32_t rr_1 = 0;
 
     for(int ii = 0; ii < 4; ii++)
@@ -79,8 +81,19 @@ void rounds(uint32_t *LL, uint64_t *XX, uint32_t *rr, int round)
     }
 
     //
-    // State 2 -> State 3
+    // State 2 -> State 3 (Dr)
     //
 
+    // shuffling
+
+    // look up tables
+
+    // unshuffling
+
+    
+}
+
+void end_rounds(uint64_t *data, uint32_t LL, uint64t XX, uint32t rr)
+{
     
 }
