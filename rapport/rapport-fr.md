@@ -85,6 +85,12 @@ Implementation
 
 toutes les fonctions peuvent être écrite sous forme de Look up table, comment marchent les look up tables ?
 
+2. les look up tables sont implémentés comme des Sbox (substitution), on prend le nombre crée par l'octet (000010 = 2) et on regarde l'entré numéro 2 dans la Tbox (pour ne pas confondre avec les Sbox de DES). Il y a donc 256 possibilités
+
+## path splitting
+
+pour ne pas avoir d'immenses Look up tables, on split le state de 96 bits en 12 octets et on crée 12 look up tables
+
 Matrix
 ------
 ![matrix](http://i.imgur.com/xODKAA3.png)
