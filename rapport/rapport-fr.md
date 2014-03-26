@@ -101,7 +101,7 @@ pour ne pas avoir d'immenses Look up tables, on split le state de 96 bits en 12 
 
 Matrix
 ------
-
+sécurité + taille => 8x4 
 [Link et al : Clarifying Obfuscation: Improving the Security of White-Box Encoding][1]
 
 ![matrix](https://github.com/mimoo/whiteboxDES/blob/master/rapport/images/matrices.PNG?raw=true)
