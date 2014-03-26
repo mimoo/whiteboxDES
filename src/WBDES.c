@@ -1,4 +1,5 @@
-#include "Ltables.c"
+#include "WBDES.h"
+#include "tboxes.c"
 
 const int rr_table[48] = {
     2, 3, 6, 7, 10, 11, 14, 18, 19, 22, 23, 26, 27, 30, 31
@@ -18,7 +19,7 @@ int position_from, int position_to)
 	*block += (FIRSTBIT >> position_to);
 }
 
-void before_rounds(uint64_t *data, uint32_t LL, uint64t XX, uint32t rr)
+void before_rounds(uint64_t *data, uint32_t LL, uint64_t XX, uint32_t rr)
 {
     // L
     LL = 0;
@@ -44,7 +45,7 @@ void rounds(uint32_t *LL, uint64_t *XX, uint32_t *rr, int round)
 
     // YY
     // non-linear T-boxes
-    uint_64t YY = 0;
+    uint64_t YY = 0;
 
     for(int ii = 0; ii < 8; ii ++)
     {
