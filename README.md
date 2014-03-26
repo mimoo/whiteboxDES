@@ -4,15 +4,17 @@ whiteboxDES
 This is an explanation of How Whitebox can be created,
 It follows [Chow et al's paper][1] on the subject.
 
-To see it, browse `rapport/rapport.md` in english or french.
+To see it, browse `rapport/rapport.md` in [english][2] or [french][3].
 
-You can also browse `src/` to see the example we build using C and [DES][1].
+You can also browse `src/` to see the example we build using C and [DES][4].
 
-It uses our previous implementation of [DES in C][3].
+It uses our previous implementation of [DES in C][5].
 
 [1]: http://www.scs.carleton.ca/%7Epaulv/papers/whitedes1.ps
-[2]: http://en.wikipedia.org/wiki/Data_Encryption_Standard
-[3]: https://github.com/mimoo/DES
+[2]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport-fr.md
+[3]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport-en.md
+[4]: http://en.wikipedia.org/wiki/Data_Encryption_Standard
+[5]: https://github.com/mimoo/DES
 
 
 Author
