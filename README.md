@@ -4,7 +4,7 @@ whiteboxDES
 This is an explanation of How Whitebox can be created,
 It follows [Chow et al's paper][1] on the subject.
 
-To see it, browse `rapport/rapport.md` in [english][2] or [french][3].
+To see it, browse `rapport/rapport.md` in [french][2] or [english][3].
 
 You can also browse `src/` to see the example we build using C and [DES][4].
 
