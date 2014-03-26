@@ -30,6 +30,8 @@ whitebox
 
 # EXPLICATION CONCEPT
 
+expliquer le pourquoi de chaque concept ! Sinon ca ne sert à rien de balancer un concept sans savoir pourquoi on l'utilise...
+
 ## Partial Evaluation and Look up tables
 
 Puisque la clef est fixé, on remplace toutes les opérations qui sont connu lorsque la clef est connu. Commes les substitutions, par des look up tables.

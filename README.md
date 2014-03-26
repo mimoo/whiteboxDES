@@ -1,14 +1,17 @@
 whiteboxDES
 ===========
 
-This is an implementation in C of a Whitebox using [DES][1] (Data Encryption Standard)  
+This is an explanation of How Whitebox can be created,
+It follows [Chow et al's paper][1] on the subject.
 
-It follows [Brecht Wyseur's Phd thesis][2] on the subject.
+To see it, browse `rapport/rapport.md` in english or french.
+
+You can also browse `src/` to see the example we build using C and [DES][1].
 
 It uses our previous implementation of [DES in C][3].
 
-[1]: http://en.wikipedia.org/wiki/Data_Encryption_Standard
-[2]: https://www.cosic.esat.kuleuven.be/publications/thesis-152.pdf
+[1]: http://www.scs.carleton.ca/%7Epaulv/papers/whitedes1.ps
+[2]: http://en.wikipedia.org/wiki/Data_Encryption_Standard
 [3]: https://github.com/mimoo/DES
 
 
@@ -19,7 +22,7 @@ Author
 * Hugo Bonnin
 * Jacques Monin
 
-Files
+How to use the C implementation
 ----
 
 * **WBDES.c** and **WBDES.h** contain the functions used in the Whitebox-DES algorithm.
