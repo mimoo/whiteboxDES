@@ -1,4 +1,3 @@
-
 # INTRODUCTION WHITEBOX
 
 ## utilité 
@@ -39,15 +38,23 @@ Puisque la clef est fixé, on remplace toutes les opérations qui sont connu lor
 
 ## Input/output Encoding
 
+## Combined Function Encoding
 
+on combine deux fonctions en une fonction, par exemple les substitutions des rounds et le xor de la clef peuvent s'écrire en une fonction.
 
 ## By-Pass Encoding
 
 Pour éviter qu'on puisse deviner à quel étape de l'algorithme on est, on aggrandit la taille de l'input que l'on passe à nos fonctions, et la taille de l'output, avec des bits inutiles.
 
-##
+## Split-Path Encoding
+
+
 
 # EXPLICATION DE COMMENT LES IMPLEMENTER
+
+## Look up tables
+
+toutes les fonctions peuvent être écrite sous forme de Look up table, comment marchent les look up tables ?
 
 # CONCLUSION
 
