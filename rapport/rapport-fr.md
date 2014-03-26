@@ -104,7 +104,7 @@ Matrix
 
 [Link et al : Clarifying Obfuscation: Improving the Security of White-Box Encoding][1]
 
-![matrix](http://i.imgur.com/xODKAA3.png)
+![matrix](https://github.com/mimoo/whiteboxDES/blob/master/rapport/images/matrices.PNG?raw=true)
 
 [1]: http://eprint.iacr.org/2004/025.pdf
 
