@@ -13,7 +13,7 @@ Note : Un article en version pdf se trouve aussi dans ce dossier, pour le build 
 Utilité
 -------
 
-explication de DRM.
+Explication de DRM.
 
 
 Problème
@@ -53,47 +53,60 @@ Il faut alors complètement modifier les algorithmes, ce qui donne ce genre de s
 
 
 Concepts
-===================
+========
 
 /!\ **expliquer le pourquoi de chaque concept ! Sinon ca ne sert à rien de balancer un concept sans savoir pourquoi on l'utilise...**
 
 voir l'article de Chow et Al:
 
-## Partial Evaluation and Look up tables
+Partial Evaluation and Look up tables
+-------------------------------------
 
 Puisque la clef est fixé, on remplace toutes les opérations qui sont previsibles lorsque la clef est connu. Commes les substitutions, par des look up tables.
 
-## Mixing Bijections
+Mixing Bijections
+-----------------
 
-## Input/output Encoding
+Input/output Encoding
+---------------------
 
-## Combined Function Encoding
+Combined Function Encoding
+--------------------------
 
 on combine deux fonctions en une fonction, par exemple les substitutions des rounds et le xor de la clef peuvent s'écrire en une fonction.
 
-## By-Pass Encoding
+By-Pass Encoding
+----------------
 
 Pour éviter qu'on puisse deviner à quel étape de l'algorithme on est, on aggrandit la taille de l'input que l'on passe à nos fonctions, et la taille de l'output, avec des bits inutiles.
 
-## Split-Path Encoding
-
+Split-Path Encoding
+-------------------
 
 
 Implementation
 ==============
-## Look up tables
+
+Look up tables
+--------------
 
 toutes les fonctions peuvent être écrite sous forme de Look up table, comment marchent les look up tables ?
 
 2. les look up tables sont implémentés comme des Sbox (substitution), on prend le nombre crée par l'octet (000010 = 2) et on regarde l'entré numéro 2 dans la Tbox (pour ne pas confondre avec les Sbox de DES). Il y a donc 256 possibilités
 
-## path splitting
+path splitting
+--------------
 
 pour ne pas avoir d'immenses Look up tables, on split le state de 96 bits en 12 octets et on crée 12 look up tables
 
 Matrix
 ------
+
+[Link et al : Clarifying Obfuscation: Improving the Security of White-Box Encoding][1]
+
 ![matrix](http://i.imgur.com/xODKAA3.png)
+
+[1]: http://eprint.iacr.org/2004/025.pdf
 
 Exemple avec DES
 ================
@@ -103,8 +116,8 @@ DES
 
 explication courte, voir notre algorithme sur github
 
-M1
---
+M_1
+---
 
 combines : 
 1. la permutation initiale de DES
@@ -115,7 +128,8 @@ puis donne les bits dans le bon ordre aux look up tables de State1->State2.
 c'est une matrice 64 par 96 (transforme 64 bits en 96 bits)
 
 STATE 1
------
+-------
+
 substitution + xor => lookuptable[round] precomputed with the key
 Magie ! la clef vient de disparaitre.
 
@@ -196,7 +210,8 @@ matrix of matrix
 pour le bypass on veut 64 bits. C'est pourquoi on utilise les Tbox lineaire dans le state 1
 
 
-## M3
+M_3
+---
 
 M_3 est 96x64
 
@@ -208,22 +223,29 @@ combine :
 4. echange L et R (what ??? je quote "DES effectively swaps the left and right halves after the last round". On a pas fait ca dans notre implementation de DES oO).
 5. Permutation finale
 
-## Variante recommande
+Variante recommande
+-------------------
 
 DES = M_4 ( DES ( M_0 ( INPUT ) ) )
 
 en fait on remplace M_1 par M_1 ( M_0)
 et M_3 par M_4 ( M_3)
 
-# CONCLUSION
+CONCLUSION
+==========
 
 Kerckhoffs’ principle : security through obscurity
 (keeping the design
 confidential) is bad practice
 
-# SOURCES
+SOURCES
+=======
 
-## vidéos
+/!\ **Mieux vaudrait indiquer les sources au fur et à mesure dans l'article! C'est moche plein de sources à la fin**
+
+Vidéos
+------
+
 https://www.youtube.com/watch?v=om5AVTqB5bA
 White-Box Cryptography
 Speaker: Dmitry Khovratovich
@@ -231,7 +253,8 @@ EventID: 5590
 Event: 30th Chaos Communication Congress [30c3] by the Chaos Computer Club [CCC]
 Location: Congress Centrum Hamburg (CCH); Am Dammtor; Marseiller Straße; 20355 Hamburg; Germany
 
-## articles
+Articles
+--------
 
 "A White-box DES Implementation for DRM Applications", Chow et al.
       http://www.scs.carleton.ca/%7Epaulv/papers/whitedes1.ps
