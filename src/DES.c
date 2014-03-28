@@ -227,7 +227,7 @@ void key_schedule(uint64_t* key, uint64_t* next_key, int round)
 	    if(ii < 28)
 		addbit(&key_left, *key, ii, ii);
 	    else
-		addbit(&key_right, *key, ii, ii);
+		addbit(&key_right, *key, ii, ii % 28);
 	}
     }
 
