@@ -21,11 +21,6 @@ int DesExpansion[48] = {
     28, 29, 28, 29, 30, 31, 32,  1
 };
 
-int NotExpansed[16] = {
-     2,  3,  6,  7, 10 ,11, 14, 15,
-    18, 19, 22, 23, 26, 27, 30, 31
-};
-
 int main()
 {
     int i,j;
@@ -43,7 +38,16 @@ int main()
     }    
     for(i=32;i<64;i++)
     {
-        tab[PermutationInitial[i]-1][i]=1;
+        int cmp=0;
+        for(j=32;j<64;j++)
+        {
+            if( tab[i][j] != 0 )
+                cmp ++;
+        }
+        if(cmp == 0)
+        {
+            tab
+        }
     }
 	/*for(i=32;i<64;i++)
     {
