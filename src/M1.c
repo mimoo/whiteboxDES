@@ -21,7 +21,7 @@ int DesExpansion[48] = {
     28, 29, 28, 29, 30, 31, 32,  1
 };
 
-int NotExpansed[16] = {
+int NotExpanded[16] = {
      2,  3,  6,  7, 10 ,11, 14, 15,
     18, 19, 22, 23, 26, 27, 30, 31
 };
@@ -55,14 +55,14 @@ int main()
 	{
 		for(j=0;j<64;j++)
 		{
-			tab[i][j]=tmp[NotExpansed[i-80]-1][j];
+			tab[i][j]=tmp[DesExpansion[i-32]-1][j];
 		}
 	}
 	for(i=80;i<96;i++)
 	{
 		for(j=0;j<64;j++)
 		{
-			tab[i][j]=tmp[DesExpansion[i-32]-1][j];
+			tab[i][j]=tmp[NotExpanded[i-80]-1][j];
 		}
 	}	
 	if(file!=NULL)
