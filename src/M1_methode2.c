@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char PermutationInitial[64] = {
+int PermutationInitial[64] = {
     58, 50, 42, 34, 26, 18, 10,  2,
     60, 52, 44, 36, 28, 20, 12,  4,
     62, 54, 46, 38, 30, 22, 14,  6,
@@ -12,7 +12,7 @@ char PermutationInitial[64] = {
     63, 55, 47, 39, 31, 23, 15,  7
 };
 
-char DesExpansion[48] = {
+int DesExpansion[48] = {
     32,  1,  2,  3,  4,  5,  4,  5,
      6,  7,  8,  9,  8,  9, 10, 11,
     12, 13, 12, 13, 14, 15, 16, 17,
@@ -21,7 +21,7 @@ char DesExpansion[48] = {
     28, 29, 28, 29, 30, 31, 32,  1
 };
 
-char NotDuplicated[16] = {
+int NotDuplicated[16] = {
      2,  3,  6,  7, 10 ,11, 14, 15,
     18, 19, 22, 23, 26, 27, 30, 31
 };
@@ -84,7 +84,7 @@ int main()
     
     // M1 = M1_expansion*M1_permutation
 
-    char temp = 0;
+    int temp = 0;
 
     for(int ii = 0; ii < 96; ii++)
     {
