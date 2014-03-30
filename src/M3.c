@@ -23,32 +23,40 @@ int DesExpansion[48] = {
 
 int main()
 {
-    int i,j;
+    int i,j,k;
     int tab[64][96];
     FILE * file;
     file = fopen("M3","w");
+
+    for(i=0;i<64;i++)
+    {
+        for(j=0;j<96;j++)
+        {
+            tab[i][j]=0;
+        }
+    }
+
     for(i=0;i<32;i++)
     {
         for(j=0;j<32;j++)
         {
-            if(j!=i)
-                tab[i][j]=0;
-            else tab[i][j]=1;
+            if(j==i)
+                tab[i][j]=1;
         }
-    }    
-    for(i=32;i<64;i++)
-    {
+    }   
         int cmp=0;
-        for(j=32;j<64;j++)
+        for(j=32;j<80;j++)
         {
-            if( tab[i][j] != 0 )
-                cmp ++;
+	    for(k=32;k<64;k++)
+            {
+                if( tab[k][j] != 0 )
+                    cmp ++;
+            }
+            if(cmp == 0)
+            {
+                tab[DesExpansion[j-32]-1+32][j]=1;
+            }
         }
-        if(cmp == 0)
-        {
-            tab
-        }
-    }
 	/*for(i=32;i<64;i++)
     {
         for(j=0;j<64;j++)
@@ -81,4 +89,6 @@ int main()
             fprintf(file,"\n");
         }
     }
+    else fprintf(stderr,"can't open the file\n");
+    return EXIT_SUCCESS;
 }

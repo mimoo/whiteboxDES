@@ -41,7 +41,7 @@ int main()
 	}
 	for(i=0;i<64;i++)
 	{
-		tab[PermutationInitial[i]-1][i]=1;
+		tab[i][PermutationInitial[i]-1]=1;
 	}
 	int tmp [32][64];
         for(i=32;i<64;i++)
@@ -76,4 +76,5 @@ int main()
 			fprintf(file,"\n");
 		}
         }
+	return EXIT_SUCCESS;
 }
