@@ -36,19 +36,9 @@ int main()
     char M1_expansion[96][96];
         
     // init to zeros
-    for(int ii = 0; ii < 96; ii++)
-    {
-	for(int jj = 0; jj < 64; jj++)
-	{
-	    M1_permutation[ii][jj] = 0;
-	    M1_expansion[ii][jj] = 0;
-	    M1[ii][jj] = 0;
-	}
-	for(int jj = 64; jj < 96; jj++)
-	{
-	    M1_expansion[ii][jj] = 0;
-	}
-    }
+    memset(M1_permutation, 0, sizeof(M1_permutation[96][64]) * 96 * 64);
+    memset(M1_expansion, 0, sizeof(M1_expansion[96][96]) * 96 * 96);
+    memset(M1, 0, sizeof(M1[96][64]) * 96 * 64);
 
     //
     // permutation matrix
