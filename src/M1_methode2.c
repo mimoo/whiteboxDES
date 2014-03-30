@@ -60,24 +60,20 @@ int main()
 	M1_permutation[ii][PermutationInitial[ii] - 1] = 1;
     }
 
-    // not duplicated bits
-    for(int ii = 0; ii < 16; ii++)
-    {
-	M1_permutation[ii + 80][NotDuplicated[ii] + 32 - 1] = 1;
-    }
-
     //
     // expansion matrix
     //
 
-    // identities
+    // identity
     for(int ii = 0; ii < 32; ii++)
     {
 	M1_expansion[ii][ii] = 1;
     }
-    for(int ii = 80; ii < 96; ii++)
+
+    // Not Duplicated bits
+    for(int ii = 0; ii < 16; ii++)
     {
-	M1_expansion[ii][ii] = 1;
+	M1_expansion[ii + 80][NotDuplicated[ii] + 32 - 1] = 1;
     }
 
     // expansion
