@@ -98,19 +98,43 @@ Pour éviter qu'on puisse deviner à quel étape de l'algorithme on est, on aggr
 
 Implementation
 ==============
-## Look up tables
-
+Look up tables
+--------------
 toutes les fonctions peuvent être écrite sous forme de Look up table, comment marchent les look up tables ?
 
 2. les look up tables sont implémentés comme des Sbox (substitution), on prend le nombre crée par l'octet (000010 = 2) et on regarde l'entré numéro 2 dans la Tbox (pour ne pas confondre avec les Sbox de DES). Il y a donc 256 possibilités
 
-## path splitting
-
+path splitting
+--------------
 pour ne pas avoir d'immenses Look up tables, on split le state de 96 bits en 12 octets et on crée 12 look up tables
 
 Matrix
 ------
 ![matrix](http://i.imgur.com/xODKAA3.png)
+
+
+De-linearization
+----------------
+
+"The delinearization step referred to by Chow et al.
+and Jacob et al. prevents an adversary from viewing
+the original contents of each table. Tables are delin-
+earized by creating random permutations to rename
+their contents; for example, the elements of a table
+of 8-bit values would be renamed with a permuta-
+tion of [0 . . . 28 − 1]. The inverse of this permutation
+would be used to reindex the following table, which
+would subsequently have its contents renamed. For
+a system like DES, which can be represented entire-
+ly with ATs and table lookups, this process can be
+carried out on the entire implementation once the
+ATs have been tabularized."
+"We chose to divide input into 8-bit subvectors to match the
+8-bit output of the T-boxes, and we divided the out-
+put into 4-bit subvectors to keep the addition tables
+from growing out of hand."
+matrix of matrix" Link et al.
+
 
 Exemple avec DES
 ================
@@ -206,9 +230,6 @@ M2 combine :
 4. extraction du vrai R(r)
 5. bypass bits (a comprendre)
 
-De-linearization
-
-matrix of matrix
 
 pour le bypass on veut 64 bits. C'est pourquoi on utilise les Tbox lineaire dans le state 1
 
