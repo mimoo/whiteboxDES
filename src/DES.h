@@ -22,6 +22,8 @@
 
 extern const int DesSbox[8][4][16];
 extern const int DesExpansion[48];
+extern const int NotDuplicated[16];
+extern const int Pbox[32];
 
 //
 //             PROTOTYPES
