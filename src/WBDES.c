@@ -1,7 +1,7 @@
 #include "WBDES.h"
 #include "tboxes.c"
 
-const int rr_table[48] = {
+const int rr_table[16] = {
     2, 3, 6, 7, 10, 11, 14, 18, 19, 22, 23, 26, 27, 30, 31
 }; 
 

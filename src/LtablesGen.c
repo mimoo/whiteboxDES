@@ -6,13 +6,11 @@
 #include "DES.h"
 
 
-
 //////////////////////////////////////////////////////
 //                 GLOBAL VARIABLES                //
 ////////////////////////////////////////////////////
 
 static FILE * output = NULL;
-
 
 
 //////////////////////////////////////////////////////
@@ -111,7 +109,7 @@ int main(/*int argc, char ** argv*/)
                     "// State 1 -> State 2 tables\n");
     
     // Write the non-linear tables
-    fprintf(output, "const char NonLinearTBoxes[16][8][256] = {\n");          
+    fprintf(output, "const int NonLinearTBoxes[16][8][256] = {\n");          
     for(int ii = 0; ii < 16; ii++)
     {
       fprintf(output, "    {\n");
@@ -140,7 +138,7 @@ int main(/*int argc, char ** argv*/)
     fprintf(output, "};\n\n");               
 
     // Write the linear tables
-    fprintf(output, "const char LinearTBoxes[16][4][256] = {\n");
+    fprintf(output, "const int LinearTBoxes[16][4][256] = {\n");
     for(int ii = 0; ii < 16; ii++)
     {
       fprintf(output, "    {\n");
