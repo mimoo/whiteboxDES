@@ -186,6 +186,9 @@ c'est une matrice 64 par 96 (transforme 64 bits en 96 bits)
 
 STATE 1
 -----
+
+plein d'images à recup ici: http://www.iacr.org/workshops/fse2007/slides/rump/white.pdf
+
 substitution + xor => lookuptable[round] precomputed with the key
 Magie ! la clef vient de disparaitre.
 
