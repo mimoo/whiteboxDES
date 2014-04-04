@@ -5,14 +5,10 @@
 
 #include "DES.h"
 
-void addbit_64(uint64_t *block, uint64_t from, 
-int position_from, int position_to);
+void before_rounds(unsigned int *in, unsigned int *out);
 
-void addbit_32(uint32_t *block, uint64_t from,
-int position_from, int position_to);
+void rounds(unsigned int *in, unsigned int *out, int round);
 
-void before_rounds(uint64_t *data, uint32_t LL, uint64_t XX, uint32_t rr);
-
-void rounds(uint32_t *LL, uint64_t *XX, uint32_t *rr, int round);
+void end_rounds(unsigned int *in, unsigned int *out);
 
 #endif
