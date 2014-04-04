@@ -23,62 +23,61 @@ int DesExpansion[48] = {
 
 int main()
 {
-    int i,j,jj;
     int tab[64][96];
     FILE * file;
     file = fopen("M3","w");
 
-    for(i=0;i<64;i++)
+    for(int ii=0;ii<64;ii++)
     {
-        for(j=0;j<96;j++)
+        for(int jj=0;jj<96;jj++)
         {
-            tab[i][j]=0;
+            tab[ii][jj]=0;
         }
     }
 
-    for(i=0;i<32;i++)
+    for(int ii=0;ii<32;ii++)
     {
-        for(j=0;j<32;j++)
+        for(int jj=0;jj<32;jj++)
         {
-            if(j==i)
-                tab[i][j]=1;
+            if(jj==ii)
+                tab[ii][jj]=1;
         }
     }   
-    for(j=32;j<80;j++)
+    for(int jj=32;jj<80;jj++)
     {
         int cmp=0;
-	for(jj=32;jj<80;jj++)
+	    for(int kk=32;kk<80;kk++)
         {
-            if( tab[DesExpansion[j-32]-1+32][jj] != 0 )
+            if( tab[DesExpansion[jj-32]-1+32][kk] != 0 )
                 cmp ++;
         }
         if(cmp == 0)
         {
-            tab[DesExpansion[j-32]-1+32][j]=1;
+            tab[DesExpansion[jj-32]-1+32][jj]=1;
         }
     }
     int tmp[64][96];
-    for(i=0;i<64;i++)
+    for(int ii=0;ii<64;ii++)
     {
-        for(j=0;j<96;j++)
+        for(int jj=0;jj<96;jj++)
         {
-            tmp[i][j]=tab[i][j];
+            tmp[ii][jj]=tab[ii][jj];
         }
     }	
-    for(i=0;i<64;i++)
+    for(int ii=0;ii<64;ii++)
     {
-        for(j=0;j<96;j++)
+        for(int jj=0;jj<96;jj++)
         {
-            tab[i][j]=tmp[PermutationFinal[i]-1][j];
+            tab[ii][jj]=tmp[PermutationFinal[ii]-1][jj];
         }
     }
     if(file!=NULL)
     {
-        for(i=0;i<64;i++)
+        for(int ii=0;ii<64;ii++)
         {
-            for(j=0;j<96;j++)
+            for(int jj=0;jj<96;jj++)
             {
-                fprintf(file,"%d",tab[i][j]);
+                fprintf(file,"%d",tab[ii][jj]);
             }
             fprintf(file,"\n");
         }

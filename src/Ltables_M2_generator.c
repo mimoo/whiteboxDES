@@ -104,7 +104,7 @@ int main()
     unsigned int subvector = 0; //4bits!
 
     // OPEN LTABLE FILE
-    FILE* file = fopen("M2_Ltables.c", "w");
+    FILE* file = fopen("tboxes.c", "w");
 
     fprintf(stdout, "int M2_Ltables[12][24][256] = {\n");
 

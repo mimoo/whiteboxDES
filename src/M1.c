@@ -28,53 +28,52 @@ int NotExpanded[16] = {
 
 int main()
 {
-	int i,j;
 	int tab[96][64];
 	FILE * file;
 	file = fopen("M1","w");
-	for(i=0;i<96;i++)
+	for(int i=0;i<96;i++)
 	{
-		for(j=0;j<64;j++)
+		for(int j=0;j<64;j++)
 		{
 			tab[i][j]=0;
 		}
 	}
-	for(i=0;i<64;i++)
+	for(int i=0;i<64;i++)
 	{
 		tab[i][PermutationInitial[i]-1]=1;
 	}
 	int tmp [32][64];
-        for(i=32;i<64;i++)
+    for(int i=32;i<64;i++)
 	{
-		for(j=0;j<64;j++)
+		for(int j=0;j<64;j++)
 		{
 			tmp[i-32][j]=tab[i][j];
 		}
 	}	
-        for(i=32;i<80;i++)
+    for(int i=32;i<80;i++)
 	{
-		for(j=0;j<64;j++)
+		for(int j=0;j<64;j++)
 		{
 			tab[i][j]=tmp[DesExpansion[i-32]-1][j];
 		}
 	}
-	for(i=80;i<96;i++)
+	for(int i=80;i<96;i++)
 	{
-		for(j=0;j<64;j++)
+		for(int j=0;j<64;j++)
 		{
 			tab[i][j]=tmp[NotExpanded[i-80]-1][j];
 		}
 	}	
 	if(file!=NULL)
-        {
-		for(i=0;i<96;i++)
+    {
+	    for(int i=0;i<96;i++)
 		{
-			for(j=0;j<64;j++)
+			for(int j=0;j<64;j++)
 			{
 				fprintf(file,"%d",tab[i][j]);
 			}
 			fprintf(file,"\n");
 		}
-        }
+    }
 	return EXIT_SUCCESS;
 }

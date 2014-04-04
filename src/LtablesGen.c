@@ -82,6 +82,43 @@ void st1_to_st2(uint64_t key, unsigned  non_linear_tboxes[16][8][256],
     }
 }
 
+void Matrix1(unsigned int M1[96][64])
+{
+	for(int i=0;i<96;i++)
+	{
+		for(int j=0;j<64;j++)
+		{
+			M1[i][j]=0;
+		}
+	}
+	for(int i=0;i<64;i++)
+	{
+		M1[i][PermutationInitial[i]-1]=1;
+	}
+	int tmp [32][64];
+    for(int i=32;i<64;i++)
+	{
+		for(int j=0;j<64;j++)
+		{
+			tmp[i-32][j]=M1[i][j];
+		}
+	}	
+    for(int i=32;i<80;i++)
+	{
+		for(int j=0;j<64;j++)
+		{
+			M1[i][j]=tmp[DesExpansion[i-32]-1][j];
+		}
+	}
+	for(int i=80;i<96;i++)
+	{
+		for(int j=0;j<64;j++)
+		{
+			M1[i][j]=tmp[NotDuplicated[i-80]-1][j];
+		}
+	}	
+}
+
 void Matrix2(unsigned int M2[96][96])
 {
     // vars
@@ -157,6 +194,54 @@ void Matrix2(unsigned int M2[96][96])
     }
 }
 
+void Matrix3(unsigned int M3[64][96])
+{
+    for(int ii=0;ii<64;ii++)
+    {
+        for(int jj=0;jj<96;jj++)
+        {
+            M3[ii][jj]=0;
+        }
+    }
+
+    for(int ii=0;ii<32;ii++)
+    {
+        for(int jj=0;jj<32;jj++)
+        {
+            if(jj==ii)
+                M3[ii][jj]=1;
+        }
+    }   
+    for(int jj=32;jj<80;jj++)
+    {
+        int cmp=0;
+	    for(int kk=32;kk<80;kk++)
+        {
+            if( M3[DesExpansion[jj-32]-1+32][kk] != 0 )
+                cmp ++;
+        }
+        if(cmp == 0)
+        {
+            M3[DesExpansion[jj-32]-1+32][jj]=1;
+        }
+    }
+    int tmp[64][96];
+    for(int ii=0;ii<64;ii++)
+    {
+        for(int jj=0;jj<96;jj++)
+        {
+            tmp[ii][jj]=M3[ii][jj];
+        }
+    }	
+    for(int ii=0;ii<64;ii++)
+    {
+        for(int jj=0;jj<96;jj++)
+        {
+            M3[ii][jj]=tmp[PermutationFinal[ii]-1][jj];
+        }
+    }
+}
+
 void addVec(unsigned int Vec[8])
 {
     int i=0;
@@ -180,13 +265,12 @@ unsigned int vec_to_int(unsigned int Vec[4])
     return res;
 }
 
-void st2_to_st3(unsigned int LUT2[288][256])
+/*void st2_to_st3(unsigned int LUT2[288][256])
 {
     unsigned int M2[96][96];
     unsigned int intMat[4][8];
     unsigned int Vec[8];
     unsigned int Vec2[4];
-    unsigned int res;
     int cmp=0;
     Matrix2(M2);
     for(int ii = 0; ii < 96; ii+=4)
@@ -207,7 +291,6 @@ void st2_to_st3(unsigned int LUT2[288][256])
             }
             for(int kk = 0; kk < 256; kk++)
             {
-                res=0;
                 for(int ll = 0; ll < 4; ll++)
                 {
                     Vec2[ll]=0;
@@ -220,8 +303,7 @@ void st2_to_st3(unsigned int LUT2[288][256])
                     }
                 }
                 addVec(Vec);
-                res=vec_to_int(Vec2);
-                LUT2[cmp][kk]=res;
+                LUT2[cmp][kk]=vec_to_int(Vec2);
             }
             cmp++;
         }
@@ -237,7 +319,7 @@ void st2_to_st3(unsigned int LUT2[288][256])
         }
         fprintf(stdout,"\n}\n");
     }
-}
+}*/
 
 void xor_table(unsigned int xor_Table[256])
 {
@@ -263,7 +345,7 @@ int main(/*int argc, char ** argv*/)
     uint64_t key = 8554016168460312; // A RECUPERER DANS LES PARAMETRES NORMALEMENT
     unsigned non_linear_tboxes[16][8][256]; 
     unsigned linear_tboxes[16][4][256];
-    unsigned int LUT2[288][256];
+    //unsigned int LUT2[288][256];
     unsigned int xor_Table[256];
     
     // Take KEY as argument
@@ -357,6 +439,140 @@ int main(/*int argc, char ** argv*/)
         if((ii + 1) % 16 == 0)
             fprintf(output, "\n     ");
     }
+
+    //Write M1_LUT
+    bool bit_test = 0;
+    unsigned int subvector = 0; //4bits!
+    unsigned int M1[96][64];
+    Matrix1(M1);
+
+    fprintf(output, "\nconst int M1_Ltables[24][8][256] = {\n");
+
+    // lines of submatrices
+    for(int ii = 0; ii < 24; ii++)
+    {
+	fprintf(output, "{\n");
+	// cols of submatrices
+	for(int jj = 0; jj < 8; jj++)
+	{
+	    fprintf(output, "{\n");
+	    // possible value for the byte
+	    for(unsigned int byte = 0; byte < 256; byte++) //8bits!
+	    {
+		// now let's do the submatrix * subvector
+		subvector = 0;
+		// lines of submatrix
+		for(int byte_i = 0; byte_i < 4; byte_i++)
+		{
+		    // cols of submatrix
+		    for(int byte_j = 0; byte_j < 8; byte_j++)
+		    {
+			if(M1[ii * 4 + byte_i][jj * 8 + byte_j] == 1 &&
+			   (((byte >> (7 - byte_j)) & 1) == 1))
+			    bit_test = bit_test == 1 ? 0 : 1;
+		    }
+		    if(bit_test == 1)
+		    {
+			subvector += (1 << (3 - byte_i));
+			bit_test = 0;
+		    }
+		}
+		fprintf(output, "%i, ", subvector);
+	    }
+	    fprintf(output, "}\n");
+	}
+	fprintf(output, "}\n");
+    }
+    fprintf(output, "}\n");
+
+    //Write M2_LUT
+    bit_test = 0;
+    subvector = 0; //4bits!
+    unsigned int M2[96][96];
+    Matrix2(M2);
+
+    fprintf(output, "\nconst int M2_Ltables[24][12][256] = {\n");
+
+    // lines of submatrices
+    for(int ii = 0; ii < 24; ii++)
+    {
+	fprintf(output, "{\n");
+	// cols of submatrices
+	for(int jj = 0; jj < 12; jj++)
+	{
+	    fprintf(output, "{\n");
+	    // possible value for the byte
+	    for(unsigned int byte = 0; byte < 256; byte++) //8bits!
+	    {
+		// now let's do the submatrix * subvector
+		subvector = 0;
+		// lines of submatrix
+		for(int byte_i = 0; byte_i < 4; byte_i++)
+		{
+		    // cols of submatrix
+		    for(int byte_j = 0; byte_j < 8; byte_j++)
+		    {
+			if(M2[ii * 4 + byte_i][jj * 8 + byte_j] == 1 &&
+			   (((byte >> (7 - byte_j)) & 1) == 1))
+			    bit_test = bit_test == 1 ? 0 : 1;
+		    }
+		    if(bit_test == 1)
+		    {
+			subvector += (1 << (3 - byte_i));
+			bit_test = 0;
+		    }
+		}
+		fprintf(output, "%i, ", subvector);
+	    }
+	    fprintf(output, "}\n");
+	}
+	fprintf(output, "}\n");
+    }
+
+    //Write M3_LUT
+    bit_test = 0;
+    subvector = 0; //4bits!
+    unsigned int M3[64][96];
+    Matrix3(M3);
+
+    fprintf(output, "\nconst int M3_Ltables[16][12][256] = {\n");
+
+    // lines of submatrices
+    for(int ii = 0; ii < 16; ii++)
+    {
+	fprintf(output, "{\n");
+	// cols of submatrices
+	for(int jj = 0; jj < 12; jj++)
+	{
+	    fprintf(output, "{\n");
+	    // possible value for the byte
+	    for(unsigned int byte = 0; byte < 256; byte++) //8bits!
+	    {
+		// now let's do the submatrix * subvector
+		subvector = 0;
+		// lines of submatrix
+		for(int byte_i = 0; byte_i < 4; byte_i++)
+		{
+		    // cols of submatrix
+		    for(int byte_j = 0; byte_j < 8; byte_j++)
+		    {
+			if(M3[ii * 4 + byte_i][jj * 8 + byte_j] == 1 &&
+			   (((byte >> (7 - byte_j)) & 1) == 1))
+			    bit_test = bit_test == 1 ? 0 : 1;
+		    }
+		    if(bit_test == 1)
+		    {
+			subvector += (1 << (3 - byte_i));
+			bit_test = 0;
+		    }
+		}
+		fprintf(output, "%i, ", subvector);
+	    }
+	    fprintf(output, "}\n");
+	}
+	fprintf(output, "}\n");
+    }
+    fprintf(output, "}\n");
 
     // Close the output file            
     fclose(output);
