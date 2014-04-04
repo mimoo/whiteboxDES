@@ -20,7 +20,7 @@ static FILE * output = NULL;
 
 // Generate Lookuptables between state 1 and state 2
 void st1_to_st2(uint64_t key, unsigned  non_linear_tboxes[16][8][256], 
-           unsigned linear_tboxes[16][4][256])
+		unsigned linear_tboxes[16][4][256])
 {
     uint64_t a_key[16];
     a_key[0] = key;
@@ -84,39 +84,39 @@ void st1_to_st2(uint64_t key, unsigned  non_linear_tboxes[16][8][256],
 
 void Matrix1(unsigned int M1[96][64])
 {
-	for(int i=0;i<96;i++)
+    for(int i=0;i<96;i++)
+    {
+	for(int j=0;j<64;j++)
 	{
-		for(int j=0;j<64;j++)
-		{
-			M1[i][j]=0;
-		}
+	    M1[i][j]=0;
 	}
-	for(int i=0;i<64;i++)
-	{
-		M1[i][PermutationInitial[i]-1]=1;
-	}
-	int tmp [32][64];
+    }
+    for(int i=0;i<64;i++)
+    {
+	M1[i][PermutationInitial[i]-1]=1;
+    }
+    int tmp [32][64];
     for(int i=32;i<64;i++)
+    {
+	for(int j=0;j<64;j++)
 	{
-		for(int j=0;j<64;j++)
-		{
-			tmp[i-32][j]=M1[i][j];
-		}
-	}	
-    for(int i=32;i<80;i++)
-	{
-		for(int j=0;j<64;j++)
-		{
-			M1[i][j]=tmp[DesExpansion[i-32]-1][j];
-		}
+	    tmp[i-32][j]=M1[i][j];
 	}
-	for(int i=80;i<96;i++)
+    }	
+    for(int i=32;i<80;i++)
+    {
+	for(int j=0;j<64;j++)
 	{
-		for(int j=0;j<64;j++)
-		{
-			M1[i][j]=tmp[NotDuplicated[i-80]-1][j];
-		}
-	}	
+	    M1[i][j]=tmp[DesExpansion[i-32]-1][j];
+	}
+    }
+    for(int i=80;i<96;i++)
+    {
+	for(int j=0;j<64;j++)
+	{
+	    M1[i][j]=tmp[NotDuplicated[i-80]-1][j];
+	}
+    }	
 }
 
 void Matrix2(unsigned int M2[96][96])
@@ -133,37 +133,37 @@ void Matrix2(unsigned int M2[96][96])
     // permutation
     for(int ii = 0; ii < 32; ii++)
     {
-	    M2_permutation[ii + 32][Pbox[ii] + 32 - 1] = 1;
+	M2_permutation[ii + 32][Pbox[ii] + 32 - 1] = 1;
     }
 
     // xor
     for(int ii = 0; ii < 32; ii++)
     {
-	    M2_permutation[ii + 32][ii] = 1;
+	M2_permutation[ii + 32][ii] = 1;
     }
 
     // R becomes L
     for(int ii = 0; ii < 32; ii++)
     {
-	    M2_permutation[ii][ii + 64] = 1;
+	M2_permutation[ii][ii + 64] = 1;
     }
 
     // expansion identities
     for(int ii = 0; ii < 32; ii++)
     {
-	    M2_expansion[ii][ii] = 1;
+	M2_expansion[ii][ii] = 1;
     }
 
     // expansion
     for(int ii = 32; ii < 80; ii++)
     {
-	    M2_expansion[ii][DesExpansion[ii - 32] + 32 - 1] = 1;
+	M2_expansion[ii][DesExpansion[ii - 32] + 32 - 1] = 1;
     }
 
     // Not Duplicated bits
     for(int ii = 0; ii < 16; ii++)
     {
-	    M2_expansion[ii + 80][NotDuplicated[ii] + 32 - 1] = 1;
+	M2_expansion[ii + 80][NotDuplicated[ii] + 32 - 1] = 1;
     }
     
     // M2 = M2_expansion*M2_permutation
@@ -171,26 +171,20 @@ void Matrix2(unsigned int M2[96][96])
 
     for(int ii = 0; ii < 96; ii++)
     {
-	    for(int jj = 0; jj < 96; jj++)
+	for(int jj = 0; jj < 96; jj++)
+	{
+	    for(int kk = 0; kk < 96; kk++)
 	    {
-	        //    char M1[96][64];
-            //    char M1_permutation[96][64];
-	        //  char M1_expansion[96][96];
-
-	        // M1[ii][jj] = M1_expansion[ii][0 -> 96] *
-	        //              M1_permutation[0 -> 96][jj]
-	        for(int kk = 0; kk < 96; kk++)
-	        {
-		        if(M2_expansion[ii][kk] == 1 && 
-		            M2_permutation[kk][jj] == 1)
-		           temp ++;
-	        }
-
-	        if(temp % 2 == 1){
-		        M2[ii][jj] = 1;
-		        temp = 0;
-	        }
+		if(M2_expansion[ii][kk] == 1 && 
+		   M2_permutation[kk][jj] == 1)
+		    temp ++;
 	    }
+
+	    if(temp % 2 == 1){
+		M2[ii][jj] = 1;
+		temp = 0;
+	    }
+	}
     }
 }
 
@@ -215,7 +209,7 @@ void Matrix3(unsigned int M3[64][96])
     for(int jj=32;jj<80;jj++)
     {
         int cmp=0;
-	    for(int kk=32;kk<80;kk++)
+	for(int kk=32;kk<80;kk++)
         {
             if( M3[DesExpansion[jj-32]-1+32][kk] != 0 )
                 cmp ++;
@@ -266,60 +260,60 @@ unsigned int vec_to_int(unsigned int Vec[4])
 }
 
 /*void st2_to_st3(unsigned int LUT2[288][256])
-{
-    unsigned int M2[96][96];
-    unsigned int intMat[4][8];
-    unsigned int Vec[8];
-    unsigned int Vec2[4];
-    int cmp=0;
-    Matrix2(M2);
-    for(int ii = 0; ii < 96; ii+=4)
-    {
-        for(int jj = 0; jj < 96; jj+=8)
-        {
-            for(int kk = ii; kk < ii+4; kk++)
-            {
-                for(int ll = jj; ll < jj+8; ll++)
-                {
-                    intMat[kk-ii][ll-jj]=M2[kk][ll];
-                }
-            }
-            //intMat initialized
-            for(int kk = 0; kk < 8; kk++)
-            {
-                Vec[kk]=0;
-            }
-            for(int kk = 0; kk < 256; kk++)
-            {
-                for(int ll = 0; ll < 4; ll++)
-                {
-                    Vec2[ll]=0;
-                }
-                for(int ll = 0; ll < 4; ll++)
-                {
-                    for(int mm = 0; mm < 8; mm++)
-                    {
-                        Vec2[ll]^=intMat[ll][mm]*Vec[mm];
-                    }
-                }
-                addVec(Vec);
-                LUT2[cmp][kk]=vec_to_int(Vec2);
-            }
-            cmp++;
-        }
-    }    
-    for(int ii = 0; ii < 288; ii++)
-    {
-        fprintf(stdout,"{\n");
-        for(int jj = 0; jj < 256; jj++)
-        {
-            fprintf(stdout,"%u ",LUT2[ii][jj]);
-            if(jj != 255)
-                fprintf(stdout,",");
-        }
-        fprintf(stdout,"\n}\n");
-    }
-}*/
+  {
+  unsigned int M2[96][96];
+  unsigned int intMat[4][8];
+  unsigned int Vec[8];
+  unsigned int Vec2[4];
+  int cmp=0;
+  Matrix2(M2);
+  for(int ii = 0; ii < 96; ii+=4)
+  {
+  for(int jj = 0; jj < 96; jj+=8)
+  {
+  for(int kk = ii; kk < ii+4; kk++)
+  {
+  for(int ll = jj; ll < jj+8; ll++)
+  {
+  intMat[kk-ii][ll-jj]=M2[kk][ll];
+  }
+  }
+  //intMat initialized
+  for(int kk = 0; kk < 8; kk++)
+  {
+  Vec[kk]=0;
+  }
+  for(int kk = 0; kk < 256; kk++)
+  {
+  for(int ll = 0; ll < 4; ll++)
+  {
+  Vec2[ll]=0;
+  }
+  for(int ll = 0; ll < 4; ll++)
+  {
+  for(int mm = 0; mm < 8; mm++)
+  {
+  Vec2[ll]^=intMat[ll][mm]*Vec[mm];
+  }
+  }
+  addVec(Vec);
+  LUT2[cmp][kk]=vec_to_int(Vec2);
+  }
+  cmp++;
+  }
+  }    
+  for(int ii = 0; ii < 288; ii++)
+  {
+  fprintf(stdout,"{\n");
+  for(int jj = 0; jj < 256; jj++)
+  {
+  fprintf(stdout,"%u ",LUT2[ii][jj]);
+  if(jj != 255)
+  fprintf(stdout,",");
+  }
+  fprintf(stdout,"\n}\n");
+  }
+  }*/
 
 void xor_table(unsigned int xor_Table[256])
 {
@@ -365,38 +359,32 @@ int main(/*int argc, char ** argv*/)
         exit(EXIT_FAILURE);
     }
     
-    // Write the header of the file
-    fprintf(output, "//////////////////////////////////////////////////////\n"
-                    "//                  LOOK-UP TABLES                 //\n"
-                    "////////////////////////////////////////////////////\n\n"
-                    "// State 1 -> State 2 tables\n");
-    
     // Write the non-linear tables
     fprintf(output, "const int NonLinearTBoxes[16][8][256] = {\n");          
     for(int ii = 0; ii < 16; ii++)
     {
-      fprintf(output, "    {\n");
-      for(int jj = 0; jj < 8; jj++)
-      {
-        fprintf(output, "    {");
-        for(int kk = 0; kk < 256; kk++)
-        {
-            if(non_linear_tboxes[ii][jj][kk] < 10)
-                fprintf(output, "  ");
-            else if(non_linear_tboxes[ii][jj][kk] < 100)
-                fprintf(output, " ");
+	fprintf(output, "    {\n");
+	for(int jj = 0; jj < 8; jj++)
+	{
+	    fprintf(output, "    {");
+	    for(int kk = 0; kk < 256; kk++)
+	    {
+		if(non_linear_tboxes[ii][jj][kk] < 10)
+		    fprintf(output, "  ");
+		else if(non_linear_tboxes[ii][jj][kk] < 100)
+		    fprintf(output, " ");
                 
-            if(kk != 255)
-                fprintf(output, "%d, ", non_linear_tboxes[ii][jj][kk]);
-            else
-                fprintf(output, "%d ", non_linear_tboxes[ii][jj][kk]);
+		if(kk != 255)
+		    fprintf(output, "%d, ", non_linear_tboxes[ii][jj][kk]);
+		else
+		    fprintf(output, "%d ", non_linear_tboxes[ii][jj][kk]);
           
-            if((kk + 1) % 16 == 0)
-                fprintf(output, "\n     ");
-        }
-        fprintf(output, "},\n\n");
-      }
-      fprintf(output, "    },\n\n");
+		if((kk + 1) % 16 == 0)
+		    fprintf(output, "\n     ");
+	    }
+	    fprintf(output, "},\n\n");
+	}
+	fprintf(output, "    },\n\n");
     }
     fprintf(output, "};\n\n");               
 
@@ -404,28 +392,28 @@ int main(/*int argc, char ** argv*/)
     fprintf(output, "const int LinearTBoxes[16][4][256] = {\n");
     for(int ii = 0; ii < 16; ii++)
     {
-      fprintf(output, "    {\n");
-      for(int jj = 0; jj < 4; jj++)
-      {
-        fprintf(output, "    {");
-        for(int kk = 0; kk < 256; kk++)
-        {
-            if(linear_tboxes[ii][jj][kk] < 10)
-                fprintf(output, "  ");
-            else if(linear_tboxes[ii][jj][kk] < 100)
-                fprintf(output, " ");
+	fprintf(output, "    {\n");
+	for(int jj = 0; jj < 4; jj++)
+	{
+	    fprintf(output, "    {");
+	    for(int kk = 0; kk < 256; kk++)
+	    {
+		if(linear_tboxes[ii][jj][kk] < 10)
+		    fprintf(output, "  ");
+		else if(linear_tboxes[ii][jj][kk] < 100)
+		    fprintf(output, " ");
             
-            if(kk != 255)
-                fprintf(output, "%d, ", linear_tboxes[ii][jj][kk]);
-            else
-                fprintf(output, "%d ", linear_tboxes[ii][jj][kk]);
+		if(kk != 255)
+		    fprintf(output, "%d, ", linear_tboxes[ii][jj][kk]);
+		else
+		    fprintf(output, "%d ", linear_tboxes[ii][jj][kk]);
           
-            if((kk + 1) % 16 == 0)
-                fprintf(output, "\n     ");
-        }
-        fprintf(output, "},\n\n");
-      }
-      fprintf(output, "    },\n\n");
+		if((kk + 1) % 16 == 0)
+		    fprintf(output, "\n     ");
+	    }
+	    fprintf(output, "},\n\n");
+	}
+	fprintf(output, "    },\n\n");
     }
     fprintf(output, "};\n\n");  
         
