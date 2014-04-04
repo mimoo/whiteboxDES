@@ -39,7 +39,7 @@ Le problème survient lorsque l'attaquant possède un total contrôle de la mach
 Utilité
 -------
 
-quelques examples ici : http://summerschool08.iaik.tugraz.at/slides/Brecht_wbc1_crete_final.pdf
+quelques exemples ici : http://summerschool08.iaik.tugraz.at/slides/Brecht_wbc1_crete_final.pdf
 
 Quelles sont les cas où l'on s'écarte du modèle de la figure 1 et on laisse à l'attaquant potentiel un control total de la machine où le programme est exécuté ? Il en existe deux assez connus :
 
@@ -110,6 +110,16 @@ voir l'article de Chow et Al:
 Puisque la clef est fixé, on remplace toutes les opérations qui sont previsibles lorsque la clef est connu. Commes les substitutions, par des look up tables.
 
 ## Mixing Bijections
+
+A mixing bijection is a bijective at which attempts to maxi-mize the dependency 
+of each output bit on all input bits. (Clearly, it is invertible and thei 
+nverse is also an AT.)
+In des, for example, the permutations, represented as AT s, have very sparse
+matrices (one or two 1-bits per row or column). In order to diffuse information
+over more bits, we can represent such a permutation P by JoK, where K is a 
+mixing bijection and J=PK^⁻1, thereby replacing a sparse matrix with two
+non-sparse ones (which is advantageous in subsequent de-linearizing encoding
+steps)
 
 ## Input/output Encoding
 
@@ -215,9 +225,9 @@ Magie ! la clef vient de disparaitre.
 State 1 -> State 2
 ------------------
 
-8 look up tables (non lineaire ?)
+8 look up tables non lineaires
 
-4 look up tables lineaire qui nous serviront pour la suite.
+4 look up tables lineaires qui nous serviront pour la suite.
 
 
 STATE 2
@@ -275,7 +285,7 @@ combine :
 1. ignore les by-pass
 2. recuperer L(16)
 3. inverse la derniere expansion realise par M_2
-4. echange L et R (what ??? je quote "DES effectively swaps the left and right halves after the last round". On a pas fait ca dans notre implementation de DES oO).
+4. echange L et R si l'on veut décoder (what ??? je quote "DES effectively swaps the left and right halves after the last round". On a pas fait ca dans notre implementation de DES oO).
 5. Permutation finale
 
 ## Variante recommande
