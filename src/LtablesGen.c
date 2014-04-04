@@ -84,8 +84,8 @@ void st1_to_st2(uint64_t key, unsigned  non_linear_tboxes[16][8][256],
 
 void Matrix1(unsigned int M1[96][64])
 {
-	for(int i=0;i<96;i++)
-	{
+    for(int i=0;i<96;i++)
+    {
 		for(int j=0;j<64;j++)
 		{
 			M1[i][j]=0;
@@ -340,9 +340,14 @@ void xor_table(unsigned int xor_Table[256])
     }
 }
 
-int main(/*int argc, char ** argv*/)
+int main(int argc, char ** argv)
 {
-    uint64_t key = 8554016168460312; // A RECUPERER DANS LES PARAMETRES NORMALEMENT
+    if(argc != 2)
+    {
+        fprintf(stdout,"Usage : ./LtablesGen Key\n");
+        return EXIT_FAILURE;
+    }
+    uint64_t key = atoi(argv[1]);
     unsigned non_linear_tboxes[16][8][256]; 
     unsigned linear_tboxes[16][4][256];
     //unsigned int LUT2[288][256];
@@ -479,11 +484,11 @@ int main(/*int argc, char ** argv*/)
 		}
 		fprintf(output, "%i, ", subvector);
 	    }
-	    fprintf(output, "}\n");
+	    fprintf(output, "},\n");
 	}
-	fprintf(output, "}\n");
+	fprintf(output, "},\n");
     }
-    fprintf(output, "}\n");
+    fprintf(output, "};\n");
 
     //Write M2_LUT
     bit_test = 0;
@@ -524,10 +529,11 @@ int main(/*int argc, char ** argv*/)
 		}
 		fprintf(output, "%i, ", subvector);
 	    }
-	    fprintf(output, "}\n");
+	    fprintf(output, "},\n");
 	}
-	fprintf(output, "}\n");
+	fprintf(output, "},\n");
     }
+    fprintf(output, "};\n");
 
     //Write M3_LUT
     bit_test = 0;
@@ -568,11 +574,11 @@ int main(/*int argc, char ** argv*/)
 		}
 		fprintf(output, "%i, ", subvector);
 	    }
-	    fprintf(output, "}\n");
+	    fprintf(output, "},\n");
 	}
-	fprintf(output, "}\n");
+	fprintf(output, "},\n");
     }
-    fprintf(output, "}\n");
+    fprintf(output, "};\n");
 
     // Close the output file            
     fclose(output);

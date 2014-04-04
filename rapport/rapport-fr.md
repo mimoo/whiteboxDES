@@ -258,9 +258,9 @@ M2 combine :
 1. P-box transform (permutation)
 2. xor avec Left
 3. Expansion pour le prochain round (qui etait donne par M1 pour le premier round)
-3. R(r) devient L(r+1)
-4. extraction du vrai R(r)
-5. bypass bits (a comprendre)
+4. R(r) devient L(r+1)
+5. extraction du vrai R(r)
+6. bypass bits (a comprendre)
 
 
 pour le bypass on veut 64 bits. C'est pourquoi on utilise les Tbox lineaire dans le state 1
@@ -288,8 +288,7 @@ et M_3 par M_4 ( M_3)
 # CONCLUSION
 
 Kerckhoffs’ principle : security through obscurity
-(keeping the design
-confidential) is bad practice
+(keeping the design confidential) is bad practice
 
 # SOURCES
 
