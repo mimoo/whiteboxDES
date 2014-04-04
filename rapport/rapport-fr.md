@@ -39,6 +39,8 @@ Le problème survient lorsque l'attaquant possède un total contrôle de la mach
 Utilité
 -------
 
+quelques examples ici : http://summerschool08.iaik.tugraz.at/slides/Brecht_wbc1_crete_final.pdf
+
 Quelles sont les cas où l'on s'écarte du modèle de la figure 1 et on laisse à l'attaquant potentiel un control total de la machine où le programme est exécuté ? Il en existe deux assez connus :
 
 ### DRM
@@ -73,6 +75,33 @@ Concepts
 ===================
 
 /!\ **expliquer le pourquoi de chaque concept ! Sinon ca ne sert à rien de balancer un concept sans savoir pourquoi on l'utilise...**
+
+
+
+voir l'article http://eprint.iacr.org/2013/455.pdf, ils parlent de 3 main steps: "Design Principles"
+by : Another Nail in the Coffin of White-Box AES Implementation
+Tancrède Lepoint and Matthieu Rivain
+
+## Partial Evaluation.
+
+Embed the key in an operation
+
+## Tabularizing
+
+Transforming all the components of the block cipher (even the linear
+transformations) into look-up tables
+
+## Randomization and Delinearization
+
+f1(f2(f3))) =>
+f1 = h(f1)
+f2 = g(f2(h^-1))
+f3 = f3(g^-1)
+
+random bijections g and h
+
+
+
 
 voir l'article de Chow et Al:
 
@@ -157,6 +186,9 @@ c'est une matrice 64 par 96 (transforme 64 bits en 96 bits)
 
 STATE 1
 -----
+
+plein d'images à recup ici: http://www.iacr.org/workshops/fse2007/slides/rump/white.pdf
+
 substitution + xor => lookuptable[round] precomputed with the key
 Magie ! la clef vient de disparaitre.
 
