@@ -14,7 +14,6 @@
 
 static FILE * output = NULL;
 
-
 //////////////////////////////////////////////////////
 //                 FUNCTIONS                       //
 ////////////////////////////////////////////////////
@@ -172,10 +171,10 @@ void addVec(unsigned int Vec[8])
 unsigned int vec_to_int(unsigned int Vec[4])
 {
     unsigned int res=0;
-    for(int ii = 0; ii < 4; ii++)
+    for(int ii = 4; ii >= 0; ii--)
     {
         res+=Vec[ii];
-        if(ii != 3)
+        if(ii != 0)
             res = res << 1;
     }
     return res;
@@ -240,12 +239,32 @@ void st2_to_st3(unsigned int LUT2[288][256])
     }
 }
 
+void xor_table(unsigned int xor_Table[256])
+{
+    unsigned int Vec[8];
+    unsigned int Vec2[4];
+    for(int ii = 0; ii < 8; ii++)
+    {
+        Vec[ii]=0;
+    }
+    for(int ii = 0; ii < 256; ii++)
+    {
+        for(int jj = 0; jj < 4; jj++)
+        {
+            Vec2[jj]=Vec[jj]^Vec[jj+4];
+        }
+        xor_Table[ii]=vec_to_int(Vec2);
+        addVec(Vec);
+    }
+}
+
 int main(/*int argc, char ** argv*/)
 {
     uint64_t key = 8554016168460312; // A RECUPERER DANS LES PARAMETRES NORMALEMENT
     unsigned non_linear_tboxes[16][8][256]; 
     unsigned linear_tboxes[16][4][256];
     unsigned int LUT2[288][256];
+    unsigned int xor_Table[256];
     
     // Take KEY as argument
 
@@ -253,8 +272,8 @@ int main(/*int argc, char ** argv*/)
 
     // Make Lookuptables in Ltables.c
     st1_to_st2(key, non_linear_tboxes, linear_tboxes);
-    st2_to_st3(LUT2);
-    return EXIT_SUCCESS;
+    //st2_to_st3(LUT2);
+    xor_table(xor_Table);
 
     // Open the output file
     output = fopen("tboxes.c", "w");
@@ -327,7 +346,18 @@ int main(/*int argc, char ** argv*/)
       fprintf(output, "    },\n\n");
     }
     fprintf(output, "};\n\n");  
-           
+        
+    fprintf(output,"const int Xor_Table[256] = {\n     ");
+    for(int ii = 0; ii < 256; ii++)
+    {
+        if(ii != 255)
+            fprintf(output, "%u ,", xor_Table[ii]);
+        else
+            fprintf(output, "%u\n};", xor_Table[ii]);
+        if((ii + 1) % 16 == 0)
+            fprintf(output, "\n     ");
+    }
+
     // Close the output file            
     fclose(output);
 
