@@ -23,10 +23,8 @@ static void usage(int status)
 {
     if(status == EXIT_SUCCESS)
     {
-        fprintf(stdout,"Usage: desbox [OPTION] FILE\n"
-                "Encrypt or Descrypt with Whitebox-DES.\n\n"
-                " -d, --decrypt     decrypt DES from input file\n"
-                " -e, --encrypt     encrypt DES from input file\n"
+        fprintf(stdout,"Usage: whitebox [OPTION] FILE\n"
+                "Descrypt with Whitebox-DES.\n\n"
                 " -o, --output=FILE write result to FILE\n"
                 " -h, --help        display this help\n");
     }
