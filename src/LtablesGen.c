@@ -578,7 +578,7 @@ int main(int argc, char ** argv)
     fprintf(output, "};\n");
 
     // Close the output file            
-    fclose(output);
+    fclose(output); 
 
     return EXIT_SUCCESS;
 }
