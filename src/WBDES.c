@@ -1,8 +1,6 @@
 #include "WBDES.h"
 #include "tboxes.c"
 
-
-
 // 64 bits input -> 96 bits output (M1)
 void before_rounds(unsigned int *in, unsigned int *out)
 {

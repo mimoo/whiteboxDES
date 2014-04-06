@@ -147,10 +147,15 @@ int main(int argc, char ** argv)
         // Copy uint64_t in an array
         for(int ii = 0; ii < 8; ii++)
             init_input[ii] = data >> (56 - 8*ii);
-            
-        // Apply DES
+
+        //  
+        // Apply DES to decrypt
+	//
+
+	// M1
         before_rounds(init_input, temp);
         
+	// state1 -> state2 Ltables + M2
         for(int ii = 0; ii < 16; ii++)
         {
             rounds(temp, rounds_output, ii);
@@ -158,6 +163,7 @@ int main(int argc, char ** argv)
                 temp[jj] = rounds_output[jj];
         }
         
+	// M3
         end_rounds(rounds_output, final_output);
         
         // Copy array in an uint64_t
