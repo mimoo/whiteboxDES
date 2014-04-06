@@ -23,7 +23,6 @@ void before_rounds(unsigned int *in, unsigned int *out)
         for(int jj = 0; jj < 8; jj++)
         {
             temp1[ii][jj] = M1_Ltables[ii][jj][in[jj]];
-            printf("temp[%d][%d] =  %d\n", ii, jj, temp1[ii][jj]);
         }
     }
     
@@ -32,8 +31,7 @@ void before_rounds(unsigned int *in, unsigned int *out)
     {
         for(int jj = 0; jj < 8; jj++)
         {
-            printf("%d\n", Xor_Table[((temp2[ii] << 4) + temp1[ii][jj])]);
-            temp2[ii] = Xor_Table[((temp2[ii] << 4) + temp1[ii][jj])];
+            temp2[ii] = xorTables[((temp2[ii] << 4) + temp1[ii][jj])];
         }
     }
     
@@ -91,7 +89,7 @@ void rounds(unsigned int *in, unsigned int *out, int round)
     {
         for(int jj = 0; jj < 12; jj++)
         {
-            temp2[ii] = Xor_Table[((temp2[ii] << 4) + temp1[ii][jj])];
+            temp2[ii] = xorTables[((temp2[ii] << 4) + temp1[ii][jj])];
         }
     }
     
@@ -130,7 +128,7 @@ void end_rounds(unsigned int *in, unsigned int *out)
     {
         for(int jj = 0; jj < 12; jj++)
         {
-            temp2[ii] = Xor_Table[((temp2[ii] << 4) + temp1[ii][jj])];
+            temp2[ii] = xorTables[((temp2[ii] << 4) + temp1[ii][jj])];
         }
     }
     

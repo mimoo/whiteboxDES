@@ -144,7 +144,7 @@ int main(int argc, char ** argv)
 	// M1
         before_rounds(init_input, temp);
         
-        /*for(int ii = 0; ii < 16; ii++)
+        for(int ii = 0; ii < 16; ii++)
         {
             rounds(temp, rounds_output, ii);
             for(int jj = 0; jj < 12; jj++)
@@ -154,6 +154,8 @@ int main(int argc, char ** argv)
 	// M3
         end_rounds(rounds_output, final_output);
         
+        // vvvvv CHECK THIS PART vvvvvv
+        
         // Copy array in an uint64_t
         for(int ii = 0; ii < 8; ii++)
         {
@@ -161,7 +163,7 @@ int main(int argc, char ** argv)
             temp_data = init_input[ii];
             temp_data = temp_data << (56 - 8*ii);
             data += temp_data;
-        }*/
+        }
         
         if(amount != 8)
         {
