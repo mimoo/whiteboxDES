@@ -342,6 +342,14 @@ void xor_table(unsigned int xor_Table[256])
         addVec(Vec);
     }
 }
+void xor_table_david(unsigned int xorTable[256])
+{
+    unsigned int right_side, left_side;
+    for(int byte = 0; byte < 256; byte++)
+    {
+        xorTable[byte] = (byte >> 4) ^ (byte & 15);
+    }
+}
 
 int main(int argc, char ** argv)
 {
