@@ -16,17 +16,15 @@ void before_rounds(unsigned int *in, unsigned int *out)
     for(int ii = 0; ii < 24; ii++)
     {
         temp2[ii] = 0;
-    }
-    
-    for(int ii = 0; ii < 8; ii++)
-        printf("in[%d] =  %c\n", ii, in[ii]);
+    }        
     
     // Sub-matrices
-    /*for(int ii = 0; ii < 24; ii++)
+    for(int ii = 0; ii < 24; ii++)
     {
         for(int jj = 0; jj < 8; jj++)
         {
             temp1[ii][jj] = M1_Ltables[ii][jj][in[jj]];
+            printf("temp[%d][%d] =  %d\n", ii, jj, temp1[ii][jj]);
         }
     }
     
@@ -35,9 +33,10 @@ void before_rounds(unsigned int *in, unsigned int *out)
     {
         for(int jj = 0; jj < 8; jj++)
         {
+            printf("%d\n", Xor_Table[((temp2[ii] << 4) + temp1[ii][jj])]);
             temp2[ii] = Xor_Table[((temp2[ii] << 4) + temp1[ii][jj])];
         }
-    }*/
+    }
     
     // Fill the output
     for(int ii = 0; ii < 12; ii++)
