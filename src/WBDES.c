@@ -1,6 +1,9 @@
 #include "WBDES.h"
 #include "tboxes.c"
-
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
 
 
 // 64 bits input -> 96 bits output (M1)
@@ -15,8 +18,11 @@ void before_rounds(unsigned int *in, unsigned int *out)
         temp2[ii] = 0;
     }
     
+    for(int ii = 0; ii < 8; ii++)
+        printf("in[%d] =  %c\n", ii, in[ii]);
+    
     // Sub-matrices
-    for(int ii = 0; ii < 24; ii++)
+    /*for(int ii = 0; ii < 24; ii++)
     {
         for(int jj = 0; jj < 8; jj++)
         {
@@ -31,7 +37,7 @@ void before_rounds(unsigned int *in, unsigned int *out)
         {
             temp2[ii] = Xor_Table[((temp2[ii] << 4) + temp1[ii][jj])];
         }
-    }
+    }*/
     
     // Fill the output
     for(int ii = 0; ii < 12; ii++)

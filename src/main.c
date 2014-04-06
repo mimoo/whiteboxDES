@@ -34,17 +34,6 @@ static void usage(int status)
     }
     exit(status);
 }
-// a supprimer
-void printbits(uint64_t v)
-{
-    for(int ii = 0; ii < 64; ii++)
-    {
-        if( ((v << ii) & FIRSTBIT) == (uint64_t)0)
-            printf("0");
-        else
-            printf("1");
-    }
-}
 
 int main(int argc, char ** argv)
 {
@@ -125,17 +114,17 @@ int main(int argc, char ** argv)
     ////////////////////////////////////////////////////
 
     //
-    // 3. 16 Rounds of encryption
+    // 16 Rounds of encryption
     //
 
     size_t amount; // used for fwrite
     uint64_t data;
     uint64_t temp_data;
     
-    unsigned int init_input[64];
-    unsigned int temp[96];
-    unsigned int rounds_output[96];
-    unsigned int final_output[64];
+    unsigned int init_input[8];
+    unsigned int temp[12];
+    unsigned int rounds_output[12];
+    unsigned int final_output[8];
     
     while((amount = fread(&data, 1, 8, input)) > 0)
     {
@@ -146,12 +135,12 @@ int main(int argc, char ** argv)
         
         // Copy uint64_t in an array
         for(int ii = 0; ii < 8; ii++)
-            init_input[ii] = data >> (56 - 8*ii);
+            init_input[ii] = (data >> (56 - 8*ii)) & 255;
             
         // Apply DES
         before_rounds(init_input, temp);
         
-        for(int ii = 0; ii < 16; ii++)
+        /*for(int ii = 0; ii < 16; ii++)
         {
             rounds(temp, rounds_output, ii);
             for(int jj = 0; jj < 12; jj++)
@@ -167,7 +156,7 @@ int main(int argc, char ** argv)
             temp_data = init_input[ii];
             temp_data = temp_data << (56 - 8*ii);
             data += temp_data;
-        }
+        }*/
         
         if(amount != 8)
         {
