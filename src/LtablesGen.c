@@ -245,17 +245,6 @@ void Matrix3(unsigned int M3[64][96])
     } 
 }
 
-void addVec(unsigned int Vec[8])
-{
-    int i=0;
-    while(Vec[i]==1)
-    {
-        Vec[i]=0;
-        i++;
-    }
-    Vec[i]=1;
-}
-
 unsigned int vec_to_int(unsigned int Vec[4])
 {
     unsigned int res=0;
@@ -268,85 +257,11 @@ unsigned int vec_to_int(unsigned int Vec[4])
     return res;
 }
 
-/*void st2_to_st3(unsigned int LUT2[288][256])
-  {
-  unsigned int M2[96][96];
-  unsigned int intMat[4][8];
-  unsigned int Vec[8];
-  unsigned int Vec2[4];
-  int cmp=0;
-  Matrix2(M2);
-  for(int ii = 0; ii < 96; ii+=4)
-  {
-  for(int jj = 0; jj < 96; jj+=8)
-  {
-  for(int kk = ii; kk < ii+4; kk++)
-  {
-  for(int ll = jj; ll < jj+8; ll++)
-  {
-  intMat[kk-ii][ll-jj]=M2[kk][ll];
-  }
-  }
-  //intMat initialized
-  for(int kk = 0; kk < 8; kk++)
-  {
-  Vec[kk]=0;
-  }
-  for(int kk = 0; kk < 256; kk++)
-  {
-  for(int ll = 0; ll < 4; ll++)
-  {
-  Vec2[ll]=0;
-  }
-  for(int ll = 0; ll < 4; ll++)
-  {
-  for(int mm = 0; mm < 8; mm++)
-  {
-  Vec2[ll]^=intMat[ll][mm]*Vec[mm];
-  }
-  }
-  addVec(Vec);
-  LUT2[cmp][kk]=vec_to_int(Vec2);
-  }
-  cmp++;
-  }
-  }    
-  for(int ii = 0; ii < 288; ii++)
-  {
-  fprintf(stdout,"{\n");
-  for(int jj = 0; jj < 256; jj++)
-  {
-  fprintf(stdout,"%u ",LUT2[ii][jj]);
-  if(jj != 255)
-  fprintf(stdout,",");
-  }
-  fprintf(stdout,"\n}\n");
-  }
-  }*/
-
-void xor_table(unsigned int xor_Table[256])
-{
-    unsigned int Vec[8];
-    unsigned int Vec2[4];
-    for(int ii = 0; ii < 8; ii++)
-    {
-        Vec[ii]=0;
-    }
-    for(int ii = 0; ii < 256; ii++)
-    {
-        for(int jj = 0; jj < 4; jj++)
-        {
-            Vec2[jj]=Vec[jj]^Vec[jj+4];
-        }
-        xor_Table[ii]=vec_to_int(Vec2);
-        addVec(Vec);
-    }
-}
-void xor_table_david(unsigned int xorTable[256])
+void xor_tables(unsigned int xorTables[256])
 {
     for(int byte = 0; byte < 256; byte++)
     {
-        xorTable[byte] = (byte >> 4) ^ (byte & 15);
+        xorTables[byte] = (byte >> 4) ^ (byte & 15);
     }
 }
 
@@ -360,17 +275,13 @@ int main(int argc, char ** argv)
     uint64_t key = atoi(argv[1]);
     unsigned non_linear_tboxes[16][8][256]; 
     unsigned linear_tboxes[16][4][256];
-    //unsigned int LUT2[288][256];
-    unsigned int xor_Table[256];
     
-    // Take KEY as argument
-
-    // Make subkeys (use DES algorithm)
-
     // Make Lookuptables in Ltables.c
     st1_to_st2(key, non_linear_tboxes, linear_tboxes);
-    //st2_to_st3(LUT2);
-    xor_table(xor_Table);
+
+    // XOR tables (4bits ^ 4bits) in M2 de-linearization
+    unsigned int xorTables[256];
+    xor_tables(xorTables);
 
     // Open the output file
     output = fopen("tboxes.c", "w");
@@ -437,17 +348,16 @@ int main(int argc, char ** argv)
 	fprintf(output, "    },\n\n");
     }
     fprintf(output, "};\n\n");  
-        
-    fprintf(output,"const int Xor_Table[256] = {\n     ");
+
+    // XOR tables
+    fprintf(output, "const int xorTables[256] = {\n");
+
     for(int ii = 0; ii < 256; ii++)
     {
-        if(ii != 255)
-            fprintf(output, "%u ,", xor_Table[ii]);
-        else
-            fprintf(output, "%u\n};", xor_Table[ii]);
-        if((ii + 1) % 16 == 0)
-            fprintf(output, "\n     ");
+	fprintf(output, "%i ,", xorTables[ii]);
     }
+
+    fprintf(output, "\n};");
 
     //Write M1_LUT
     bool bit_test = 0;
