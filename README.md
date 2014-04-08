@@ -4,7 +4,9 @@ whiteboxDES
 This is an explanation of How Whitebox can be created,
 It follows [Chow et al's paper][1] on the subject.
 
-To see it, browse `rapport/rapport.md` in [french][2] or [english][3].
+To see it, browse `rapport/`. You can find a Markdown version in [french][2] or [english][3].
+
+And a LaTeX/pdf version in [french][6].
 
 You can also browse `src/` to see the example we build using C and [DES][4].
 
@@ -15,6 +17,7 @@ It uses our previous implementation of [DES in C][5].
 [3]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport-en.md
 [4]: http://en.wikipedia.org/wiki/Data_Encryption_Standard
 [5]: https://github.com/mimoo/DES
+[6]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport.tex
 
 
 Author
@@ -29,7 +32,7 @@ How to use the C implementation
 
 * **WBDES.c** and **WBDES.h** contain the functions used in the Whitebox-DES algorithm.
 
-* **main.c** builds the algorithm and allows you to encrypt/decrypt an input file using the Whitebox DES.
+* **main.c** builds the algorithm and allows you to decrypt an input file using the Whitebox DES. To encrypt you can use a simple DES encryption.
 
 use make to build desbox.
 
@@ -41,7 +44,8 @@ use make to build desbox.
 
 use `make` to build the lookup table generator:
 
-    $ make ltablesgen
+    $ make Ltablesgen
 
-    $ ./ltablesgen
+    $ ./Ltablesgen key
 
+key must be in binary format.
