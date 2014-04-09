@@ -42,7 +42,88 @@ Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons pre
 \section{Concepts}
 
 \subsection{Tabularisation}
-		
+
+\section{Principes et Concepts}
+
+\subsection{Partial Evaluation}
+
+On cherche à cacher la clef. La première étape est de pré-calculer toutes les opérations qui sont déjà connu dans notre cas. Puisque dans une whitebox la clef est déjà connu, on pré-calcule toutes les sous-clefs et on cache l'étape du XOR avec ces sous-clefs dans des Lookup tables.
+
+Les look up tables sont des tableaux qui listent les sorties possibles en fonction des entrées possibles.
+
+\subsection{Tabularizing}
+
+Cette seconde étape consiste à transformer toutes les opérations en Lookup tables.
+
+\subsection{Randomization and De-linearization}
+
+aussi appelé I/O-blocked Encoding :
+
+Une fois que toutes les opérations ont étés codés en Lookup tables, il est encore facile de retrouver les matrices qui forment toutes ces transformations et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est d'encoder les entrées et sorties de ces Lookup tables avec des bijections (pour pouvoir les annuler d'une Lookup table à une autre).
+
+\section{Principes et concepts secondaires}
+
+
+\subsection{Mixing Bijection}
+
+La création des Lookup tables dans la tabularization se fait à partir de matrices représentant les opérations du cipher. Souvent ces matrices contiennent beaucoup plus de 0 que de 1 ce qui rend les lookup tables trop simples et ce qui crée donc un nouveau problème. Pour éviter ce genre de problème on crée deux opérations au lieu d'une. La première composé d'une bijection. La deuxième composé de son inverse multiplié par l'opération qu'on veut complexifier.
+
+\section{Implementation}
+
+
+\subsection{Partial Evaluation}
+
+On crée un programme prenant une clef en entrée et générant toutes les lookup tables dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
+
+\subsection{Tabularizing}
+
+Dans ce même programme on transforme toutes les opérations en matrices.
+Chaque matrice est découpé en sous-matrices et la multiplications des sous-matrices au vecteur associé est transformée en Lookup tables. On utilise des blocs de matrice assez conséquent pour éviter les blocs nuls (il y a beaucoup de zéros dans ces matrices).
+Ensuite tous les XOR sont transformés en Lookup tables aussi qu'on appellera des XOR tables.
+
+Après cette étape toutes les opérations ont étés codés en lookup tables
+
+\subsection{Randomization}
+
+Pour compliquer la compréhension du programme on peut mélanger l'ordre dans lequel on envois les bits à notre programme. Puisqu'on a les matrices $M_1, M_2 et M_3$, il suffit de les multiplier par d'autres matrices de mélange avant et après.
+
+Par exemple le premier round représenté par notre implémentation :
+
+$M_1 . M_2 . data$
+
+data étant un vecteur de 64bits
+
+peut se remplacer par
+
+$(M_1 . R_1^-1) . (R_1 . M2 ) . data$
+
+* De-linearization :
+
+Une fois que toutes les opérations sont transformés en lookup tables. On rajoute des encodages à ces look up tables.
+
+Par exemple $L_1$ et $L_2$ deux look up tables qui se suivent.
+
+$L_1 rond L_2$
+
+on crée une clef pour $L_1$ et on XOR cette clef à ses sorties. Ce qui fait que $L_1$ ressemble sous le manteau à $output = (L_1(input) \oplus k_1)$
+
+et on décrypte cette encryption dans $L_2$ en faisant un XOR dans ses inputs ($L_2$ ressemble alors à output = $L_2(input \oplus k_1).$
+
+Si $L_1$ sort un octet, et $L_2$ prend un octet en entrée. Alors on a un encodage sur les 256 possibilités de la Look up table. Ce qui est assez facile à retrouver avec une recherche exhaustive. C'est pourquoi on crée un nombre de Look up tables différentes pour les XORs assez important pour rendre cette recherche exhaustive inefficace. servir
+
+\section{Notre implémentation}
+
+On utilise DES
+petite intro
+
+\subsection{Traduction des concepts}
+
+\subsubsection{Bypass}
+
+puisqu'on a, au maximum un état de 96bits dans la mémoire, on va garder cet état de 96 bits tout le long et utiliser les bits qui ne servent à rien comme bypass.
+
+\subsection{Différentes étapes}
+
 \subsubsection{Étape 1 à Étape 2}
 
 \begin{figure}[h]
@@ -137,10 +218,6 @@ state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
 \label{fig:ascii-box}
 \end{figure}	
 
-\newpage
-\section{Notre implémentation}
-
-\subsection{Les fonctions de base}
 \newpage
 \section{Conclusion}
 \newpage
