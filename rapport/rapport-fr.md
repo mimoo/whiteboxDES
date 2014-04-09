@@ -194,8 +194,9 @@ puis donne les bits dans le bon ordre aux look up tables de State1->State2.
 
 c'est une matrice 64 par 96 (transforme 64 bits en 96 bits)
 
-STATE 1
------
+
+State 1 -> State 2
+------------------
 
 plein d'images à recup ici: http://www.iacr.org/workshops/fse2007/slides/rump/white.pdf
 
@@ -281,6 +282,10 @@ Voilà le fonctionnement initial qu'on va vouloir changer :
                ************** ********************* ********
     state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
                ************** ********************* ********
+
+
+M_2
+---
 
 Commme pour l'étape précédente, nous voulons transformer les différentes opérations de cette étape en look up tables.
 

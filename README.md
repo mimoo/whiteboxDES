@@ -28,7 +28,7 @@ Author
 * Jacques Monin
 
 How to use the C implementation
-----
+-------------------------------
 
 * **WBDES.c** and **WBDES.h** contain the functions used in the Whitebox-DES algorithm.
 
@@ -49,3 +49,16 @@ use `make` to build the lookup table generator:
     $ ./Ltablesgen key
 
 key must be in binary format.
+
+Tools used
+----------
+
+* [github][1]
+* [trello][2]
+* [flowdock][3]
+* [penflip][4]
+
+[1]: http://www.github.com
+[2]: http://www.trello.com
+[3]: http://www.flowdock.com
+[4]: https://www.penflip.com/
