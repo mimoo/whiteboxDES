@@ -1,43 +1,148 @@
 \documentclass[a4paper,12pt]{article}
 
 \usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[francais]{babel}
 \usepackage{mathtools}
 
 \author{David Wong
   \and Jacques Monin
-  \and Hugo Bonin}
+  \and Hugo Bonnin}
 
 \title{Whitebox}
 
 \begin{document}
 
 \maketitle
+\newpage
+\tableofcontents
+\newpage
 
 
 \section{Introduction}
-
-\subsection{DRM}
+	
+\subsection{Utilisation}
 
 \subsection{Problèmes}
 
 l'attaquant à accès à la mémoire et donc il peut facilement récupérer la clef en analysant l'exécution du programme.\\
-De base il peut aussi choisir ce qu'il envoit au programme et voir comment le programme l'encrypte ou le décrypte (chosen plaintext attack) (cas d'une blackbox)\\
-Whitebox: l'attaquant a encore plus de possibilité puisqu'il controle l'environement: accès à la mémoire, trace, breakpoints,...
+De base il peut aussi choisir ce qu'il envoie au programme et voir comment le programme l'encrypte ou le décrypte (chosen plaintext attack) (cas d'une blackbox)\\
+Whitebox: l'attaquant a encore plus de possibilité puisqu'il contrôle l'environnement: accès à la mémoire, trace, breakpoints,...
 
 \subsection{Solution}
 
-but : Rendre l'extraction de la clef impossible
-
+Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons prendre un algorithme connu : DES et y appliquer de la tabularisation ainsi que de la délinéarisation qui sont des concepts que nous expliquerons ultérieurement.
+\newpage
+	
 \section{DES}
 
 \subsection{Pourquoi DES?}
-
+\newpage
 \section{Concepts}
 
-\subsection{Look up tables}
+\subsection{Tabularisation}
+		
+\subsubsection{Étape 1 à Étape 2}
 
+\begin{figure}[h]
+\begin{verbatim}
+			
+             32b               48b              16b
+           ************** ********************* ********
+state 1:   *     L(r)   * *       X(r)        * * r(r) *
+           ************** ********************* ********
+                 |                |      |         |
+                 |                v      |         |
+                 | *********    .....    |         v
+                 | * sK(r) *--> . + .    |    .-------.
+                 | *********    .....    '-->(  Merge  )
+                 |                |           '-------'
+                 |                v               |
+                 |         .-------------.        |
+                 |          \     S     /         |
+                 |           '---------'          |
+                 |                |               |
+            32b  v                v 32b     32b   v
+           ************** *************** ***************
+state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
+           ************** *************** ***************
+
+\end{verbatim}
+\caption{Avant Tabularisation}
+\label{fig:ascii-box}
+\end{figure}		
+
+\clearpage
+
+\begin{figure}[h]
+\begin{verbatim}
+
+            *********************************************
+state 1:    *          state 1 (12 x 8 = 96 bits)       *
+            *********************************************
+               |      |      |                       |
+               v      v      v                       v
+            .-----..-----..-----.                 .-----.
+            | T0  || T1  || T2  |       ...       | T11 |
+            '-----''-----''-----'                 '-----'
+               |      |      |                       |
+               v      v      v                       v
+            *********************************************
+state 2:    *              state 2 (96 bits)            *
+            *********************************************			
+			
+\end{verbatim}
+\caption{Après Tabularisation}
+\label{fig:ascii-box}
+\end{figure}		
+		
+Pour ce faire, nous allons calculer 12 Look up Tables qui prendront 8 bits chacun ce qui recouvrira les 96 bits d'input.
+
+Il y a :
+
+8 look up tables non lineaires qui permettent le xor avec la clef et la substitution
+
+4 look up tables lineaires qui nous serviront à by-passer les bits qui ne subissent pas de calculs.		
+		
+\subsubsection{Étape 2 à Étape 3}
+
+\begin{figure}[h]
+\begin{verbatim}
+
+           ************** *************** ***************
+state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
+           ************** *************** ***************
+                 |                  |           |
+                 v                  |           |
+               .....    .--------.  |           |
+               . + .<---|    P   |<-'           |
+               .....    '--------'              |
+                |                               |
+            32b '----------------------------------.
+                                    |           |  |
+                .-------------------|-----------'  |
+                |               32b v              v 32b
+                |               .-------.       .------.
+                |              /  E-box  \     ( Select )
+                |  32b        '-----------'     '------'
+                |                   |              |
+                v               48b v              v 16b
+           ************** ********************* ********
+state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
+           ************** ********************* ********
+
+\end{verbatim}
+\caption{Avant Tabularisation}
+\label{fig:ascii-box}
+\end{figure}	
+
+\newpage
 \section{Notre implémentation}
 
 \subsection{Les fonctions de base}
-
+\newpage
+\section{Conclusion}
+\newpage
+\section{Bibliographie}
 \end{document}
