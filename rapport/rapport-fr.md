@@ -76,8 +76,6 @@ Concepts
 
 /!\ **expliquer le pourquoi de chaque concept ! Sinon ca ne sert à rien de balancer un concept sans savoir pourquoi on l'utilise...**
 
-
-
 voir l'article http://eprint.iacr.org/2013/455.pdf, ils parlent de 3 main steps: "Design Principles"
 by : Another Nail in the Coffin of White-Box AES Implementation
 Tancrède Lepoint and Matthieu Rivain
@@ -143,6 +141,8 @@ toutes les fonctions peuvent être écrite sous forme de Look up table, comment 
 
 2. les look up tables sont implémentés comme des Sbox (substitution), on prend le nombre crée par l'octet (000010 = 2) et on regarde l'entré numéro 2 dans la Tbox (pour ne pas confondre avec les Sbox de DES). Il y a donc 256 possibilités
 
+Le pincipe est de calculer toutes les possibilités et de n'avoir qu'à accéder au Look up tables en utilisant l'input comme entrée de la table.
+
 path splitting
 --------------
 pour ne pas avoir d'immenses Look up tables, on split le state de 96 bits en 12 octets et on crée 12 look up tables
@@ -202,6 +202,9 @@ plein d'images à recup ici: http://www.iacr.org/workshops/fse2007/slides/rump/w
 substitution + xor => lookuptable[round] precomputed with the key
 Magie ! la clef vient de disparaitre.
 
+
+Nous devons convertir ce fonctionement :
+
                  32b               48b              16b
                ************** ********************* ********
     state 1:   *     L(r)   * *       X(r)        * * r(r) *
@@ -222,18 +225,40 @@ Magie ! la clef vient de disparaitre.
     state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
                ************** *************** ***************
 
-State 1 -> State 2
-------------------
+En celui-ci :
 
-8 look up tables non lineaires
+               *********************************************
+   state 1:    *          state 1 (12 x 8 = 96 bits)       *
+               *********************************************
+                  |      |      |                       |
+                  v      v      v                       v
+               .-----..-----..-----.                 .-----.
+               | T0  || T1  || T2  |       ...       | T11 |
+               '-----''-----''-----'                 '-----'
+                  |      |      |                       |
+                  v      v      v                       v
+               *********************************************
+   state 2:    *              state 2 (96 bits)            *
+               *********************************************
 
-4 look up tables lineaires qui nous serviront pour la suite.
+Pour ce faire, nous allons calculer 12 Look up Tables qui prendront 8 bits chacun ce qui recouvrira les 96 bits d'input.
+
+Il y a :
+
+8 look up tables non lineaires qui permettent le xor avec la clef et la substitution
+
+4 look up tables lineaires qui nous serviront à by-passer les bits qui ne subissent pas de calculs.
+
+
 
 
 STATE 2
 -------
 
+/!\ WHAT ?
 Pour ne pas qu'on puisse comprendre que seule la partie gauche est change, on prend aussi la partie gauche et la partie droite inchange dans les calculs. le by-pass ! comme ca on ne sait pas ce qu'on fait dans cet etape
+
+Voilà le fonctionnement initial qu'on va vouloir changer :
 
                ************** *************** ***************
     state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
@@ -257,8 +282,11 @@ Pour ne pas qu'on puisse comprendre que seule la partie gauche est change, on pr
     state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
                ************** ********************* ********
 
-M_2
----
+Commme pour l'étape précédente, nous voulons transformer les différentes opérations de cette étape en look up tables.
+
+Pour ce faire, nous allons modéliser les différentes opérations en matrice puis la décomposer puisque la combinaison de la Permutation et du xor est une fonction affine.
+
+Ces calculs vont être modélisé par M2 :
 
 M_2 s'en fout de l'ordre dont les 12 look up tables lui donne les bits. n'importe quel ordre peut etre prit en compte dans M2.
 
@@ -273,8 +301,27 @@ M2 combine :
 6. bypass bits (a comprendre)
 
 
-pour le bypass on veut 64 bits. C'est pourquoi on utilise les Tbox lineaire dans le state 1
+Pour le bypass on veut 64 bits. C'est pourquoi on utilise les Tbox lineaire dans le state 1
 
+Pour utiliser un nombre satisfaisant de look up tables, nous allons devoir décomposer M2.
+
+Par exemple, nous allons décomposer une matrice 16*16 en sous-matrices de 8x4. 
+
+           .----.     .---------.---------.     .----.
+           |    |     |    A    |    B    |     |    |
+           | Y0 |     .---------.---------.     | X0 |
+           |    |     |    C    |    D    |     |    |
+           .----.  =  .---------.---------.  x  .----.
+           |    |     |    E    |    F    |     |    |
+           | Y1 |     .---------.---------.     | X1 |
+           |    |     |    H    |    I    |     |    |
+           '----'     '---------'---------'     '----'
+
+Chaque sous-matrice va être la source d'une nouvelle look up table.
+
+Cette look up table va être créée par le multiplication d'une sous-matrice avec toutes les possibilités d'input.
+
+Elle aura donc 2^8 = 256 entrées possibles et 2^4 = 16 sorties possibles.
 
 ## M3
 
