@@ -69,7 +69,7 @@ fonctionnement :
 
 L = { 0000 => 1, 0001 => 2, ... } comme un tableau
 
-Mais on ne peut pas faire des lookup tables trop grosses (3.2)
+
 
 \subsection{Randomization and De-linearization}
 
@@ -109,13 +109,27 @@ On crée un programme prenant une clef en entrée et générant toutes les looku
 
 \subsection{Tabularizing}
 
-Dans ce même programme on transforme toutes les opérations en matrices.
-Chaque matrice est découpé en sous-matrices et la multiplications des sous-matrices au vecteur associé est transformée en Lookup tables. On utilise des blocs de matrice assez conséquent pour éviter les blocs nuls (il y a beaucoup de zéros dans ces matrices).
+Problème :
+On ne peut pas faire des lookup tables trop grosses (3.2) ca augmente exponentiellement.
+
+pour 8 bits d'entrées il y a 2^8 possibilités. Donc la taille de la lookuptable est de 2^8 octets. ou 2^8 * sizeof(int) puisqu'on utilise int dans notre implémentation.
+Pour 16 bits d'entrées, il y a 2^16 possibilités. Donc la taille de la lookup table est de 2^16 octets...
+
+On voit que ca augmente exponentiellement. Il faut donc prendre des look up tables petites et ne pas faire une énorme look up table pour notre vecteur de 96 bits.
+
+On crée donc des \textbf{réseaux} de lookup tables.
+
+----
+
+Dans ce même programme on transforme toutes les opérations en \textbf{matrices}.
+
+Chaque matrice est découpé en \textbf{blocs de sous-matrices} et les multiplications des sous-matrices au vecteur associé sont transformées en Lookup tables. On utilise des blocs de matrice assez conséquent pour éviter les blocs nuls (il y a beaucoup de zéros dans ces matrices).
+
 Ensuite tous les XOR sont transformés en Lookup tables aussi qu'on appellera des XOR tables.
 
 Après cette étape toutes les opérations ont étés codés en lookup tables
 
-Par exemple, nous allons décomposer une matrice 16*16 en sous-matrices de 8x4. 
+Par exemple, nous allons décomposer une matrice 16*16 en sous-matrices de 8x4. (selon Link et cie, c'est plus secure).
 
 Voici l'opération sans la décomposition
 
