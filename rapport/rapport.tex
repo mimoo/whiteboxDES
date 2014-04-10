@@ -38,13 +38,74 @@ Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons pre
 	
 \section{DES}
 
-DES est un cipher inventé en xxxx ...
+Avant de nous lancer dans l'implémentation de la WhiteBox de DES nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub). \\
+	Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation.
 
-\subsection{Pourquoi DES?}
+\subsection{Qu'est-ce que DES?}
 
-\subsection{Comment marche DES}
+/!\ Peut-être un passage sur l'histoire
 
-...
+	DES est un algorithme de chiffrement symétrique (ou chiffrement par bloc) qui utilise des clés de 56 bits et manipule des blocs de 64 bits. Bien qu'il soit recommandé de ne plus l'utiliser, on peut encore parfois le trouver sous la forme de Triple DES.
+	
+	L'intérêt principal d'utiliser DES est que cet algorithme a seulement besoin de transformations linéaires et de substitutions, ce qui facilite l'étude du principe de WhiteBox. De plus l'algorithme de Triple DES étant encore parfois utilisé, il peut être intéressant de savoir en implémenter une version WhiteBox. 
+	
+A/ Génération des 16 clés. La clé initiale est représentée sur 64 bits (à laquelle on retire 1 bit de parité à chaque octet). 
+
+	Un algorithme est utilisé afin de générer les 16 clés (correspondant aux 16 itérations de DES) issues de la clé initiale. 
+	
+	On commence par retirer les 8 bits de parité de la clé (1 bit à chaque octet). La clé obtenue fait alors 56 bits. \\
+1) Permutation PC1 puis séparation en deux blocs (droite et gauche). \\
+2) Rotation de chaque bloc vers la gauche (le bit en première position passe en dernière position). \\
+3) Fusion des deux blocs \\
+4) Permutation PC2 de 56 bits vers 48 bits qui correspond à la clé du même numéro que l'itération actuelle. On réutilise le bloc de 56 bits (d'avant la permutation PC2) pour la prochaine itération. \\
+
+\includegraphics[scale=0.75]{./images/keygen.png}
+
+B/ DES comporte 3 grandes étapes :
+
+/! Expliquer plus en détail chaque étape
+
+1)  Une permutation initiale sur le bloc qui est ensuite divisé en deux blocs de 32 bits.
+
+2) S'ensuit un cycle de 16 itérations effectuant les opérations suivantes : \\
+-> Expansion du bloc de droite vers 48 bits (on copie 16 bits du bloc initial). \\
+-> XOR avec la clé correspondant au numéro d'itération actuelle. \\
+-> Substitutions de 6 bits vers 4 bits (8 tables de substitutions sont utilisées). Les 4 bits du milieu déterminent la colonne de la table et les 2 bits extérieurs la ligne. Le nouveau bloc a alors une taille de 32 bits. \\
+-> Permutation sur ce bloc. \\
+-> XOR entre ce bloc et le bloc de gauche. \\
+-> Les deux blocs sont échangés. \\
+
+3) Fusionner les deux blocs, et effectuer une permutation finale, inverse de la permutation initiale.
+
+\includegraphics[scale=0.75]{./images/DES_diagram.png}
+
+\includegraphics[scale=0.75]{./images/DES_round.png}
+
+\subsection{Notre implémentation de DES}
+
+Dans un soucis de facilité d'utilisation, nous avons créé un générateur de clés de 64 bits. Notre programme comporte donc un fichier genkey (compilé à partir de genkey.c) chargé de générer cette clé. Le programme « desbox » (compilé à partir de DES.h, DES.c et main.c) permet soit d'encrypter (paramètre -e), soit de décrypter (paramètre -d) un fichier passé en entrée. Il prend aussi en argument une clé (paramètre -k) et un fichier de sortie (paramètre -o).
+
+genkey.c :
+
+	Génère une clé aléatoire de 64 bits dont le dernier bit de chaque octet est un bit de parité. S'assure que les clés ne sont pas trop faibles d'un point de vue sécurité en utilisant la fonction key\_schedule() de DES.c (c'est à dire que la période de la clé n'est pas trop faible). Si la clé est trop faible une nouvelle est alors générée et testée à son tour.
+
+DES.c :
+
+	Contient les différentes tables nécessaires au bon fonctionnement de l'algorithme, à savoir les 2 tables de permutation pour la générations des 16 clés, les tables de permutations initiale et finale de DES, ses tables d'expansion, de substitutions et de permutation.
+	
+	Nous avons choisi de coder nos blocs avec des uint\_64t afin de pouvoir les modifier avec des opérations bit à bit (et donc de gagner en rapidité d'exécution). La fonction addbit() nous sert alors à copier un bit en position x d'un bloc A vers la position y d'un bloc B.
+	
+	La fonction permutation() peut effectuer (selon le booléen passé en argument) soit la permutation initiale, soit la permutation finale du bloc, en utilisant les tables de permutation correspondantes.
+	
+	key\_schedule() génère une nouvelle clé à partir de celle passée en argument. Elle demande aussi le numéro d'itération actuel car son comportement diffère entre l'itération numéro 0 et les itérations suivantes. Dans le cas de l'itération numéro 0 on doit commencer par effectuer la permutation PC1. Cette fonction fait appel au tables de permutation PC1 et PC2.
+	
+	La fonction round() effectue une itération de DES en fonction de la clé passée en paramètre.
+	
+Elle comprend donc l'expansion, le XOR avec la clé, les substitutions, la permutation et le XOR entre les deux blocs avant de les recombiner. Elle fait appel à la table d'expansion, aux tables de substitutions et à la table de permutation.
+
+main.c :
+
+	Comprend un parseur d'options (clé, encrypter, decrypter, aide, fichier de sortie, fichier d'entrée).
 
 
 \newpage
