@@ -61,7 +61,14 @@ A/ Génération des 16 clés. La clé initiale est représentée sur 64 bits (à
 3) Fusion des deux blocs \\
 4) Permutation PC2 de 56 bits vers 48 bits qui correspond à la clé du même numéro que l'itération actuelle. On réutilise le bloc de 56 bits (d'avant la permutation PC2) pour la prochaine itération. \\
 
+\begin{figure}[h]
+\centering
 \includegraphics[scale=0.75]{./images/keygen.png}
+\caption{Schéma d'une itération de génération de clé}
+\label{fig:keygen}
+\end{figure}
+
+\clearpage
 
 B/ DES comporte 3 grandes étapes :
 
@@ -79,9 +86,21 @@ B/ DES comporte 3 grandes étapes :
 
 3) Fusionner les deux blocs, et effectuer une permutation finale, inverse de la permutation initiale.
 
+\begin{figure}[h]
+\centering
 \includegraphics[scale=0.75]{./images/DES_diagram.png}
+\caption{Schéma général de DES}
+\label{fig:DES-diagram}
+\end{figure}
 
+\clearpage
+
+\begin{figure}[h]
+\centering
 \includegraphics[scale=0.75]{./images/DES_round.png}
+\caption{Schéma d'une itération de DES}
+\label{fig:DES-round}
+\end{figure}
 
 \subsection{Notre implémentation de DES}
 
