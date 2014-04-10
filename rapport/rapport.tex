@@ -33,17 +33,26 @@ Whitebox: l'attaquant a encore plus de possibilité puisqu'il contrôle l'enviro
 \subsection{Solution}
 
 Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons prendre un algorithme connu : DES et y appliquer de la tabularisation ainsi que de la délinéarisation qui sont des concepts que nous expliquerons ultérieurement.
+
 \newpage
 	
 \section{DES}
 
-\subsection{Pourquoi DES?}
-\newpage
-\section{Concepts}
+DES est un cipher inventé en xxxx ...
 
-\subsection{Tabularisation}
+\subsection{Pourquoi DES?}
+
+
+
+\subsection{Comment marche DES}
+
+...
+
+\newpage
 
 \section{Principes et Concepts}
+
+Plusieurs concepts ont étés introduits pour les Whitebox par Chow et cie dans leur article. On peut généralement les diviser en deux parties : l'obfuscation qui cherche à rendre la compréhension du programme plus difficile, et l'encryption des entrées/sorties qui cherche à rendre la recherche exhaustive fastidieuse.
 
 \subsection{Partial Evaluation}
 
@@ -55,21 +64,45 @@ Les look up tables sont des tableaux qui listent les sorties possibles en foncti
 
 Cette seconde étape consiste à transformer toutes les opérations en Lookup tables.
 
+fonctionnement :
+
+0101 := 5 => L(5) = ?
+
+L = { 0000 => 1, 0001 => 2, ... } comme un tableau
+
+Mais on ne peut pas faire des lookup tables trop grosses (3.2)
+
 \subsection{Randomization and De-linearization}
 
 aussi appelé I/O-blocked Encoding :
 
 Une fois que toutes les opérations ont étés codés en Lookup tables, il est encore facile de retrouver les matrices qui forment toutes ces transformations et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est d'encoder les entrées et sorties de ces Lookup tables avec des bijections (pour pouvoir les annuler d'une Lookup table à une autre).
+Par exemple, si $f_1$ et $f_2$ sont deux lookup tables se suivant ($output = f_2 circ f_1(input)$). On peut rajouter une bijection $E$ entre les deux comme ceci : $f_2 \circ E^-1 \circ E \circ f_1(input)$.
 
 \section{Principes et concepts secondaires}
 
 
 \subsection{Mixing Bijection}
 
-La création des Lookup tables dans la tabularization se fait à partir de matrices représentant les opérations du cipher. Souvent ces matrices contiennent beaucoup plus de 0 que de 1 ce qui rend les lookup tables trop simples et ce qui crée donc un nouveau problème. Pour éviter ce genre de problème on crée deux opérations au lieu d'une. La première composé d'une bijection. La deuxième composé de son inverse multiplié par l'opération qu'on veut complexifier.
+La création des Lookup tables dans la tabularization se fait à partir de matrices représentant les opérations du cipher. Souvent ces matrices contiennent beaucoup plus de 0 que de 1 ce qui rend les lookup tables trop simples et ce qui crée donc un nouveau problème. Pour éviter ce genre de problème on crée deux opérations au lieu d'une. La première composé d'une bijection. La deuxième composé de son inverse multiplié par l'opération qu'on veut complexifier.\\
+Soit $M_1$ la matrice d'une des opérations que l'on transformera en lookup table plus tard. On peut la multiplier par une autre matrice $G$ choisie pertinament pour augmenter le bruit dans $M_1$ (un nombre de 0 et de 1 qui parait aléatoire). De fait que l'opération devienne alors $G \cdot M_1$. Il faut bien sur annuler $G$ ensuite en créant une seconde opération $G^(-1)$.\\
+L'opération devient alors : $G^(-1) \cdot (G \cdot M_1)$ où $G \cdot M_1$ est pré-évalué comme une unique opération.
+
+\subsection{By-Pass Encoding}
+
+En général, on veut cacher ce qu'une opération fait. L'idée du bypass est d'élargir la taille de son entré et la taille de sa sortie avec des bits inutiles.
+
+\subsection{Combined Function Encoding}
+
+Lorsque deux opérations sont évalués en même temps, on peut les faire évaluer une entrée composée de leurs deux entrées respectives $(P||Q)(input_P||Input_Q)$.
+
+\subsection{Split-Path Encoding}
+
+même idée que le bypass ?
 
 \section{Implementation}
 
+Les concepts introduits précédemment sont très théoriques et il faut réfléchir un peu pour les mettre en pratique. Voici notre interprétation:
 
 \subsection{Partial Evaluation}
 
