@@ -42,11 +42,10 @@ DES est un cipher inventé en xxxx ...
 
 \subsection{Pourquoi DES?}
 
-
-
 \subsection{Comment marche DES}
 
 ...
+
 
 \newpage
 
@@ -116,6 +115,59 @@ Ensuite tous les XOR sont transformés en Lookup tables aussi qu'on appellera de
 
 Après cette étape toutes les opérations ont étés codés en lookup tables
 
+Par exemple, nous allons décomposer une matrice 16*16 en sous-matrices de 8x4. 
+
+Voici l'opération sans la décomposition
+
+\begin{figure}[h]
+\begin{verbatim}
+           .----.     .-------------------.     .----.
+           |    |     |                   |     |    |
+           |    |     |                   |     |    |
+           |    |     |                   |     |    |
+           | Y0 |  =  |         M         |  x  | X0 |
+           |    |     |                   |     |    |
+           |    |     |                   |     |    |
+           |    |     |                   |     |    |
+           '----'     '-------------------'     '----'
+
+\end{verbatim}
+\caption{Avant décomposition en sous-matrice}
+\label{fig:ascii-box}
+\end{figure}
+
+\clearpage
+
+Voici l'opération après la décomposition en sous-matrice
+
+\begin{figure}[h]
+\begin{verbatim}
+
+           .----.     .---------.---------.     .----.
+           |    |     |    A    |    B    |     |    |
+           | Y0 |     .---------.---------.     | X0 |
+           |    |     |    C    |    D    |     |    |
+           .----.  =  .---------.---------.  x  .----.
+           |    |     |    E    |    F    |     |    |
+           | Y1 |     .---------.---------.     | X1 |
+           |    |     |    H    |    I    |     |    |
+           '----'     '---------'---------'     '----'
+           
+\end{verbatim}
+\caption{Après décomposition en sous-matrice}
+\label{fig:ascii-box}
+\end{figure}
+
+\clearpage
+
+Chaque sous-matrice va être la source d'une nouvelle look up table.
+
+Cette look up table va être créée par le multiplication d'une sous-matrice avec toutes les possibilités d'input.
+
+Elle aura donc $2^8$ = 256 entrées possibles et $2^4$ = 16 sorties possibles.
+
+Ainsi pour une matrice (m,n), et pour une sous-matrice ($m_{1}$,$n_{1}$), il y aura     $\frac{m*n}{m_{1}*n_{1}}$ look up tables créées qui prendront $(2^n_{1})$ valeurs et pourront engendrer $(2^m_{1})$ sorties.
+
 \subsection{Randomization}
 
 Pour compliquer la compréhension du programme on peut mélanger l'ordre dans lequel on envois les bits à notre programme. Puisqu'on a les matrices $M_1, M_2 et M_3$, il suffit de les multiplier par d'autres matrices de mélange avant et après.
@@ -136,13 +188,15 @@ Une fois que toutes les opérations sont transformés en lookup tables. On rajou
 
 Par exemple $L_1$ et $L_2$ deux look up tables qui se suivent.
 
-$L_1 rond L_2$
+$L_1 \circ L_2$
 
 on crée une clef pour $L_1$ et on XOR cette clef à ses sorties. Ce qui fait que $L_1$ ressemble sous le manteau à $output = (L_1(input) \oplus k_1)$
 
 et on décrypte cette encryption dans $L_2$ en faisant un XOR dans ses inputs ($L_2$ ressemble alors à output = $L_2(input \oplus k_1).$
 
 Si $L_1$ sort un octet, et $L_2$ prend un octet en entrée. Alors on a un encodage sur les 256 possibilités de la Look up table. Ce qui est assez facile à retrouver avec une recherche exhaustive. C'est pourquoi on crée un nombre de Look up tables différentes pour les XORs assez important pour rendre cette recherche exhaustive inefficace. servir
+
+\newpage
 
 \section{Notre implémentation}
 
@@ -157,7 +211,40 @@ puisqu'on a, au maximum un état de 96bits dans la mémoire, on va garder cet é
 
 \subsection{Différentes étapes}
 
+\subsubsection{Étape préliminaire}
+
+Avant que les 16 rounds ne s'exécutent, il est nécessaire que les bits d'input subissent une permutation initiale suivie d'une expansion de l'input de 64 bits en 96 bits qui permettra le bypass.
+Ces deux opération seront réalisées par une matrice M1 qui ne sera utilisée qu'une fois juste avant les 16 rounds et qui réalisera ceci :
+
+\begin{figure}[h]
+\begin{verbatim}
+
+            96b           96x64b           64b
+           .----.     .-------------. 
+           |    |     |             |     .----.
+           |    |     |             |     |    |
+           |    |     |             |     |    |
+           |    |     |             |     |    |
+           | OUT|  =  |             |  x  | IN |
+           |    |     |     M1      |     |    |
+           |    |     |             |     |    |
+           |    |     |             |     |    |
+           |    |     |             |     '----'
+           '----'     '-------------'
+
+\end{verbatim}
+\caption{M1 avant décomposition en sous-matrice}
+\label{fig:ascii-box}
+\end{figure}
+
+\clearpage
+
+Nous décomposons M1 en sous-matrice de taille 4x8. Nous multiplions chacune de ces $\frac{96*64}{4*8}$ = 288 sous-matrices par les $2^8$ = 256 différentes possibilités ayant $2^4$ = 16 résultats possibles.
+
+
 \subsubsection{Étape 1 à Étape 2}
+
+Nous devons convertir ce fonctionnement :
 
 \begin{figure}[h]
 \begin{verbatim}
@@ -189,6 +276,8 @@ state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
 
 \clearpage
 
+En celui-ci :
+
 \begin{figure}[h]
 \begin{verbatim}
 
@@ -211,13 +300,16 @@ state 2:    *              state 2 (96 bits)            *
 \label{fig:ascii-box}
 \end{figure}		
 		
+\clearpage		
+		
 Pour ce faire, nous allons calculer 12 Look up Tables qui prendront 8 bits chacun ce qui recouvrira les 96 bits d'input.
 
 Il y a :
 
-8 look up tables non lineaires qui permettent le xor avec la clef et la substitution
+8 look up tables non linéaires qui permettent le xor avec la clef et la substitution en les précalculant.
 
-4 look up tables lineaires qui nous serviront à by-passer les bits qui ne subissent pas de calculs.		
+
+4 look up tables linaires qui nous serviront à bypasser les bits qui ne subissent pas de calculs.		
 		
 \subsubsection{Étape 2 à Étape 3}
 
@@ -255,4 +347,6 @@ state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
 \section{Conclusion}
 \newpage
 \section{Bibliographie}
+
+
 \end{document}
