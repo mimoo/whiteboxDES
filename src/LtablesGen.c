@@ -235,14 +235,14 @@ void Matrix3(unsigned int M3[64][96])
             M3[ii][jj]=tmp[PermutationFinal[ii]-1][jj];
         }
     }
-    for(int ii = 0; ii < 32; ii++)
+    /*for(int ii = 0; ii < 32; ii++)
     {
         for(int jj=0;jj<96;jj++)
         {
             M3[ii][jj]=tmp[ii+32][jj];
             M3[ii+32][jj]=tmp[ii][jj];
         }
-    } 
+    } */
 }
 
 unsigned int vec_to_int(unsigned int Vec[4])
