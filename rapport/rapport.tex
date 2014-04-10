@@ -24,6 +24,8 @@
 	
 \subsection{Utilisation}
 
+http://www.dagstuhl.de/Materials/Files/08/08253/08253.PreneelBart.Slides.pdf
+
 \subsection{Problèmes}
 
 l'attaquant à accès à la mémoire et donc il peut facilement récupérer la clef en analysant l'exécution du programme.\\
@@ -112,13 +114,14 @@ main.c :
 
 \section{Principes et Concepts}
 
-Plusieurs concepts ont étés introduits pour les Whitebox par Chow et cie dans leur article. On peut généralement les diviser en deux parties : l'obfuscation qui cherche à rendre la compréhension du programme plus difficile, et l'encryption des entrées/sorties qui cherche à rendre la recherche exhaustive fastidieuse.
+Plusieurs concepts ont étés introduits pour les Whitebox par Chow et cie dans leur article. On peut généralement les diviser en deux parties : l'obfuscation qui cherche à rendre la compréhension du programme plus difficile, et
+ l'encryption des entrées/sorties qui cherche à rendre la recherche exhaustive fastidieuse.
 
 \subsection{Partial Evaluation}
 
 On cherche à cacher la clef. La première étape est de pré-calculer toutes les opérations qui sont déjà connu dans notre cas. Puisque dans une whitebox la clef est déjà connu, on pré-calcule toutes les sous-clefs et on cache l'étape du XOR avec ces sous-clefs dans des Lookup tables.
 
-Les look up tables sont des tableaux qui listent les sorties possibles en fonction des entrées possibles.
+Les lookup tables sont des tableaux qui listent les sorties possibles en fonction des entrées possibles.
 
 \subsection{Tabularizing}
 
@@ -129,8 +132,6 @@ fonctionnement :
 0101 := 5 => L(5) = ?
 
 L = { 0000 => 1, 0001 => 2, ... } comme un tableau
-
-
 
 \subsection{Randomization and De-linearization}
 
@@ -158,9 +159,15 @@ Lorsque deux opérations sont évalués en même temps, on peut les faire évalu
 
 \subsection{Split-Path Encoding}
 
-même idée que le bypass ?
+lorsqu'on donne un input de n bit, et que l'on reçoit un output de m bits tel que $m < n$ on a une perte d'information. Pour répondre à ce problème on append une fonction prenant le même input pour augmenter le nombre de bit de sorties (faire un schéma ou une formule)
 
-\section{Implementation}
+\subsection{External Encoding}
+
+Pour éviter une extraction de l'implémentation de la whitebox, et pour éviter les attaques sur les premiers et derniers rounds, on peut appliquer deux bijections à l'entrée et à la sortie du programme.\\
+
+$E \circ WHITEBOX-DES(input) \circ G$
+
+\section{Implémentation}
 
 Les concepts introduits précédemment sont très théoriques et il faut réfléchir un peu pour les mettre en pratique. Voici notre interprétation:
 
@@ -176,7 +183,7 @@ On ne peut pas faire des lookup tables trop grosses (3.2) ca augmente exponentie
 pour 8 bits d'entrées il y a 2^8 possibilités. Donc la taille de la lookuptable est de 2^8 octets. ou 2^8 * sizeof(int) puisqu'on utilise int dans notre implémentation.
 Pour 16 bits d'entrées, il y a 2^16 possibilités. Donc la taille de la lookup table est de 2^16 octets...
 
-On voit que ca augmente exponentiellement. Il faut donc prendre des look up tables petites et ne pas faire une énorme look up table pour notre vecteur de 96 bits.
+On voit que ca augmente exponentiellement. Il faut donc prendre des lookup tables petites et ne pas faire une énorme lookup table pour notre vecteur de 96 bits.
 
 On crée donc des \textbf{réseaux} de lookup tables.
 
@@ -235,13 +242,13 @@ Voici l'opération après la décomposition en sous-matrice
 
 \clearpage
 
-Chaque sous-matrice va être la source d'une nouvelle look up table.
+Chaque sous-matrice va être la source d'une nouvelle lookup table.
 
-Cette look up table va être créée par le multiplication d'une sous-matrice avec toutes les possibilités d'input.
+Cette lookup table va être créée par le multiplication d'une sous-matrice avec toutes les possibilités d'input.
 
 Elle aura donc $2^8$ = 256 entrées possibles et $2^4$ = 16 sorties possibles.
 
-Ainsi pour une matrice (m,n), et pour une sous-matrice ($m_{1}$,$n_{1}$), il y aura     $\frac{m*n}{m_{1}*n_{1}}$ look up tables créées qui prendront $(2^n_{1})$ valeurs et pourront engendrer $(2^m_{1})$ sorties.
+Ainsi pour une matrice (m,n), et pour une sous-matrice ($m_{1}$,$n_{1}$), il y aura     $\frac{m*n}{m_{1}*n_{1}}$ lookup tables créées qui prendront $(2^n_{1})$ valeurs et pourront engendrer $(2^m_{1})$ sorties.
 
 \subsection{Randomization}
 
@@ -259,9 +266,9 @@ $(M_1 . R_1^-1) . (R_1 . M2 ) . data$
 
 * De-linearization :
 
-Une fois que toutes les opérations sont transformés en lookup tables. On rajoute des encodages à ces look up tables.
+Une fois que toutes les opérations sont transformés en lookup tables. On rajoute des encodages à ces lookup tables.
 
-Par exemple $L_1$ et $L_2$ deux look up tables qui se suivent.
+Par exemple $L_1$ et $L_2$ deux lookup tables qui se suivent.
 
 $L_1 \circ L_2$
 
@@ -269,7 +276,7 @@ on crée une clef pour $L_1$ et on XOR cette clef à ses sorties. Ce qui fait qu
 
 et on décrypte cette encryption dans $L_2$ en faisant un XOR dans ses inputs ($L_2$ ressemble alors à output = $L_2(input \oplus k_1).$
 
-Si $L_1$ sort un octet, et $L_2$ prend un octet en entrée. Alors on a un encodage sur les 256 possibilités de la Look up table. Ce qui est assez facile à retrouver avec une recherche exhaustive. C'est pourquoi on crée un nombre de Look up tables différentes pour les XORs assez important pour rendre cette recherche exhaustive inefficace. servir
+Si $L_1$ sort un octet, et $L_2$ prend un octet en entrée. Alors on a un encodage sur les 256 possibilités de la Lookup table. Ce qui est assez facile à retrouver avec une recherche exhaustive. C'est pourquoi on crée un nombre de Lookup tables différentes pour les XORs assez important pour rendre cette recherche exhaustive inefficace. servir
 
 \newpage
 
@@ -300,8 +307,8 @@ Ces deux opération seront réalisées par une matrice M1 qui ne sera utilisée 
            |    |     |             |     |    |
            |    |     |             |     |    |
            |    |     |             |     |    |
-           | OUT|  =  |             |  x  | IN |
-           |    |     |     M1      |     |    |
+           | Y0 |  =  |     M1      |  x  | X0 |
+           |    |     |             |     |    |
            |    |     |             |     |    |
            |    |     |             |     |    |
            |    |     |             |     '----'
@@ -377,14 +384,14 @@ state 2:    *              state 2 (96 bits)            *
 		
 \clearpage		
 		
-Pour ce faire, nous allons calculer 12 Look up Tables qui prendront 8 bits chacun ce qui recouvrira les 96 bits d'input.
+Pour ce faire, nous allons calculer 12 Lookup Tables qui prendront 8 bits chacun ce qui recouvrira les 96 bits d'input.
 
 Il y a :
 
-8 look up tables non linéaires qui permettent le xor avec la clef et la substitution en les précalculant.
+8 lookup tables non linéaires qui permettent le xor avec la clef et la substitution en les précalculant.
 
 
-4 look up tables linaires qui nous serviront à bypasser les bits qui ne subissent pas de calculs.		
+4 lookup tables linaires qui nous serviront à bypasser les bits qui ne subissent pas de calculs.		
 		
 \subsubsection{Étape 2 à Étape 3}
 
@@ -419,7 +426,16 @@ state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
 \end{figure}	
 
 \newpage
+
+\subsubsection{Étape finale}
+
+L'étape finale va consister à ignorer les bypass (ie, ignorer r(r+1)), inverser la dernière expansion réalisée par M2, échanger L et R en cas de décryptage et faire la permutation finale.
+
+Toutes ces étapes vont être réalisée grâce à une matrice M3 qui va être décomposée en sous-matrice et traduite en Lookup table.
 \section{Conclusion}
+
+No secure whitebox implementation known today
+
 \newpage
 \section{Bibliographie}
 
