@@ -26,6 +26,11 @@ Author
 * David Wong
 * Hugo Bonnin
 * Jacques Monin
+ 
+To Do List
+----------
+
+* create encodings for the network of XOR tables.
 
 How to use the C implementation
 -------------------------------
