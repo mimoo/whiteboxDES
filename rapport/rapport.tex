@@ -60,23 +60,18 @@ Bien qu'il soit recommandé de ne plus l'utiliser (la dernière version avant l'
 L'intérêt principal d'utiliser DES dans un contexte de type WhiteBox est que cet algorithme a seulement besoin de transformations linéaires et de substitutions, ce qui facilite l'étude du principe. De plus l'algorithme de Triple DES étant encore parfois utilisé, il peut être intéressant de savoir en implémenter une version WhiteBox.
 	
 \subsubsection{Génération des 16 clés}	
-
-DES transforme un bloc de 64 bits en un autre bloc de 64 bits au terme de 16 itérations d'un ensemble d'opérations. En particulier, un XOR entre une partie du bloc et une clé est effectué.
-
-Une clé unique étant nécessaire pour chacune de ces itérations (il en faut donc 16  en tout), l'ensemble de ces dernières est généré à partir de la clé initiale passée au programme. Cette clé est représentée sur 64 bits (à laquelle on retire 1 bit de parité à chaque octet). \\
-
-Voici le déroulement de l'algorithme de génération de ces clés :
 	
-On commence par retirer les 8 bits de parité de la clé initiale (1 bit à chaque octet). La clé obtenue fait alors 56 bits.
+La clé initiale est représentée sur 64 bits (à laquelle on retire 1 bit de parité à chaque octet). 
 
-Puis on effectue 16 fois les instructions suivantes :
-
-\begin{itemize}
-\item Permutation PC1 (les bits sont changés de place) puis séparation en deux blocs de 28 bits (partie droite et partie gauche).
-\item Rotation de chaque bloc vers la gauche (le bit en première position passe en dernière position, le bit en seconde position passe en première position, etc).
-\item Fusion des deux blocs en un bloc de 56 bits.
-\item Permutation PC2 de 56 bits vers 48 bits (8 bits ne sont pas recopiés) qui correspond à la clé du même numéro que l'itération actuelle. On réutilise le bloc de 56 bits précédant la permutation PC2 pour la prochaine itération.
-\end{itemize}
+Un algorithme est utilisé afin de générer les 16 clés (correspondant aux 16 itérations de DES) issues de la clé initiale. 
+	
+On commence par retirer les 8 bits de parité de la clé (1 bit à chaque octet). La clé obtenue fait alors 56 bits.
+\begin{enumerate}
+\item Permutation PC1 puis séparation en deux blocs (droite et gauche).
+\item Rotation de chaque bloc vers la gauche (le bit en première position passe en dernière position).
+\item Fusion des deux blocs
+\item Permutation PC2 de 56 bits vers 48 bits qui correspond à la clé du même numéro que l'itération actuelle. On réutilise le bloc de 56 bits (d'avant la permutation PC2) pour la prochaine itération.
+\end{enumerate}
 
 \begin{figure}[h]
 \centering
@@ -125,7 +120,7 @@ Puis on effectue 16 fois les instructions suivantes :
 
 \subsection{Notre implémentation de DES}
 
-vvvvv Toute cette section est sujette à modification/suppression vvvvv \\
+vvvvv Toute cette section sujette à modification/suppression vvvvv \\
 
 Dans un soucis de facilité d'utilisation, nous avons créé un générateur de clés de 64 bits. Notre programme comporte donc un fichier genkey (compilé à partir de genkey.c) chargé de générer cette clé. Le programme « desbox » (compilé à partir de DES.h, DES.c et main.c) permet soit d'encrypter (paramètre -e), soit de décrypter (paramètre -d) un fichier passé en entrée. Il prend aussi en argument une clé (paramètre -k) et un fichier de sortie (paramètre -o).
 
@@ -477,10 +472,63 @@ Comme pour l'étape précédente, nous voulons transformer les différentes opé
 
 Pour ce faire, nous allons modéliser les différentes opérations en matrice puis la décomposer puisque la combinaison de la Permutation et du xor est une fonction affine.
 
-Ces calculs vont être modélisé par M2 :
+Ces calculs vont être modélisé par M2 qui est une matrice (96,96) et qui réalise :
+\begin{enumerate}
+\item La permutation
+\item Le xor avec la partie gauche
+\item L'expansion pour le prochain round,
+\item le placement de R(r) dans L(r+1) 
+\item l'extraction le vrai R(r).
+\end{enumerate}
 
-M2 est une matrice (96,96). Elle réalise la permutation, le xor avec la partie gauche, l'expansion pour le prochain round, met R(r) dans L(r+1) et extrait le vrai R(r).
 
+/!\ A expliquer :
+
+ Y0 = A*X0 [+] B*X1 [+] C*X2 [+] D*X3
+
+\begin{figure}[h]
+\begin{verbatim}
+
+     ******  ******    ******  ******
+     * X0 *  * X1 *    * X2 *  * X3 *
+     ******  ******    ******  ******
+
+        |      |          |       |
+        v      v          v       v
+
+        2b    2b          2b     2b
+      <----><---->      <----><---->
+      .----------.      .----------.
+       \   S0   /        \   S1   /
+        '------'          '------'
+         <---->            <---->
+           2b                2b
+
+                \         /
+                 \       /
+                  |     |
+                  v     v
+
+                  2b    2b
+                <----><---->
+                 .---------.
+                 \   S2   /
+                  '------'
+                   <---->
+                     2b
+
+                      |
+                      v
+
+                   ******
+                   * Y0 *
+                   ******
+
+\end{verbatim}
+\caption{Avant Tabularisation}
+\label{fig:ascii-box}
+\end{figure}	
+\clearpage
 
 \subsubsection{Étape finale}
 
