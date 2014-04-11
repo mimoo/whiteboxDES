@@ -78,6 +78,8 @@ Puis on effectue 16 fois les instructions suivantes :
 \item Permutation PC2 de 56 bits vers 48 bits (8 bits ne sont pas recopiés) qui correspond à la clé du même numéro que l'itération actuelle. On réutilise le bloc de 56 bits précédant la permutation PC2 pour la prochaine itération.
 \end{itemize}
 
+Après ces étapes le bloc est chiffré. Pour déchiffrer ce dernier, on utilise le même algorithme, à ceci près que l'on change l'ordre d'utilisation des clés et que l'on inverse les deux blocs de gauche et de droite au début et à la fin de DES.
+
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.80]{./images/keygen.png}
@@ -103,6 +105,7 @@ L'algorithme de DES peut se décomposer en 3 grandes étapes :
 \item XOR entre ce bloc et le bloc de gauche.
 \item Les deux blocs sont échangés (le bloc de gauche devient celui de droite et inversement).
 \end{itemize}
+
 
 \item Enfin une fusion des deux blocs, suivie d'une permutation finale, inverse de la permutation initiale.
 \end{enumerate}
