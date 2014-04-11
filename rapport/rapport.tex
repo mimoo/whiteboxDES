@@ -5,6 +5,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[francais]{babel}
 \usepackage{mathtools}
+\usepackage{url}
 
 \author{David Wong
   \and Jacques Monin
@@ -22,13 +23,13 @@
 
 \section{Introduction}
 
-DES, AES, block cipher sécurisé et solide contre la cryptanalise depuis des années. Beaucoup de preuves mais aussi beaucoup d'observations.
+DES (Data Encryption Standard), AES (Advanced Encryption Standard), block cipher sécurisé et solide contre la cryptanalise depuis des années. Beaucoup de preuves mais aussi beaucoup d'observations.
 
 Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut, voir sa mémoire, extraire la clef.
 	
 \subsection{Utilisation}
 
-http://www.dagstuhl.de/Materials/Files/08/08253/08253.PreneelBart.Slides.pdf
+\url{http://www.dagstuhl.de/Materials/Files/08/08253/08253.PreneelBart.Slides.pdf}
 
 \subsection{Problèmes}
 
@@ -44,17 +45,19 @@ Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons pre
 	
 \section{Data Encryption Standard}
 
-Avant de nous lancer dans l'implémentation de la WhiteBox de DES nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub).
+Avant de nous lancer dans l'implémentation de la version WhiteBox de DES (Data Encryption Standard), nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub : \url{https://github.com/mimoo/whiteboxDES}).
 	
 Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation.
 
 \subsection{Qu'est-ce que DES?}
 
-\subsubsection{Historique et intérêt}	
+\subsubsection{Historique et intérêt}
 
-DES est un algorithme de chiffrement symétrique (ou chiffrement par bloc) qui utilise des clés de 56 bits et manipule des blocs de 64 bits. Bien qu'il soit recommandé de ne plus l'utiliser, on peut encore parfois le trouver sous la forme de Triple DES.
+DES est un algorithme de chiffrement symétrique (ou chiffrement par bloc) qui utilise des clés de 56 bits et manipule des blocs de 64 bits. Il a été développé par IBM au début des années 70 à la demande du National Bureau of Standards (NBS) qui proposait de trouver un moyen de sécuriser des informations sensibles, non classifiées, du gouvernement. En 1976, après consultation de la National Security Agency (NSA), Le NBS en sélectionne une version légèrement modifiée, qui sera publiée l'année suivante (le standard arrivant en 1979).
+
+Bien qu'il soit recommandé de ne plus l'utiliser (la dernière version avant l'obsolescence datant de 1999), on peut encore parfois le trouver sous la forme de Triple DES.
 	
-L'intérêt principal d'utiliser DES est que cet algorithme a seulement besoin de transformations linéaires et de substitutions, ce qui facilite l'étude du principe de WhiteBox. De plus l'algorithme de Triple DES étant encore parfois utilisé, il peut être intéressant de savoir en implémenter une version WhiteBox. 
+L'intérêt principal d'utiliser DES dans un contexte de type WhiteBox est que cet algorithme a seulement besoin de transformations linéaires et de substitutions, ce qui facilite l'étude du principe. De plus l'algorithme de Triple DES étant encore parfois utilisé, il peut être intéressant de savoir en implémenter une version WhiteBox.
 	
 \subsubsection{Génération des 16 clés}	
 	
@@ -116,6 +119,8 @@ On commence par retirer les 8 bits de parité de la clé (1 bit à chaque octet)
 \end{figure}
 
 \subsection{Notre implémentation de DES}
+
+vvvvv Toute cette section sujette à modification/suppression vvvvv \\
 
 Dans un soucis de facilité d'utilisation, nous avons créé un générateur de clés de 64 bits. Notre programme comporte donc un fichier genkey (compilé à partir de genkey.c) chargé de générer cette clé. Le programme « desbox » (compilé à partir de DES.h, DES.c et main.c) permet soit d'encrypter (paramètre -e), soit de décrypter (paramètre -d) un fichier passé en entrée. Il prend aussi en argument une clé (paramètre -k) et un fichier de sortie (paramètre -o).
 
