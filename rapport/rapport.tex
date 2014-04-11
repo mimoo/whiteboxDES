@@ -43,6 +43,7 @@ Avec les avancées technologiques des dernières années de nouvelles utilisatio
 
 Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement en extraire la clef.\\
 
+
 \subsection{Utilisation}
 
 Avant d'expliquer une potentielle solution à ce problème, voici quelques illustrations afin de mieux comprendre pourquoi on s'intéresse à cette nouvelle utilisation de la cryptologie :\\
@@ -56,16 +57,19 @@ Une des solutions disponible est d'encrypter ces instructions avec la clef publi
 
 Personne ne peut lire ces instructions, personne ne peut envoyer d'instructions.
 
+
 \subsubsection{DRMs}
 
 Imaginons maintenant un système de distribution de film. On encrypte le film avec une clef et on l'envoit avec la clef en annexe. La clef en annexe est elle même encrypté avec la clef de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
 Le logiciel propriétaire, qui est donc notre fameuse Whitebox, décrypte la clef, décrypte le film ET ajoute un hash de la clef dans le film.\\
 L'attaquant peut maintenant soit essayer d'extraire une des deux clefs du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera bien sur le hash intégré dans cet output et pourra être incriminé.
 
+
 \subsection{Solution}
 
-C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information important impossible. Dans notre cas une clef.\\
-Dans ce rapport, l'explication d'une whitebox se fait à travers DES. C'est pourquoi la prochaine partie vise à rappeler brièvement comment DES fonctionne. Vous pouvez bien sur rapidement lire cette partie si vous êtes déjà familier avec DES.
+C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clef.\\
+Il faut savoir que les différentes approches connues sont basées sur plus d'observations que de théorie, et qu'elles ont toutes étés crackés.\\
+Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empécher l'opération inverse c'est-à-dire l'encrption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait construire nous même des instructions à destination des backdoors.\\
 
 \newpage
 	
@@ -73,7 +77,7 @@ Dans ce rapport, l'explication d'une whitebox se fait à travers DES. C'est pour
 
 Avant de nous lancer dans l'implémentation de la version WhiteBox de DES (Data Encryption Standard), nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub : \url{https://github.com/mimoo/DES}).
 	
-Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation.
+Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation. Si vous êtes déjà familier avec ce cipher vous pouvez rapidement lire cette partie.
 
 \subsection{Historique et intérêt}
 
