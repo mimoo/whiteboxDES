@@ -12,7 +12,7 @@
   \and Jacques Monin
   \and Hugo Bonnin}
 
-\title{Whitebox}
+\title{Implémentation et Analyse d une White-box du DES}
 
 \begin{document}
 
@@ -158,18 +158,19 @@ L'algorithme de DES peut se décomposer en 3 grandes étapes :
 
 \section{Principes et concepts fondamentaux}
 
-Plusieurs concepts ont étés introduits pour les Whitebox par Chow et cie dans leur article. On peut généralement les diviser en deux parties : l'obfuscation qui cherche à rendre la compréhension du programme plus difficile, et
- l'encryption des entrées/sorties qui cherche à rendre la recherche exhaustive fastidieuse.
+Les Whitebox, en leur définition actuelle, sont des blackbox destinées à la décryption dans lesquelles les clefs sont cachées et le processus est assez complexe pour empêcher son inversion.\\
+Plusieurs concepts ont étés introduits par Chow et cie dans leur article\footnote{http://crypto.stanford.edu/DRM2002/whitebox.pdf}. Voici les trois principaux concepts d'une implémentation whitebox :
+
 
 \subsection{Partial Evaluation}
 
-On cherche à cacher la clef. La première étape est de pré-calculer toutes les opérations qui sont déjà connu dans notre cas. Puisque dans une whitebox la clef est déjà connu, on pré-calcule toutes les sous-clefs et on cache l'étape du XOR avec ces sous-clefs dans des Lookup tables.
+L'évaluation partielle consiste à précalculer ce que l'on connait déjà puis à \textbf{mélanger l'opération du XOR} de la clef avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
+Dans DES 16 sous-clés sont générées à partir de la clé principale puis sont une à une XORé durant les 16 rounds de l'algorithme. Ces 16 clefs de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les 2^48 différents vecteurs possibles à chaque rounds sont pré-générées et stockées dans des S-box (Substitution boxes) qu'on appelera \textbf{Lookup tables} par la suite.
 
-Les lookup tables sont des tableaux qui listent les sorties possibles en fonction des entrées possibles.
 
 \subsection{Tabularizing}
 
-La tabularization consiste à transformer toutes les opérations en Lookup tables (qu'on peut représenter sous forme de S-box (Substitution boxes)).
+La tabularization consiste à transformer toutes les autres opérations en \textbf{Lookup tables}.
 
 \begin{verbatim}
             Entrée                 S-box              Sortie
@@ -180,15 +181,15 @@ La tabularization consiste à transformer toutes les opérations en Lookup table
                          '----------------------'
 \end{verbatim}
 
-\subsection{Randomization and De-linearization}
 
-aussi appelé I/O-blocked Encoding :
+\subsection{I/O-blocked}
 
-Une fois que toutes les opérations ont étés codés en Lookup tables, il est encore facile de retrouver les matrices qui forment toutes ces transformations et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est d'encoder les entrées et sorties de ces Lookup tables avec des bijections (pour pouvoir les annuler d'une Lookup table à une autre).
-Par exemple, si $f_1$ et $f_2$ sont deux lookup tables se suivant ($output = f_2 \circ f_1(input)$). On peut rajouter une bijection $E$ entre les deux comme ceci : $f_2 \circ E^-1 \circ E \circ f_1(input)$.
+Une fois que toutes les opérations ont étés transformées en Lookup tables, il est encore facile de retrouver les opération initiales et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est de délinéariser ces opérations en encodant les entrées et sorties de ces Lookup tables.
+Par exemple, si $L_1$ et $L_2$ sont deux lookup tables se suivant ($output = L_2 \circ L_1(input)$). On peut rajouter une bijection $E$ entre les deux comme ceci : $L_2 \circ E^-1 \circ E \circ L_1(input)$.
 
 \section{Principes et concepts secondaires}
 
+\subsection{Randomization}
 
 \subsection{Mixing Bijection}
 
