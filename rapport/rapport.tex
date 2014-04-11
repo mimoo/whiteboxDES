@@ -57,12 +57,16 @@ Une des solutions disponible est d'encrypter ces instructions avec la clef publi
 
 Personne ne peut lire ces instructions, personne ne peut envoyer d'instructions.
 
-
 \subsubsection{DRMs}
 
 Imaginons maintenant un système de distribution de film. On encrypte le film avec une clef et on l'envoit avec la clef en annexe. La clef en annexe est elle même encrypté avec la clef de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
 Le logiciel propriétaire, qui est donc notre fameuse Whitebox, décrypte la clef, décrypte le film ET ajoute un hash de la clef dans le film.\\
 L'attaquant peut maintenant soit essayer d'extraire une des deux clefs du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera bien sur le hash intégré dans cet output et pourra être incriminé.
+
+
+\subsubsection{Autres utilisations}
+
+Il existe d'autres utilisations comme les mobile-agents ou les smartcards et surement bien d'autres encore qui n'ont pas encore été pensées...
 
 
 \subsection{Solution}
