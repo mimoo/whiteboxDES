@@ -168,27 +168,27 @@ Les lookup tables sont des tableaux qui listent les sorties possibles en fonctio
 
 \subsection{Tabularizing}
 
-Cette seconde étape consiste à transformer toutes les opérations en Lookup tables.
+tabularization
 
-fonctionnement :
+    The act of tabularizing, or the state of being tabularized; formation into tables; tabulation.
+
+La tabularization consiste à transformer toutes les opérations en Lookup tables (qu'on peut représenter sous forme de S-box (Substitution boxes)).
 
 \begin{verbatim}
-           .--------------------.
-
-           | 0000 | 0001 | 0010 |
-
-           '--------------------'
+            Entrée                 S-box              Sortie
+                         .----------------------.
+          0010 := 2 -->  | 0 | 1 | 2 | ... | 15 |
+                         |----------------------|
+                         | 5 | 2 | 0 | ... |  8 | --> 0 := 0000
+                         '----------------------'
 \end{verbatim}
-0101 := 5 => L(5) = ?
-
-L = { 0000 => 1, 0001 => 2, ... } comme un tableau
 
 \subsection{Randomization and De-linearization}
 
 aussi appelé I/O-blocked Encoding :
 
 Une fois que toutes les opérations ont étés codés en Lookup tables, il est encore facile de retrouver les matrices qui forment toutes ces transformations et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est d'encoder les entrées et sorties de ces Lookup tables avec des bijections (pour pouvoir les annuler d'une Lookup table à une autre).
-Par exemple, si $f_1$ et $f_2$ sont deux lookup tables se suivant ($output = f_2 circ f_1(input)$). On peut rajouter une bijection $E$ entre les deux comme ceci : $f_2 \circ E^-1 \circ E \circ f_1(input)$.
+Par exemple, si $f_1$ et $f_2$ sont deux lookup tables se suivant ($output = f_2 \circ f_1(input)$). On peut rajouter une bijection $E$ entre les deux comme ceci : $f_2 \circ E^-1 \circ E \circ f_1(input)$.
 
 \section{Principes et concepts secondaires}
 
