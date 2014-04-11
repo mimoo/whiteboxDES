@@ -16,29 +16,43 @@
 \begin{document}
 
 \maketitle
+
 \newpage
+
 \tableofcontents
+
 \newpage
 
 
 \section{Introduction}
 
-DES (Data Encryption Standard), AES (Advanced Encryption Standard), block cipher sécurisé et solide contre la cryptanalise depuis des années. Beaucoup de preuves mais aussi beaucoup d'observations.
+La cryptographie est fondé depuis très longtemps sur le principe que deux personnes veulent converser entre elles sans pouvoir être écouté (Man In The Middle).\\
+De nombreux block cipher comme DES ou AES ont étés inventé à travers les années et ont su rester solide contre la cryptanalise. Ces travaux résident sur beaucoup de preuves mathématiques mais aussi sur beaucoup d'observations.
 
-Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut, voir sa mémoire, extraire la clef.
-	
+\begin{verbatim}
+                         MAN IN THE MIDDLE
+                                 |
+           .-----.               |               .-------.
+           |     |               v               |       |
+           | BOB |     ------------------->      | ALICE |
+           |     |                               |       |
+           .-----.                               .-------.
+
+\end{verbatim}
+
+Avec les avancées technologiques des dernières années de nouvelles utilisation de la Cryptologie ont fait surface. Une assez récente est le besoin d'exécuter du code sur des machines potentiellement dangereuses. Lorsque le code ne contient aucune informations importantes cela n'est pas un problème, mais lorsque le code contient des passwords ou des clefs cela devient un problème.\\
+
+Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement en extraire la clef.\\
+
 \subsection{Utilisation}
 
-\url{http://www.dagstuhl.de/Materials/Files/08/08253/08253.PreneelBart.Slides.pdf}
+Avant d'expliquer une potentielle solution à ce problème, voici quelques illustrations afin de mieux comprendre pourquoi on s'intéresse à cette nouvelle utilisation de la cryptologie :
 
-\subsection{Problèmes}
 
-l'attaquant à accès à la mémoire et donc il peut facilement récupérer la clef en analysant l'exécution du programme.\\
-De base il peut aussi choisir ce qu'il envoie au programme et voir comment le programme l'encrypte ou le décrypte (chosen plaintext attack) (cas d'une blackbox)\\
-Whitebox: l'attaquant a encore plus de possibilité puisqu'il contrôle l'environnement: accès à la mémoire, trace, breakpoints,...
 
 \subsection{Solution}
 
+Whitebox: l'attaquant a encore plus de possibilité puisqu'il contrôle l'environnement: accès à la mémoire, trace, breakpoints,...
 Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons prendre un algorithme connu : DES et y appliquer de la tabularisation ainsi que de la délinéarisation qui sont des concepts que nous expliquerons ultérieurement.
 
 \newpage
