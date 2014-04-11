@@ -182,14 +182,24 @@ La tabularization consiste à transformer toutes les autres opérations en \text
 \end{verbatim}
 
 
-\subsection{I/O-blocked}
+\subsection{Input/Output Encoding}
 
-Une fois que toutes les opérations ont étés transformées en Lookup tables, il est encore facile de retrouver les opération initiales et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est de délinéariser ces opérations en encodant les entrées et sorties de ces Lookup tables.
-Par exemple, si $L_1$ et $L_2$ sont deux lookup tables se suivant ($output = L_2 \circ L_1(input)$). On peut rajouter une bijection $E$ entre les deux comme ceci : $L_2 \circ E^-1 \circ E \circ L_1(input)$.
+Une fois que toutes les opérations ont étés transformées en Lookup tables, il est encore facile de retrouver les opération initiales et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est de délinéariser ces opérations en encodant les entrées et sorties de ces Lookup tables.\\
+
+Soit $L_1$ et $L_2$ deux Lookup tables se suivant : $sortie = L_2(L_1(entrée))$\\
+On peut encrypter la sortie de L_1 avec une clé $k_1$ et décrypter l'entrée de $L_2$ avec cette même clef. C'est un **cipher de Vernam** :\\
+On remplace donc $L_1(entrée)$ par $L_1'(entrée) = L_1(entrée) \oplus k_1$\\
+et $L_2(entrée)$ par $L_2'(entrée) = L_2(entrée \oplus k_1$\\
+Ce qui donne : $output = L_2'((L_1(entrée)))$.\\
 
 \section{Principes et concepts secondaires}
 
 \subsection{Randomization}
+
+Comme l'encryption des entrées/sorties. On peut aussi \textbf{mélanger} les bits sortant d'une opération, puis les remettre dans l'ordre avant la prochaine.\\
+
+Par exemple, si $L_1$ et $L_2$ sont deux lookup tables se suivant ($output = L_2 \circ L_1(input)$). On peut rajouter une bijection $E$ entre les deux comme ceci : $L_2 \circ E^-1 \circ E \circ L_1(input)$.
+
 
 \subsection{Mixing Bijection}
 
@@ -197,17 +207,21 @@ La création des Lookup tables dans la tabularization se fait à partir de matri
 Soit $M_1$ la matrice d'une des opérations que l'on transformera en lookup table plus tard. On peut la multiplier par une autre matrice $G$ choisie pertinament pour augmenter le bruit dans $M_1$ (un nombre de 0 et de 1 qui parait aléatoire). De fait que l'opération devienne alors $G \cdot M_1$. Il faut bien sur annuler $G$ ensuite en créant une seconde opération $G^(-1)$.\\
 L'opération devient alors : $G^(-1) \cdot (G \cdot M_1)$ où $G \cdot M_1$ est pré-évalué comme une unique opération.
 
+
 \subsection{By-Pass Encoding}
 
-En général, on veut cacher ce qu'une opération fait. L'idée du bypass est d'élargir la taille de son entré et la taille de sa sortie avec des bits inutiles.
+En général, on veut cacher ce qu'une opération fait. L'idée du bypass est d'élargir la taille de son entrée et la taille de sa sortie avec des bits inutiles.
+
 
 \subsection{Combined Function Encoding}
 
 Lorsque deux opérations sont évalués en même temps, on peut les faire évaluer une entrée composée de leurs deux entrées respectives $(P||Q)(input_P||Input_Q)$.
 
+
 \subsection{Split-Path Encoding}
 
 lorsqu'on donne un input de n bit, et que l'on reçoit un output de m bits tel que $m < n$ on a une perte d'information. Pour répondre à ce problème on append une fonction prenant le même input pour augmenter le nombre de bit de sorties (faire un schéma ou une formule)
+
 
 \subsection{External Encoding}
 
@@ -215,13 +229,15 @@ Pour éviter une extraction de l'implémentation de la whitebox, et pour éviter
 
 $E \circ WHITEBOX-DES(input) \circ G$
 
+
+
+
+
+
 \section{Implémentation}
 
-Les concepts introduits précédemment sont très théoriques et il faut réfléchir un peu pour les mettre en pratique. Voici notre interprétation:
+Les concepts introduits précédemment sont très théoriques et il faut réfléchir un peu pour les mettre en pratique. Voici notre implémentation avec DES :
 
-\subsection{Partial Evaluation}
-
-On crée un programme prenant une clef en entrée et générant toutes les lookup tables dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
 
 \subsection{Tabularizing}
 
@@ -316,16 +332,17 @@ Si $L_1$ sort un octet, et $L_2$ prend un octet en entrée. Alors on a un encoda
 
 \newpage
 
-\section{Notre implémentation}
-
-On utilise DES
-petite intro
-
 \subsection{Traduction des concepts}
 
-\subsubsection{Bypass}
+\subsubsection{Partial Evaluation}
 
-Puisqu'on a, au maximum un état de 96bits dans la mémoire, on va garder cet état de 96 bits tout le long et utiliser les bits qui ne servent à rien comme bypass.
+Toutes les Lookuptables seront généré par un programme Ltablesgen.c prenant une clé de 64bits en entrée et générant toutes les Lookup tables dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
+
+\subsubsection{Bypass et Combined Function Encoding}
+
+Puisqu'on a, au maximum un état de 96bits dans la mémoire, on va garder cet état de 96 bits tout le long et utiliser les bits qui ne servent à rien comme bypass.\\
+
+(peut -être mieux expliquer cet état de 96 bits?)
 
 Ils seront répartis d'une manière différentes tout au long de l'exécution, leur répartition sera par étape :
 \begin{enumerate}
