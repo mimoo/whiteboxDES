@@ -235,6 +235,7 @@ void Matrix3(unsigned int M3[64][96])
             M3[ii][jj]=tmp[PermutationFinal[ii]-1][jj];
         }
     }
+    //inversion L R
     /*for(int ii = 0; ii < 32; ii++)
     {
         for(int jj=0;jj<96;jj++)
@@ -243,18 +244,6 @@ void Matrix3(unsigned int M3[64][96])
             M3[ii+32][jj]=tmp[ii][jj];
         }
     } */
-}
-
-unsigned int vec_to_int(unsigned int Vec[4])
-{
-    unsigned int res=0;
-    for(int ii = 4; ii >= 0; ii--)
-    {
-        res+=Vec[ii];
-        if(ii != 0)
-            res = res << 1;
-    }
-    return res;
 }
 
 void xor_tables(unsigned int xorTables[256])
