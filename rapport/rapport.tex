@@ -6,7 +6,6 @@
 \usepackage[francais]{babel}
 \usepackage{mathtools}
 \usepackage{url}
-\usepackage{fancyvrb}
 
 \author{David Wong
   \and Jacques Monin
@@ -17,8 +16,11 @@
 \begin{document}
 
 \maketitle
+
 \newpage
+
 \tableofcontents
+
 \newpage
 
 
@@ -44,14 +46,23 @@ Man at the end : l'attaquant à un accès physique au système. Il peut l'inspec
 
 \subsection{Utilisation}
 
-\url{http://www.dagstuhl.de/Materials/Files/08/08253/08253.PreneelBart.Slides.pdf}
+Avant d'expliquer une potentielle solution à ce problème, voici quelques illustrations afin de mieux comprendre pourquoi on s'intéresse à cette nouvelle utilisation de la cryptologie :\\
+
+
+\subsubsection{Backdoors}
+
+Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les enterprises/associations/gouvernements de leur choix. Imaginons maintenant que notre gouvernement veuille envoyer des instructions à ce backdoor sans qu'elles puissent être intercepter et écouté, parce que les instructions doivent rester secrète et/ou parce que l'intercepetion de telles instructions en clair pourrait élever des soupçons.\\
+
+Une des solutions disponible est d'encrypter ces instructions avec la clef publique/privée de ces backdoors avant de leur envoyer.\\
+
+Personne ne peut lire ces instructions, personne ne peut envoyer d'instructions.
 
 
 \subsubsection{DRMs}
 
-l'attaquant à accès à la mémoire et donc il peut facilement récupérer la clef en analysant l'exécution du programme.\\
-De base il peut aussi choisir ce qu'il envoie au programme et voir comment le programme l'encrypte ou le décrypte (chosen plaintext attack) (cas d'une blackbox)\\
-Whitebox: l'attaquant a encore plus de possibilité puisqu'il contrôle l'environnement: accès à la mémoire, trace, breakpoints,...
+Imaginons maintenant un système de distribution de film. On encrypte le film avec une clef et on l'envoit avec la clef en annexe. La clef en annexe est elle même encrypté avec la clef de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
+Le logiciel propriétaire, qui est donc notre fameuse Whitebox, décrypte la clef, décrypte le film ET ajoute un hash de la clef dans le film.\\
+L'attaquant peut maintenant soit essayer d'extraire une des deux clefs du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera bien sur le hash intégré dans cet output et pourra être incriminé.
 
 
 \subsection{Solution}
@@ -60,18 +71,15 @@ C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction
 Il faut savoir que les différentes approches connues sont basées sur plus d'observations que de théorie, et qu'elles ont toutes étés crackés.\\
 Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empécher l'opération inverse c'est-à-dire l'encrption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait construire nous même des instructions à destination des backdoors.\\
 
-
 \newpage
 	
 \section{Data Encryption Standard}
 
-Avant de nous lancer dans l'implémentation de la version WhiteBox de DES (Data Encryption Standard), nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub : \url{https://github.com/mimoo/whiteboxDES}).
+Avant de nous lancer dans l'implémentation de la version WhiteBox de DES (Data Encryption Standard), nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub : \url{https://github.com/mimoo/DES}).
 	
 Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation. Si vous êtes déjà familier avec ce cipher vous pouvez rapidement lire cette partie.
 
-\subsection{Qu'est-ce que DES?}
-
-\subsubsection{Historique et intérêt}
+\subsection{Historique et intérêt}
 
 DES est un algorithme de chiffrement symétrique (ou chiffrement par bloc) qui utilise des clés de 56 bits et manipule des blocs de 64 bits. Il a été développé par IBM au début des années 70 à la demande du National Bureau of Standards (NBS) qui proposait de trouver un moyen de sécuriser des informations sensibles, non classifiées, du gouvernement. En 1976, après consultation de la National Security Agency (NSA), Le NBS en sélectionne une version légèrement modifiée, qui sera publiée l'année suivante (le standard arrivant en 1979).
 
@@ -79,7 +87,7 @@ Bien qu'il soit recommandé de ne plus l'utiliser (la dernière version avant l'
 	
 L'intérêt principal d'utiliser DES dans un contexte de type WhiteBox est que cet algorithme a seulement besoin de transformations linéaires et de substitutions, ce qui facilite l'étude du principe. De plus l'algorithme de Triple DES étant encore parfois utilisé, il peut être intéressant de savoir en implémenter une version WhiteBox.
 	
-\subsubsection{Génération des 16 clés}	
+\subsection{Génération des 16 clés}	
 	
 La clé initiale est représentée sur 64 bits (à laquelle on retire 1 bit de parité à chaque octet). 
 
@@ -104,7 +112,7 @@ Après ces étapes le bloc est chiffré. Pour déchiffrer ce dernier, on utilise
 
 \clearpage
 
-\subsubsection{Fonctionnement de DES}	
+\subsection{Fonctionnement de DES}	
 
 L'algorithme de DES peut se décomposer en 3 grandes étapes :
 
@@ -162,10 +170,11 @@ fonctionnement :
 
 \begin{verbatim}
            .--------------------.
+
            | 0000 | 0001 | 0010 |
+
            '--------------------'
 \end{verbatim}
-
 0101 := 5 => L(5) = ?
 
 L = { 0000 => 1, 0001 => 2, ... } comme un tableau
@@ -238,8 +247,7 @@ Par exemple, nous allons décomposer une matrice 16*16 en sous-matrices de 8x4. 
 
 Voici l'opération sans la décomposition
 
-\begin{Verbatim}[samepage=true]
-
+\begin{verbatim}
            .----.     .-------------------.     .----.
            |    |     |                   |     |    |
            |    |     |                   |     |    |
@@ -250,12 +258,11 @@ Voici l'opération sans la décomposition
            |    |     |                   |     |    |
            '----'     '-------------------'     '----'
 
-\end{Verbatim}
-
+\end{verbatim}
 
 Voici l'opération après la décomposition en sous-matrice
 
-\begin{Verbatim}[samepage=true]
+\begin{verbatim}
 
            .----.     .---------.---------.     .----.
            |    |     |    A    |    B    |     |    |
@@ -267,7 +274,7 @@ Voici l'opération après la décomposition en sous-matrice
            |    |     |    H    |    I    |     |    |
            '----'     '---------'---------'     '----'
            
-\end{Verbatim}
+\end{verbatim}
 
 Chaque sous-matrice va être la source d'une nouvelle lookup table.
 
@@ -332,7 +339,7 @@ Ils seront répartis d'une manière différentes tout au long de l'exécution, l
 Avant que les 16 rounds ne s'exécutent, il est nécessaire que les bits d'input subissent une permutation initiale suivie d'une expansion de l'input de 64 bits en 96 bits qui permettra le bypass.
 Ces deux opération seront réalisées par une matrice M1 qui ne sera utilisée qu'une fois juste avant les 16 rounds et qui réalisera ceci :
 
-\begin{Verbatim}[samepage=true]
+\begin{verbatim}
 
             96b           96x64b           64b
            .----.     .-------------. 
@@ -347,7 +354,7 @@ Ces deux opération seront réalisées par une matrice M1 qui ne sera utilisée 
            |    |     |             |     '----'
            '----'     '-------------'
 
-\end{Verbatim}
+\end{verbatim}
 
 
 Nous décomposons M1 en sous-matrice de taille 4x8. Nous multiplions chacune de ces $\frac{96*64}{4*8}$ = 288 sous-matrices par les $2^8$ = 256 différentes possibilités ayant $2^4$ = 16 résultats possibles.
@@ -357,7 +364,7 @@ Nous décomposons M1 en sous-matrice de taille 4x8. Nous multiplions chacune de 
 
 Nous devons convertir ce fonctionnement :
 
-\begin{Verbatim}[samepage=true]
+\begin{verbatim}
 			
              32b               48b              16b
            ************** ********************* ********
@@ -379,11 +386,11 @@ state 1:   *     L(r)   * *       X(r)        * * r(r) *
 state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
            ************** *************** ***************
 
-\end{Verbatim}		
+\end{verbatim}		
 
 En celui-ci :
 
-\begin{Verbatim}[samepage=true]
+\begin{verbatim}
 
             *********************************************
 state 1:    *          state 1 (12 x 8 = 96 bits)       *
@@ -399,15 +406,13 @@ state 1:    *          state 1 (12 x 8 = 96 bits)       *
 state 2:    *              state 2 (96 bits)            *
             *********************************************			
 			
-\end{Verbatim}
+\end{verbatim}
 		
 				
 Pour ce faire, nous allons calculer 12 Lookup Tables qui prendront 8 bits chacun ce qui recouvrira les 96 bits d'input et qui seront composées de :
 \bigskip
-\begin{enumerate}
 
-
-\item 8 lookup tables non linéaires qui permettent le xor avec la clef et la substitution en les précalculant grâce à la formule :
+8 lookup tables non linéaires qui permettent le xor avec la clef et la substitution en les précalculant grâce à la formule :
 
 \medskip
 \begin{center}
@@ -417,7 +422,7 @@ $T_i(x) = S_i(x \oplus k_i)$
 
 Une permutation est faite sur les données, chaque lookup table non linéaire va donc prendre en paramètre deux bits de L(r-1) et 6 bits de X(r-1) et renverra 2 bits de L(r-1), 2 bits de R(r-1) et 4 bits qui formeront Y(r). Elles sont de la forme :
 
-\begin{Verbatim}[samepage=true]
+\begin{verbatim}
 
              L(r-1)                   X(r-1)
            .--|--|------------|---|---|---|---|---|-----.
@@ -443,7 +448,7 @@ Une permutation est faite sur les données, chaque lookup table non linéaire va
               v  v  v  v          v   v   v   v 
             L(r-1)  R(r-1)            Y(r)
 
-\end{Verbatim}	
+\end{verbatim}	
 
 
 L'output de ces lookup tables est donc :
@@ -453,49 +458,18 @@ $T_i^r = b_0 b_1||b_2 b_7||S_j(b_2 b_3 b_5 b_6 b_7 \oplus k_i^r)$
 \end{center}
 \medskip
 
-\item 4 lookup tables linaires qui nous serviront à bypasser les bits qui ne subissent pas de calculs.
+4 lookup tables linaires qui nous serviront à bypasser les bits qui ne subissent pas de calculs.
 
-Après permutation, les lookup tables linéaires prendront en paramètre 4 bits de la partie gauchede L et 4 bits de la partie des bits non étendus de R. Elles sont sous la forme :
+Après permutation, les lookup tables l
 
-\begin{Verbatim}[samepage=true]
-                                         _____
-                    L(r-1)               R(r-1)
-           .-----|---|---|---|--------|---|---|---|-----.
-           |     |   |   |   |        |   |   |   |     |
-           |     |   |   |   |        |   |   |   |     |
-           |     |   |   |   |        |   |   |   |     |  
-           |     |   |   |   |        |   |   |   |     | 
-           |     |   |   |   |        |   |   |   |     |
-           |     |   |   |   |        |   |   |   |     |
-           |     |   |   |   |        |   |   |   |     |
-           |     |   |   |   |        |   |   |   |     | 
-           |     |   |   |   |        |   |   |   |     | 
-           |     |   |   |   |        |   |   |   |     | 
-           |     |   |   |   |        |   |   |   |     |             
-           |     |   |   |   |        |   |   |   |     |              
-           |     |   |   |   |        |   |   |   |     |             
-           |     |   |   |   |        |   |   |   |     |               
-           |     |   |   |   |        |   |   |   |     |                
-           |     |   |   |   |        |   |   |   |     |     
-           |     |   |   |   |        |   |   |   |     | 
-           |     |   |   |   |        |   |   |   |     |  
-           '-----|---|---|---|--------|---|---|---|-----'
-                 v   v   v   v        v   v   v   v 
-                     L(r-1)               R(r-1)
 
-\end{Verbatim}	
 
-L'output de ces lookup tables est donc :
-\medskip
-\begin{center}
-$T_i^r = b_0 b_1 b_2 b_3||b_4 b_5 b_6 b_7$
-\end{center}
-\medskip
-\end{enumerate}
+
+
 		
 \subsubsection{Étape 2 à Étape 3}
 
-\begin{Verbatim}[samepage=true]
+\begin{verbatim}
 
            ************** *************** ***************
 state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
@@ -519,7 +493,7 @@ state 2:   *    L(r)    * *    Y(r+1)   * *     R(r)    *
 state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
            ************** ********************* ********
 
-\end{Verbatim}
+\end{verbatim}
 
 
 Comme pour l'étape précédente, nous voulons transformer les différentes opérations de cette étape en look up tables.
@@ -540,7 +514,7 @@ Ces calculs vont être modélisé par M2 qui est une matrice (96,96) et qui réa
 
  Y0 = A*X0 [+] B*X1 [+] C*X2 [+] D*X3
 
-\begin{Verbatim}[samepage=true]
+\begin{verbatim}
 
      ******  ******    ******  ******
      * X0 *  * X1 *    * X2 *  * X3 *
@@ -577,7 +551,7 @@ Ces calculs vont être modélisé par M2 qui est une matrice (96,96) et qui réa
                    * Y0 *
                    ******
 
-\end{Verbatim}
+\end{verbatim}
 
 \subsubsection{Étape finale}
 
@@ -585,13 +559,18 @@ L'étape finale va consister à ignorer les bypass (ie, ignorer r(r+1)), inverse
 
 Toutes ces étapes vont être réalisée grâce à une matrice M3 qui va être décomposée en sous-matrice et traduite en Lookup table.
 
-\newpage
 \section{Conclusion}
 
 No secure whitebox implementation known today
 
+Si vous voulez implémenter une whitebox dans votre programme. Cela demande des efforts, de la recherche, etc... Il faut que ça soit un projet important et il faut considérer les autres solutions possibles (utilisation d'une API, d'une clef publique, ...) avant de considérer la solution de la whitebox.
+
+La taille que prend une whitebox est considérablement plus important que la taille d'un cipher nu (link et cie : 2.5mb je crois ? il faut vérifier, c'est marqué dans la thèse).
+
 \newpage
+
 \section{Bibliographie}
+
 
 
 \end{document}
