@@ -16,30 +16,57 @@
 \begin{document}
 
 \maketitle
+
 \newpage
+
 \tableofcontents
+
 \newpage
 
 
 \section{Introduction}
 
-DES (Data Encryption Standard), AES (Advanced Encryption Standard), block cipher sécurisé et solide contre la cryptanalise depuis des années. Beaucoup de preuves mais aussi beaucoup d'observations.
+La cryptographie est fondé depuis très longtemps sur le principe que deux personnes veulent converser entre elles sans pouvoir être écouté (Man In The Middle).\\
+De nombreux block cipher comme DES ou AES ont étés inventé à travers les années et ont su rester solide contre la cryptanalise. Ces travaux résident sur beaucoup de preuves mathématiques mais aussi sur beaucoup d'observations.
 
-Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut, voir sa mémoire, extraire la clef.
-	
+\begin{verbatim}
+                         MAN IN THE MIDDLE
+                                 |
+           .-----.               |               .-------.
+           |     |               v               |       |
+           | BOB |     ------------------->      | ALICE |
+           |     |                               |       |
+           .-----.                               .-------.
+
+\end{verbatim}
+
+Avec les avancées technologiques des dernières années de nouvelles utilisation de la Cryptologie ont fait surface. Une assez récente est le besoin d'exécuter du code sur des machines potentiellement dangereuses. Lorsque le code ne contient aucune informations importantes cela n'est pas un problème, mais lorsque le code contient des passwords ou des clefs cela devient un problème.\\
+
+Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement en extraire la clef.\\
+
 \subsection{Utilisation}
 
-\url{http://www.dagstuhl.de/Materials/Files/08/08253/08253.PreneelBart.Slides.pdf}
+Avant d'expliquer une potentielle solution à ce problème, voici quelques illustrations afin de mieux comprendre pourquoi on s'intéresse à cette nouvelle utilisation de la cryptologie :\\
 
-\subsection{Problèmes}
 
-l'attaquant à accès à la mémoire et donc il peut facilement récupérer la clef en analysant l'exécution du programme.\\
-De base il peut aussi choisir ce qu'il envoie au programme et voir comment le programme l'encrypte ou le décrypte (chosen plaintext attack) (cas d'une blackbox)\\
-Whitebox: l'attaquant a encore plus de possibilité puisqu'il contrôle l'environnement: accès à la mémoire, trace, breakpoints,...
+\subsubsection{Backdoors}
+
+Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les enterprises/associations/gouvernements de leur choix. Imaginons maintenant que notre gouvernement veuille envoyer des instructions à ce backdoor sans qu'elles puissent être intercepter et écouté, parce que les instructions doivent rester secrète et/ou parce que l'intercepetion de telles instructions en clair pourrait élever des soupçons.\\
+
+Une des solutions disponible est d'encrypter ces instructions avec la clef publique/privée de ces backdoors avant de leur envoyer.\\
+
+Personne ne peut lire ces instructions, personne ne peut envoyer d'instructions.
+
+\subsubsection{DRMs}
+
+Imaginons maintenant un système de distribution de film. On encrypte le film avec une clef et on l'envoit avec la clef en annexe. La clef en annexe est elle même encrypté avec la clef de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
+Le logiciel propriétaire, qui est donc notre fameuse Whitebox, décrypte la clef, décrypte le film ET ajoute un hash de la clef dans le film.\\
+L'attaquant peut maintenant soit essayer d'extraire une des deux clefs du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera bien sur le hash intégré dans cet output et pourra être incriminé.
 
 \subsection{Solution}
 
-Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons prendre un algorithme connu : DES et y appliquer de la tabularisation ainsi que de la délinéarisation qui sont des concepts que nous expliquerons ultérieurement.
+C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information important impossible. Dans notre cas une clef.\\
+Dans ce rapport, l'explication d'une whitebox se fait à travers DES. C'est pourquoi la prochaine partie vise à rappeler brièvement comment DES fonctionne. Vous pouvez bien sur rapidement lire cette partie si vous êtes déjà familier avec DES.
 
 \newpage
 	
@@ -503,12 +530,19 @@ Ces calculs vont être modélisé par M2 qui est une matrice (96,96) et qui réa
 L'étape finale va consister à ignorer les bypass (ie, ignorer r(r+1)), inverser la dernière expansion réalisée par M2, échanger L et R en cas de décryptage et faire la permutation finale.
 
 Toutes ces étapes vont être réalisée grâce à une matrice M3 qui va être décomposée en sous-matrice et traduite en Lookup table.
+
 \section{Conclusion}
 
 No secure whitebox implementation known today
 
+Si vous voulez implémenter une whitebox dans votre programme. Cela demande des efforts, de la recherche, etc... Il faut que ça soit un projet important et il faut considérer les autres solutions possibles (utilisation d'une API, d'une clef publique, ...) avant de considérer la solution de la whitebox.
+
+La taille que prend une whitebox est considérablement plus important que la taille d'un cipher nu (link et cie : 2.5mb je crois ? il faut vérifier, c'est marqué dans la thèse).
+
 \newpage
+
 \section{Bibliographie}
+
 
 
 \end{document}
