@@ -24,23 +24,42 @@
 
 \section{Introduction}
 
-DES (Data Encryption Standard), AES (Advanced Encryption Standard), block cipher sécurisé et solide contre la cryptanalise depuis des années. Beaucoup de preuves mais aussi beaucoup d'observations.
+La cryptographie est fondé depuis très longtemps sur le principe que deux personnes veulent converser entre elles sans pouvoir être écouté (Man In The Middle).\\
+De nombreux block cipher comme DES ou AES ont étés inventé à travers les années et ont su rester solide contre la cryptanalise. Ces travaux résident sur beaucoup de preuves mathématiques mais aussi sur beaucoup d'observations.
 
-Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut, voir sa mémoire, extraire la clef.
-	
+\begin{verbatim}
+                         MAN IN THE MIDDLE
+                                 |
+           .-----.               |               .-------.
+           |     |               v               |       |
+           | BOB |     ------------------->      | ALICE |
+           |     |                               |       |
+           .-----.                               .-------.
+\end{verbatim}
+
+Avec les avancées technologiques des dernières années de nouvelles utilisation de la Cryptologie ont fait surface. Une assez récente est le besoin d'exécuter du code sur des machines potentiellement dangereuses. Lorsque le code ne contient aucune informations importantes cela n'est pas un problème, mais lorsque le code contient des passwords ou des clefs cela devient un problème.\\
+
+Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement en extraire la clef.\\
+
+
 \subsection{Utilisation}
 
 \url{http://www.dagstuhl.de/Materials/Files/08/08253/08253.PreneelBart.Slides.pdf}
 
-\subsection{Problèmes}
+
+\subsubsection{DRMs}
 
 l'attaquant à accès à la mémoire et donc il peut facilement récupérer la clef en analysant l'exécution du programme.\\
 De base il peut aussi choisir ce qu'il envoie au programme et voir comment le programme l'encrypte ou le décrypte (chosen plaintext attack) (cas d'une blackbox)\\
 Whitebox: l'attaquant a encore plus de possibilité puisqu'il contrôle l'environnement: accès à la mémoire, trace, breakpoints,...
 
+
 \subsection{Solution}
 
-Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons prendre un algorithme connu : DES et y appliquer de la tabularisation ainsi que de la délinéarisation qui sont des concepts que nous expliquerons ultérieurement.
+C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clef.\\
+Il faut savoir que les différentes approches connues sont basées sur plus d'observations que de théorie, et qu'elles ont toutes étés crackés.\\
+Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empécher l'opération inverse c'est-à-dire l'encrption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait construire nous même des instructions à destination des backdoors.\\
+
 
 \newpage
 	
@@ -48,7 +67,7 @@ Le but est de rendre l'extraction de clef impossible. Pour cela, nous allons pre
 
 Avant de nous lancer dans l'implémentation de la version WhiteBox de DES (Data Encryption Standard), nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub : \url{https://github.com/mimoo/whiteboxDES}).
 	
-Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation.
+Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation. Si vous êtes déjà familier avec ce cipher vous pouvez rapidement lire cette partie.
 
 \subsection{Qu'est-ce que DES?}
 
@@ -108,6 +127,15 @@ L'algorithme de DES peut se décomposer en 3 grandes étapes :
 
 \begin{figure}[h]
 \centering
+\includegraphics[scale=0.80]{./images/DES_round.png}
+\caption{Schéma d'une itération de DES}
+\label{fig:DES-round}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[h]
+\centering
 \includegraphics[scale=0.80]{./images/DES_diagram.png}
 \caption{Schéma général de DES}
 \label{fig:DES-diagram}
@@ -115,45 +143,7 @@ L'algorithme de DES peut se décomposer en 3 grandes étapes :
 
 \clearpage
 
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.80]{./images/DES_round.png}
-\caption{Schéma d'une itération de DES}
-\label{fig:DES-round}
-\end{figure}
-
-\subsection{Notre implémentation de DES}
-
-vvvvv Toute cette section sujette à modification/suppression vvvvv \\
-
-Dans un soucis de facilité d'utilisation, nous avons créé un générateur de clés de 64 bits. Notre programme comporte donc un fichier genkey (compilé à partir de genkey.c) chargé de générer cette clé. Le programme « desbox » (compilé à partir de DES.h, DES.c et main.c) permet soit d'encrypter (paramètre -e), soit de décrypter (paramètre -d) un fichier passé en entrée. Il prend aussi en argument une clé (paramètre -k) et un fichier de sortie (paramètre -o).
-
-genkey.c :
-
-	Génère une clé aléatoire de 64 bits dont le dernier bit de chaque octet est un bit de parité. S'assure que les clés ne sont pas trop faibles d'un point de vue sécurité en utilisant la fonction key\_schedule() de DES.c (c'est à dire que la période de la clé n'est pas trop faible). Si la clé est trop faible une nouvelle est alors générée et testée à son tour.
-
-DES.c :
-
-	Contient les différentes tables nécessaires au bon fonctionnement de l'algorithme, à savoir les 2 tables de permutation pour la générations des 16 clés, les tables de permutations initiale et finale de DES, ses tables d'expansion, de substitutions et de permutation.
-	
-	Nous avons choisi de coder nos blocs avec des uint\_64t afin de pouvoir les modifier avec des opérations bit à bit (et donc de gagner en rapidité d'exécution). La fonction addbit() nous sert alors à copier un bit en position x d'un bloc A vers la position y d'un bloc B.
-	
-	La fonction permutation() peut effectuer (selon le booléen passé en argument) soit la permutation initiale, soit la permutation finale du bloc, en utilisant les tables de permutation correspondantes.
-	
-	key\_schedule() génère une nouvelle clé à partir de celle passée en argument. Elle demande aussi le numéro d'itération actuel car son comportement diffère entre l'itération numéro 0 et les itérations suivantes. Dans le cas de l'itération numéro 0 on doit commencer par effectuer la permutation PC1. Cette fonction fait appel au tables de permutation PC1 et PC2.
-	
-	La fonction round() effectue une itération de DES en fonction de la clé passée en paramètre.
-	
-Elle comprend donc l'expansion, le XOR avec la clé, les substitutions, la permutation et le XOR entre les deux blocs avant de les recombiner. Elle fait appel à la table d'expansion, aux tables de substitutions et à la table de permutation.
-
-main.c :
-
-	Comprend un parseur d'options (clé, encrypter, decrypter, aide, fichier de sortie, fichier d'entrée).
-
-
-\newpage
-
-\section{Principes et Concepts}
+\section{Principes et concepts fondamentaux}
 
 Plusieurs concepts ont étés introduits pour les Whitebox par Chow et cie dans leur article. On peut généralement les diviser en deux parties : l'obfuscation qui cherche à rendre la compréhension du programme plus difficile, et
  l'encryption des entrées/sorties qui cherche à rendre la recherche exhaustive fastidieuse.
