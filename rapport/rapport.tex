@@ -82,24 +82,24 @@ On commence par retirer les 8 bits de parité de la clé (1 bit à chaque octet)
 
 \clearpage
 
-\subsubsection{Les 3 grandes étapes de DES}	
+\subsubsection{Fonctionnement de DES}	
 
-=====>>>>> Expliquer plus en détail chaque étape <<<<<=====
+L'algorithme de DES peut se décomposer en 3 grandes étapes :
 
 \begin{enumerate}
 \item Une permutation initiale sur le bloc qui est ensuite divisé en deux blocs de 32 bits.
 
 \item S'ensuit un cycle de 16 itérations effectuant les opérations suivantes :
 \begin{itemize}
-\item Expansion du bloc de droite vers 48 bits (on copie 16 bits du bloc initial). 
-\item XOR avec la clé correspondant au numéro d'itération actuelle.
-\item Substitutions de 6 bits vers 4 bits (8 tables de substitutions sont utilisées). Les 4 bits du milieu déterminent la colonne de la table et les 2 bits extérieurs la ligne. Le nouveau bloc a alors une taille de 32 bits.
-\item Permutation sur ce bloc.
+\item Expansion du bloc de droite de 32 bits vers 48 bits (on copie 16 bits du bloc initial, le tout à l'aide d'un table d'expansion). 
+\item XOR entre le nouveau bloc de 48 bits et la clé correspondant au numéro d'itération actuelle.
+\item Le bloc de 48 bits est divisé en 8 blocs de 6 bits. Chacun de ces sous-blocs passe à travers une table de substitution (qui prend 6 bits en input et donne 4 bits en output). Il y a en tout 8 tables de substitutions, une pour chaque sous-bloc. La valeur en binaire des 4 bits du milieu détermine l'indice de colonne de la table et la valeur binaire des 2 bits extérieurs l'indice de ligne. Le bloc obtenu en fusionnant les 8 sorties de 4 bits a alors une taille de 32 bits.
+\item Permutation sur ce bloc (les bits sont changés de place).
 \item XOR entre ce bloc et le bloc de gauche.
-\item Les deux blocs sont échangés.
+\item Les deux blocs sont échangés (le bloc de gauche devient celui de droite et inversement).
 \end{itemize}
 
-\item Fusionner les deux blocs, et effectuer une permutation finale, inverse de la permutation initiale.
+\item Enfin une fusion des deux blocs, suivie d'une permutation finale, inverse de la permutation initiale.
 \end{enumerate}
 
 \begin{figure}[h]
@@ -326,15 +326,9 @@ petite intro
 
 \subsubsection{Bypass}
 
-puisqu'on a, au maximum un état de 96bits dans la mémoire, on va garder cet état de 96 bits tout le long et utiliser les bits qui ne servent à rien comme bypass, pour cela, nous garderons :
-
-Pour l'état 1 et l'état 3 : le 32 bits de la partie gauche, les 48 bits de la partie droite étendue et les 16 bits non étendus de la partie droite. 
-
-Pour l'état 2 : les 32 bits de la partie droite, les 32 bits résultants du Xor entre la partie droite étendue et la clé et les 32 buts de la partie droite.
+puisqu'on a, au maximum un état de 96bits dans la mémoire, on va garder cet état de 96 bits tout le long et utiliser les bits qui ne servent à rien comme bypass.
 
 \subsection{Différentes étapes}
-
-
 
 \subsubsection{Étape préliminaire}
 
@@ -365,6 +359,7 @@ Ces deux opération seront réalisées par une matrice M1 qui ne sera utilisée 
 \clearpage
 
 Nous décomposons M1 en sous-matrice de taille 4x8. Nous multiplions chacune de ces $\frac{96*64}{4*8}$ = 288 sous-matrices par les $2^8$ = 256 différentes possibilités ayant $2^4$ = 16 résultats possibles.
+
 
 \subsubsection{Étape 1 à Étape 2}
 
@@ -431,6 +426,7 @@ Pour ce faire, nous allons calculer 12 Lookup Tables qui prendront 8 bits chacun
 Il y a :
 
 8 lookup tables non linéaires qui permettent le xor avec la clef et la substitution en les précalculant.
+
 
 4 lookup tables linaires qui nous serviront à bypasser les bits qui ne subissent pas de calculs.		
 		
@@ -535,9 +531,6 @@ Ces calculs vont être modélisé par M2 qui est une matrice (96,96) et qui réa
 L'étape finale va consister à ignorer les bypass (ie, ignorer r(r+1)), inverser la dernière expansion réalisée par M2, échanger L et R en cas de décryptage et faire la permutation finale.
 
 Toutes ces étapes vont être réalisée grâce à une matrice M3 qui va être décomposée en sous-matrice et traduite en Lookup table.
-
-\newpage
-
 \section{Conclusion}
 
 No secure whitebox implementation known today
