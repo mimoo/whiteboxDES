@@ -67,7 +67,7 @@ A/ Génération des 16 clés. La clé initiale est représentée sur 64 bits (à
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.75]{./images/keygen.png}
+\includegraphics[scale=0.80]{./images/keygen.png}
 \caption{Schéma d'une itération de génération de clé}
 \label{fig:keygen}
 \end{figure}
@@ -92,7 +92,7 @@ B/ DES comporte 3 grandes étapes :
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.75]{./images/DES_diagram.png}
+\includegraphics[scale=0.80]{./images/DES_diagram.png}
 \caption{Schéma général de DES}
 \label{fig:DES-diagram}
 \end{figure}
@@ -101,7 +101,7 @@ B/ DES comporte 3 grandes étapes :
 
 \begin{figure}[h]
 \centering
-\includegraphics[scale=0.75]{./images/DES_round.png}
+\includegraphics[scale=0.80]{./images/DES_round.png}
 \caption{Schéma d'une itération de DES}
 \label{fig:DES-round}
 \end{figure}
@@ -203,8 +203,8 @@ On crée un programme prenant une clef en entrée et générant toutes les looku
 Problème :
 On ne peut pas faire des lookup tables trop grosses (3.2) ca augmente exponentiellement.
 
-pour 8 bits d'entrées il y a 2^8 possibilités. Donc la taille de la lookuptable est de 2^8 octets. ou 2^8 * sizeof(int) puisqu'on utilise int dans notre implémentation.
-Pour 16 bits d'entrées, il y a 2^16 possibilités. Donc la taille de la lookup table est de 2^16 octets...
+Pour 8 bits d'entrées il y a $2^{8}$ possibilités. Donc la taille de la lookuptable est de $2^{8}$ octets. ou $2^{8}$ * sizeof(int) puisqu'on utilise int dans notre implémentation.
+Pour 16 bits d'entrées, il y a $2^{16}$ possibilités. Donc la taille de la lookup table est de $2^{16}$ octets...
 
 On voit que ca augmente exponentiellement. Il faut donc prendre des lookup tables petites et ne pas faire une énorme lookup table pour notre vecteur de 96 bits.
 
