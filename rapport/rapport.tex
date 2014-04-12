@@ -42,6 +42,18 @@ De nombreux block cipher comme DES ou AES ont étés inventé à travers les ann
 
 Avec les avancées technologiques des dernières années de nouvelles utilisation de la Cryptologie ont fait surface. Une assez récente est le besoin d'exécuter du code sur des machines potentiellement dangereuses. Lorsque le code ne contient aucune informations importantes cela n'est pas un problème, mais lorsque le code contient des passwords ou des clefs cela devient un problème.\\
 
+\begin{Verbatim}[samepage=true]
+           .-----------------. 
+           |    ATTAQUANT    |
+           |  .-----------.  |  
+           |  |           |  |  
+           |  |  WHITEBOX |  | 
+           |  |           |  | 
+           |  .-----------.  |
+           |                 |
+           ²-----------------²
+\end{Verbatim}
+
 Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement en extraire la clef.\\
 
 
