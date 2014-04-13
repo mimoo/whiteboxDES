@@ -1,4 +1,5 @@
 \documentclass[a4paper,12pt]{article}
+
 \usepackage{times}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
@@ -7,6 +8,8 @@
 \usepackage{mathtools}
 \usepackage{fancyvrb}
 \usepackage{url}
+
+\setlength{\parindent}{0in}
 
 \author{David Wong
   \and Jacques Monin
@@ -218,8 +221,7 @@ En général, on veut cacher ce qu'une opération fait. L'idée du bypass est d'
 
 \subsection{Combined Function Encoding}
 
-Lorsque deux opérations sont évalués en même temps, on peut les faire évaluer une entrée composée de leurs deux entrées respectives $(P||Q)(input_P||Input_Q)$.
-
+Lorsque deux opérations sont évalués en même temps, on peut les faire évaluer une entrée composée de leurs deux entrées respectives pour transformer le tout en une seule opération : $(P||Q)(input_P||input_Q)$.
 
 \subsection{Split-Path Encoding}
 
@@ -233,32 +235,62 @@ Pour éviter une extraction de l'implémentation de la whitebox, et pour éviter
 $E \circ WHITEBOX-DES(input) \circ G$
 
 
+\subsection{Randomization}
 
+Pour compliquer la compréhension du programme on peut mélanger l'ordre des bits dans une opération. Ceci se fait grâce à une bijection et son inverse entre deux opérations.
 
+Si $M_1$ et $M_2$ sont deux opérations sous forme de matrice executé à la suite sur notre vecteur de donnée $data$ :\\
 
+$M_1 \cdot M_2 \cdot data$\\
 
-\section{Implémentation}
+On peut ajouter une bijection $R_1$ entre ces deux opérations :\\
 
-Les concepts introduits précédemment sont très théoriques et il faut réfléchir un peu pour les mettre en pratique. Voici notre implémentation avec DES :
+$(M_1 \cdot R_1^{-1}) \cdot (R_1 \cdot M2 ) \cdot data$\\
 
+\subsection{De-linearization}
 
-\subsection{Tabularizing}
+Une fois que toutes les opérations sont transformés en lookup tables. On rajoute des encodages à ces lookup tables.
+
+Par exemple $L_1$ et $L_2$ deux lookup tables qui se suivent.
+
+$L_1 \circ L_2$
+
+on crée une clef pour $L_1$ et on XOR cette clef à ses sorties. Ce qui fait que $L_1$ ressemble sous le manteau à $output = (L_1(input) \oplus k_1)$
+
+et on décrypte cette encryption dans $L_2$ en faisant un XOR dans ses inputs ($L_2$ ressemble alors à output = $L_2(input \oplus k_1).$
+
+Si $L_1$ sort un octet, et $L_2$ prend un octet en entrée. Alors on a un encodage sur les 256 possibilités de la Lookup table. Ce qui est assez facile à retrouver avec une recherche exhaustive. C'est pourquoi on crée un nombre de Lookup tables différentes pour les XORs assez important pour rendre cette recherche exhaustive inefficace. servir
+
+\newpage
+
+\subsection{Traduction des concepts}
+
+Toutes les Lookuptables seront généré par un programme Ltablesgen.c prenant une clé de 64bits en entrée et générant toutes les Lookup tables dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
+
+\subsubsection{Bypass et Combined Function Encoding}
+
+Puisqu'on a, au maximum un état de 96bits dans la mémoire, on va garder cet état de 96 bits tout le long et utiliser les bits qui ne servent à rien comme bypass.\\
+
+(peut -être mieux expliquer cet état de 96 bits?)
+
+Ils seront répartis d'une manière différentes tout au long de l'exécution, leur répartition sera par étape :
+\begin{enumerate}
+\item les 32 bits de la partie gauche, les 48 bits de la partie droite étendue et les 16 bits non étendus de la partie droite.
+\item les 32 bits de la partie gauche, les 32 bits résultant du XOR entre la clé et la partie droite étendue et les 32 bits de la partie de droite
+\item De même que l'étape 1
+\end{enumerate}
+
+\subsection{Différentes étapes}
+
 
 Problème :
-On ne peut pas faire des lookup tables trop grosses (3.2) ca augmente exponentiellement.
+On ne peut pas faire des Lookup tables trop grosses car la taille des Lookup tables augmente exponentiellement.\\
 
-Pour 8 bits d'entrées il y a $2^{8}$ possibilités. Donc la taille de la lookuptable est de $2^{8}$ octets. ou $2^{8}$ * sizeof(int) puisqu'on utilise int dans notre implémentation.
-Pour 16 bits d'entrées, il y a $2^{16}$ possibilités. Donc la taille de la lookup table est de $2^{16}$ octets...
-
-On voit que ca augmente exponentiellement. Il faut donc prendre des lookup tables petites et ne pas faire une énorme lookup table pour notre vecteur de 96 bits.
+Pour 8 bits d'entrées il y a $2^{8}$ possibilités. Donc la taille de la lookuptable est de $2^{8}$ octets ou $2^{8} * sizeof(output)$.\\
+Pour 16 bits d'entrées, il y a $2^{16}$ possibilités. Donc la taille de la lookup table est de $2^{16}$ octets\\.
+etc...\\
 
 On crée donc des \textbf{réseaux} de lookup tables.
-
-----
-
-Dans ce même programme on transforme toutes les opérations en \textbf{matrices}.
-
-Chaque matrice est découpé en \textbf{blocs de sous-matrices} et les multiplications des sous-matrices au vecteur associé sont transformées en Lookup tables. On utilise des blocs de matrice assez conséquent pour éviter les blocs nuls (il y a beaucoup de zéros dans ces matrices).
 
 Ensuite tous les XOR sont transformés en Lookup tables aussi qu'on appellera des XOR tables.
 
@@ -305,57 +337,6 @@ Elle aura donc $2^8$ = 256 entrées possibles et $2^4$ = 16 sorties possibles.
 
 Ainsi pour une matrice (m,n), et pour une sous-matrice ($m_{1}$,$n_{1}$), il y aura     $\frac{m*n}{m_{1}*n_{1}}$ lookup tables créées qui prendront $(2^{n_{1}})$ valeurs et pourront engendrer $(2^{m_{1}})$ sorties.
 
-\subsection{Randomization}
-
-Pour compliquer la compréhension du programme on peut mélanger l'ordre des bits dans une opération. Ceci se fait grâce à une bijection et son inverse entre deux opérations.
-Puisqu'on a les matrices $M_1$, $M_2$ et $M_3$, il suffit de les multiplier par d'autres matrices de mélange avant et après.
-
-Par exemple le premier round représenté par notre implémentation :
-
-$M_1 . M_2 . data$
-
-data étant un vecteur de 64bits
-
-peut se remplacer par
-
-$(M_1 . R_1^-1) . (R_1 . M2 ) . data$
-
-* De-linearization :
-
-Une fois que toutes les opérations sont transformés en lookup tables. On rajoute des encodages à ces lookup tables.
-
-Par exemple $L_1$ et $L_2$ deux lookup tables qui se suivent.
-
-$L_1 \circ L_2$
-
-on crée une clef pour $L_1$ et on XOR cette clef à ses sorties. Ce qui fait que $L_1$ ressemble sous le manteau à $output = (L_1(input) \oplus k_1)$
-
-et on décrypte cette encryption dans $L_2$ en faisant un XOR dans ses inputs ($L_2$ ressemble alors à output = $L_2(input \oplus k_1).$
-
-Si $L_1$ sort un octet, et $L_2$ prend un octet en entrée. Alors on a un encodage sur les 256 possibilités de la Lookup table. Ce qui est assez facile à retrouver avec une recherche exhaustive. C'est pourquoi on crée un nombre de Lookup tables différentes pour les XORs assez important pour rendre cette recherche exhaustive inefficace. servir
-
-\newpage
-
-\subsection{Traduction des concepts}
-
-\subsubsection{Partial Evaluation}
-
-Toutes les Lookuptables seront généré par un programme Ltablesgen.c prenant une clé de 64bits en entrée et générant toutes les Lookup tables dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
-
-\subsubsection{Bypass et Combined Function Encoding}
-
-Puisqu'on a, au maximum un état de 96bits dans la mémoire, on va garder cet état de 96 bits tout le long et utiliser les bits qui ne servent à rien comme bypass.\\
-
-(peut -être mieux expliquer cet état de 96 bits?)
-
-Ils seront répartis d'une manière différentes tout au long de l'exécution, leur répartition sera par étape :
-\begin{enumerate}
-\item les 32 bits de la partie gauche, les 48 bits de la partie droite étendue et les 16 bits non étendus de la partie droite.
-\item les 32 bits de la partie gauche, les 32 bits résultant du XOR entre la clé et la partie droite étendue et les 32 bits de la partie de droite
-\item De même que l'étape 1
-\end{enumerate}
-
-\subsection{Différentes étapes}
 
 \subsubsection{Étape préliminaire}
 
