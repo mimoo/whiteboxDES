@@ -235,20 +235,6 @@ Pour éviter une extraction de l'implémentation de la whitebox, et pour éviter
 
 $E \circ WHITEBOX-DES(input) \circ G$
 
-
-\subsection{Randomization}
-
-Pour compliquer la compréhension du programme on peut mélanger l'ordre des bits dans une opération. Ceci se fait grâce à une bijection et son inverse entre deux opérations.
-
-Si $M_1$ et $M_2$ sont deux opérations sous forme de matrice executé à la suite sur notre vecteur de donnée $data$ :\\
-
-$M_1 \cdot M_2 \cdot data$\\
-
-On peut ajouter une bijection $R_1$ entre ces deux opérations :\\
-
-$(M_1 \cdot R_1^{-1}) \cdot (R_1 \cdot M2 ) \cdot data$\\
-
-
 \newpage
 
 \subsection{Traduction des concepts}
