@@ -279,33 +279,6 @@ Les 16 sous-clés sont d'abord pré-évalués. Puis on pré-évalue l'opération
 
 La prochaine étape consiste à transformer toutes les opérations en Lookup table. Pour ce faire on met d'abord sous forme de matrice chaque opération. Le découpage des opérations sous forme de matrice est expliqué plus loin.\\
 
-Un \textbf{premier problème} survient :\\
-
-Ces matrices contienent généralement beaucoup trop de zéros (identités, permutations, ...). Pour éviter d'avoir trop de Lookup tables nulles et réduire le champ de recherche pour l'attaquant, chaque matrice est découpé en \textbf{blocs de sous-matrices}.\\
-Les multiplications des sous-matrices au vecteur associé sont ensuite transformées en Lookup tables.\\
-
-Un \textbf{second problème} intervient :\\
-
-On ne peut pas faire des Lookup tables trop grosses car leur taille augmente exponentiellement :\\
-
-Pour 8 bits d'entrées il y a $2^{8}$ possibilités. Donc la taille de la lookuptable est de $2^{8} * sizeof(output)$.\\
-Pour 16 bits d'entrées, il y a $2^{16}$ possibilités. Donc la taille de la lookup table est de $2^{16} * sizeof(output)$.\\
-Avec notre exemple simplifié, en multipliant par deux le nombre de Lookup table on réduit la taille de notre fichier final par $(2^{16} - 2^8 + 2^8) * sizeof(output)$ pour chaque Lookup table.
-etc...\\
-
-
-----
-
-
-On crée donc des \textbf{réseaux} de lookup tables.
-
-Ensuite tous les XOR sont transformés en Lookup tables aussi qu'on appellera des XOR tables.
-
-Après cette étape toutes les opérations ont étés codés en lookup tables
-
-Par exemple, nous allons décomposer une matrice 16*16 en sous-matrices de 8x4. (selon Link et cie, c'est plus secure).
-
-Voici l'opération sans la décomposition
 
 \begin{Verbatim}[samepage=true]
            .----.     .-------------------.     .----.
@@ -320,32 +293,109 @@ Voici l'opération sans la décomposition
 
 \end{Verbatim}
 
-Voici l'opération après la décomposition en sous-matrice
+Un \textbf{premier problème} survient :\\
+
+Ces matrices contienent généralement beaucoup trop de zéros (identités, permutations, ...).\\
+On utilise d'abord la technique des \textbf{Mixing Bijection} pour séparer la matrice en deux matrices plus complexes (et donc en deux opérations). Mais cela ne suffit pas.\\
+Pour éviter d'avoir trop de Lookup tables nulles et réduire le champ de recherche pour l'attaquant, chaque matrice est découpé en \textbf{blocs de sous-matrices}.\\
+Les multiplications des sous-matrices au vecteur associé sont ensuite transformées en Lookup tables.\\
 
 \begin{Verbatim}[samepage=true]
 
            .----.     .---------.---------.     .----.
-           |    |     |    A    |    B    |     |    |
-           | Y0 |     .---------.---------.     | X0 |
-           |    |     |    C    |    D    |     |    |
+           |    |     |    |    |    |    |     | X0 |
+           | Y0 |     |  A | B  | C  |  D |     .----|
+           |    |     |    |    |    |    |     | X1 |
            .----.  =  .---------.---------.  x  .----.
-           |    |     |    E    |    F    |     |    |
-           | Y1 |     .---------.---------.     | X1 |
-           |    |     |    H    |    I    |     |    |
+           |    |     |    E    |    F    |     | X2 |
+           | Y1 |     .---------.---------.     .----.
+           |    |     |    H    |    I    |     | X3 |
            '----'     '---------'---------'     '----'
            
 \end{Verbatim}
 
-Chaque sous-matrice va être la source d'une nouvelle lookup table.
+avec Y0 = A*X0 $\oplus$ B*X1 $\oplus$ C*X2 $\oplus$ D*X3
 
-Cette lookup table va être créée par le multiplication d'une sous-matrice avec toutes les possibilités d'input.
+Un \textbf{second problème} intervient :\\
 
-Elle aura donc $2^8$ = 256 entrées possibles et $2^4$ = 16 sorties possibles.
+On ne peut pas faire des Lookup tables trop grosses car leur taille augmente exponentiellement :\\
 
-Ainsi pour une matrice (m,n), et pour une sous-matrice ($m_{1}$,$n_{1}$), il y aura     $\frac{m*n}{m_{1}*n_{1}}$ lookup tables créées qui prendront $(2^{n_{1}})$ valeurs et pourront engendrer $(2^{m_{1}})$ sorties.
+Pour 8 bits d'entrées il y a $2^{8}$ possibilités. Donc la taille de la Lookup table est de $2^{8} * sizeof(output)$.\\
+Pour 16 bits d'entrées, il y a $2^{16}$ possibilités. Donc la taille de la Lookup table est de $2^{16} * sizeof(output)$.\\
+Avec notre exemple simplifié, en utilisant des Lookup table prenant 8bits en entrée, et donc en multipliant par deux le nombre de Lookup table, on réduit la taille de notre fichier final par $(2^{16} - 2^8 + 2^8) * sizeof(output)$ pour chaque Lookup table.
+etc...\\
 
+L'article de Link et cie\footnote{http://eprint.iacr.org/2004/025.pdf} conseille, pour plus de sécurité, de choisir des blocs de $8x4$ à la place de $8x8$ que conseille Chow et al.\\
+
+
+
+
+METTRE TABLEAU DES COMAPRAISONS EN TAILLE DANS LARTICLE DE LINK ET AL
+
+
+
+
+
+
+
+
+Chaque sous-matrice va être la source d'une nouvelle lookup table qui sera créée par la multiplication de la sous-matrice avec toutes les possibilités d'input de 4bits.\\
+
+Ensuite chaque ligne de Lookup table donnera des outputs de 8bits qu'il faudrat XORer entre eux. Pour continuer la tabularization, chaque XOR est pré-calculé dans ce qu'on appelera des XOR tables.\\
+
+Ce qui donne des \textbf{réseaux} de lookup tables :\\
+
+\begin{Verbatim}[samepage=true]
+
+     ******  ******    ******  ******
+     * AX1*  * BX2*    * CX3*  * DX4*
+     ******  ******    ******  ******
+
+        |      |          |       |
+        v      v          v       v
+
+        8b    8b          8b     8b
+      <----><---->      <----><---->
+      .----------.      .----------.
+       \   S0   /        \   S1   /
+        '------'          '------'
+         <---->            <---->
+           8b                8b
+
+                \         /
+                 \       /
+                  |     |
+                  v     v
+
+                  8b    8b
+                <----><---->
+                 .---------.
+                 \   S2   /
+                  '------'
+                   <---->
+                     8b
+
+                      |
+                      v
+
+                   ******
+                   * Y0 *
+                   ******
+
+\end{Verbatim}
+
+\subsection{Split-Path Encoding}
+
+On a maintenant un réseau de XOR Tables qui prennent 16 bits en input et rendent 8 bits en output. Il y a donc une perte d'information, ce que l'on peut corriger en modifiant ces Look up tables pour avoir un output de 16bits avec 8bits de bypass.\\
+$L_1'(input) = L_1(input)||R(input)$ avec R une fonction rendant 8bits en output.
+ 
+\subsection{Input/Output Encoding}
+
+Ce réseau de XOR Tables est maintenant modifié en encryptant/décryptant les entrées sorties entre opérations. On peut générer des clés de 16bits en fonction de la clé principale.
 
 \subsection{Matrices}
+
+La suite explique comment les opérations ont été réduites en 3 matrices $M_1$, $M_2$ et $M_3$
 
 \subsubsection{Étape préliminaire}
 
@@ -557,48 +607,6 @@ Ces calculs vont être modélisé par M2 qui est une matrice (96,96) et qui réa
 \end{enumerate}
 
 
-/!\ A expliquer :
-
- Y0 = A*X0 [+] B*X1 [+] C*X2 [+] D*X3
-
-\begin{Verbatim}[samepage=true]
-
-     ******  ******    ******  ******
-     * X0 *  * X1 *    * X2 *  * X3 *
-     ******  ******    ******  ******
-
-        |      |          |       |
-        v      v          v       v
-
-        2b    2b          2b     2b
-      <----><---->      <----><---->
-      .----------.      .----------.
-       \   S0   /        \   S1   /
-        '------'          '------'
-         <---->            <---->
-           2b                2b
-
-                \         /
-                 \       /
-                  |     |
-                  v     v
-
-                  2b    2b
-                <----><---->
-                 .---------.
-                 \   S2   /
-                  '------'
-                   <---->
-                     2b
-
-                      |
-                      v
-
-                   ******
-                   * Y0 *
-                   ******
-
-\end{Verbatim}
 
 \subsubsection{Étape finale}
 
