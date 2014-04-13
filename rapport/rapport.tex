@@ -186,11 +186,11 @@ La tabularization consiste à transformer toutes les autres opérations en \text
 Une fois que toutes les opérations ont étés transformées en Lookup tables, il est encore facile de retrouver les opération initiales et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est de délinéariser ces opérations en encodant les entrées et sorties de ces Lookup tables.\\
 
 Soit $L_1$ et $L_2$ deux Lookup tables se suivant :\\
-$sortie = L_2(L_1(entrée))$\\
-On peut encrypter la sortie de $L_1$ avec une clé $k_1$ et décrypter l'entrée de $L_2$ avec cette même clef. C'est un **cipher de Vernam** :\\
-On remplace donc $L_1(entrée)$ par $L_1'(entrée) = L_1(entrée) \oplus k_1$\\
-et $L_2(entrée)$ par $L_2'(entrée) = L_2(entrée \oplus k_1$\\
-Ce qui donne : $output = L_2'((L_1(entrée)))$.\\
+$sortie = L_2(L_1(input))$\\
+On peut encrypter la sortie de $L_1$ avec une clé $k_1$ et décrypter l'entrée de $L_2$ avec cette même clef. C'est un \textbf{cipher de Vernam} :\\
+On remplace donc $L_1(input)$ par $L_1'(input) = L_1(input) \oplus k_1$\\
+et $L_2(input)$ par $L_2'(input) = L_2(input \oplus k_1)$\\
+Ce qui donne : $output = L_2'((L_1'(input)))$.\\
 
 \section{Principes et concepts secondaires}
 
