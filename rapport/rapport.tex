@@ -185,7 +185,8 @@ La tabularization consiste à transformer toutes les autres opérations en \text
 
 Une fois que toutes les opérations ont étés transformées en Lookup tables, il est encore facile de retrouver les opération initiales et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est de délinéariser ces opérations en encodant les entrées et sorties de ces Lookup tables.\\
 
-Soit $L_1$ et $L_2$ deux Lookup tables se suivant : $sortie = L_2(L_1(entrée))$\\
+Soit $L_1$ et $L_2$ deux Lookup tables se suivant :\\
+$sortie = L_2(L_1(entrée))$\\
 On peut encrypter la sortie de $L_1$ avec une clé $k_1$ et décrypter l'entrée de $L_2$ avec cette même clef. C'est un **cipher de Vernam** :\\
 On remplace donc $L_1(entrée)$ par $L_1'(entrée) = L_1(entrée) \oplus k_1$\\
 et $L_2(entrée)$ par $L_2'(entrée) = L_2(entrée \oplus k_1$\\
@@ -197,7 +198,10 @@ Ce qui donne : $output = L_2'((L_1(entrée)))$.\\
 
 Comme l'encryption des entrées/sorties. On peut aussi \textbf{mélanger} les bits sortant d'une opération, puis les remettre dans l'ordre avant la prochaine.\\
 
-Par exemple, si $L_1$ et $L_2$ sont deux lookup tables se suivant ($output = L_2 \circ L_1(input)$). On peut rajouter une bijection $E$ entre les deux comme ceci : $L_2 \circ E^-1 \circ E \circ L_1(input)$.
+Par exemple, si $L_1$ et $L_2$ sont deux lookup tables se suivant :\\
+$output = L_2 \circ L_1(input)$\\
+ On peut rajouter une bijection $E$ entre les deux comme ceci :\\
+$L_2 \circ E^-1 \circ E \circ L_1(input)$
 
 
 \subsection{Mixing Bijection}
@@ -303,7 +307,8 @@ Ainsi pour une matrice (m,n), et pour une sous-matrice ($m_{1}$,$n_{1}$), il y a
 
 \subsection{Randomization}
 
-Pour compliquer la compréhension du programme on peut mélanger l'ordre dans lequel on envois les bits à notre programme. Puisqu'on a les matrices $M_1, M_2 et M_3$, il suffit de les multiplier par d'autres matrices de mélange avant et après.
+Pour compliquer la compréhension du programme on peut mélanger l'ordre des bits dans une opération. Ceci se fait grâce à une bijection et son inverse entre deux opérations.
+Puisqu'on a les matrices $M_1$, $M_2$ et $M_3$, il suffit de les multiplier par d'autres matrices de mélange avant et après.
 
 Par exemple le premier round représenté par notre implémentation :
 
