@@ -73,7 +73,7 @@ Il existe d'autres utilisations comme les mobile-agents ou les smartcards et sur
 
 C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clef.\\
 Il faut savoir que les différentes approches connues sont basées sur plus d'observations que de théorie, et qu'elles ont toutes étés crackés.\\
-Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empécher l'opération inverse c'est-à-dire l'encrption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait construire nous même des instructions à destination des backdoors.\\
+Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empécher l'opération inverse c'est-à-dire l'encryption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait alors construire nous même des instructions à destination des backdoors.\\
 
 \newpage
 	
@@ -164,7 +164,7 @@ Plusieurs concepts ont étés introduits par Chow et cie dans leur article\footn
 \subsection{Partial Evaluation}
 
 L'évaluation partielle consiste à précalculer ce que l'on connait déjà puis à \textbf{mélanger l'opération du XOR} de la clef avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
-Dans DES 16 sous-clés sont générées à partir de la clé principale puis sont une à une XORé durant les 16 rounds de l'algorithme. Ces 16 clefs de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les 2^48 différents vecteurs possibles à chaque rounds sont pré-générées et stockées dans des S-box (Substitution boxes) qu'on appelera \textbf{Lookup tables} par la suite.
+Dans DES 16 sous-clés sont générées à partir de la clé principale puis sont une à une XORé durant les 16 rounds de l'algorithme. Ces 16 clefs de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque rounds sont pré-générées et stockées dans des S-box (Substitution boxes) qu'on appelera \textbf{Lookup tables} par la suite.
 
 
 \subsection{Tabularizing}
@@ -186,7 +186,7 @@ La tabularization consiste à transformer toutes les autres opérations en \text
 Une fois que toutes les opérations ont étés transformées en Lookup tables, il est encore facile de retrouver les opération initiales et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est de délinéariser ces opérations en encodant les entrées et sorties de ces Lookup tables.\\
 
 Soit $L_1$ et $L_2$ deux Lookup tables se suivant : $sortie = L_2(L_1(entrée))$\\
-On peut encrypter la sortie de L_1 avec une clé $k_1$ et décrypter l'entrée de $L_2$ avec cette même clef. C'est un **cipher de Vernam** :\\
+On peut encrypter la sortie de $L_1$ avec une clé $k_1$ et décrypter l'entrée de $L_2$ avec cette même clef. C'est un **cipher de Vernam** :\\
 On remplace donc $L_1(entrée)$ par $L_1'(entrée) = L_1(entrée) \oplus k_1$\\
 et $L_2(entrée)$ par $L_2'(entrée) = L_2(entrée \oplus k_1$\\
 Ce qui donne : $output = L_2'((L_1(entrée)))$.\\
@@ -203,8 +203,8 @@ Par exemple, si $L_1$ et $L_2$ sont deux lookup tables se suivant ($output = L_2
 \subsection{Mixing Bijection}
 
 La création des Lookup tables dans la tabularization se fait à partir de matrices représentant les opérations du cipher. Souvent ces matrices contiennent beaucoup plus de 0 que de 1 ce qui rend les lookup tables trop simples et ce qui crée donc un nouveau problème. Pour éviter ce genre de problème on crée deux opérations au lieu d'une. La première composé d'une bijection. La deuxième composé de son inverse multiplié par l'opération qu'on veut complexifier.\\
-Soit $M_1$ la matrice d'une des opérations que l'on transformera en lookup table plus tard. On peut la multiplier par une autre matrice $G$ choisie pertinament pour augmenter le bruit dans $M_1$ (un nombre de 0 et de 1 qui parait aléatoire). De fait que l'opération devienne alors $G \cdot M_1$. Il faut bien sur annuler $G$ ensuite en créant une seconde opération $G^(-1)$.\\
-L'opération devient alors : $G^(-1) \cdot (G \cdot M_1)$ où $G \cdot M_1$ est pré-évalué comme une unique opération.
+Soit $M_1$ la matrice d'une des opérations que l'on transformera en lookup table plus tard. On peut la multiplier par une autre matrice $G$ choisie pertinament pour augmenter le bruit dans $M_1$ (un nombre de 0 et de 1 qui parait aléatoire). De fait que l'opération devienne alors $G \cdot M_1$. Il faut bien sur annuler $G$ ensuite en créant une seconde opération $G^{-1}$.\\
+L'opération devient alors : $G^{-1} \cdot (G \cdot M_1)$ où $G \cdot M_1$ est pré-évalué comme une unique opération.
 
 
 \subsection{By-Pass Encoding}
