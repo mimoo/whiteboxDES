@@ -1,5 +1,5 @@
 \documentclass[a4paper,12pt]{article}
-
+\usepackage{times}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -30,13 +30,13 @@ La cryptographie est fondé depuis très longtemps sur le principe que deux pers
 De nombreux block cipher comme DES ou AES ont étés inventé à travers les années et ont su rester solide contre la cryptanalise. Ces travaux résident sur beaucoup de preuves mathématiques mais aussi sur beaucoup d'observations.
 
 \begin{Verbatim}[samepage=true]
-                         MAN IN THE MIDDLE
-                                 |
-           .-----.               |               .-------.
-           |     |               v               |       |
-           | BOB |     ------------------->      | ALICE |
-           |     |                               |       |
-           .-----.                               .-------.
+                   MAN IN THE MIDDLE
+                           |
+       .-----.             |            .-------.
+       |     |             v            |       |
+       | BOB |   ------------------->   | ALICE |
+       |     |                          |       |
+       '-----'                          '-------'
 \end{Verbatim}
 
 Avec les avancées technologiques des dernières années de nouvelles utilisation de la Cryptologie ont fait surface. Une assez récente est le besoin d'exécuter du code sur des machines potentiellement dangereuses. Lorsque le code ne contient aucune informations importantes cela n'est pas un problème, mais lorsque le code contient des passwords ou des clefs cela devient un problème.\\
@@ -172,12 +172,12 @@ Dans DES 16 sous-clés sont générées à partir de la clé principale puis son
 La tabularization consiste à transformer toutes les autres opérations en \textbf{Lookup tables}.
 
 \begin{verbatim}
-            Entrée                 S-box              Sortie
-                         .----------------------.
-          0010 := 2 -->  | 0 | 1 | 2 | ... | 15 |
-                         |----------------------|
-                         | 5 | 2 | 0 | ... |  8 | --> 0 := 0000
-                         '----------------------'
+  Entrée                 S-box              Sortie
+               .----------------------.
+0010 := 2 -->  | 0 | 1 | 2 | ... | 15 |
+               |----------------------|
+               | 5 | 2 | 0 | ... |  8 | --> 0 := 0000
+               '----------------------'
 \end{verbatim}
 
 
