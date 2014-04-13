@@ -265,7 +265,7 @@ void key_schedule(uint64_t* key, uint64_t* next_key, int round)
     }
 
     // All Good!
-    //pn Use key in the DES rounds.
+    // Use key in the DES rounds.
     // Use next_key in this function again as the new key to change
 }
 
