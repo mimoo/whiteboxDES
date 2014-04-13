@@ -195,6 +195,7 @@ On remplace donc $L_1(input)$ par $L_1'(input) = L_1(input) \oplus k_1$\\
 et $L_2(input)$ par $L_2'(input) = L_2(input \oplus k_1)$\\
 Ce qui donne : $output = L_2'((L_1'(input)))$.\\
 
+
 \section{Principes et concepts secondaires}
 
 \subsection{Randomization}
@@ -247,19 +248,6 @@ On peut ajouter une bijection $R_1$ entre ces deux opérations :\\
 
 $(M_1 \cdot R_1^{-1}) \cdot (R_1 \cdot M2 ) \cdot data$\\
 
-\subsection{De-linearization}
-
-Une fois que toutes les opérations sont transformés en lookup tables. On rajoute des encodages à ces lookup tables.
-
-Par exemple $L_1$ et $L_2$ deux lookup tables qui se suivent.
-
-$L_1 \circ L_2$
-
-on crée une clef pour $L_1$ et on XOR cette clef à ses sorties. Ce qui fait que $L_1$ ressemble sous le manteau à $output = (L_1(input) \oplus k_1)$
-
-et on décrypte cette encryption dans $L_2$ en faisant un XOR dans ses inputs ($L_2$ ressemble alors à output = $L_2(input \oplus k_1).$
-
-Si $L_1$ sort un octet, et $L_2$ prend un octet en entrée. Alors on a un encodage sur les 256 possibilités de la Lookup table. Ce qui est assez facile à retrouver avec une recherche exhaustive. C'est pourquoi on crée un nombre de Lookup tables différentes pour les XORs assez important pour rendre cette recherche exhaustive inefficace. servir
 
 \newpage
 
