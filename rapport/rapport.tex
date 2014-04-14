@@ -45,15 +45,15 @@ De nombreux block cipher comme DES ou AES ont étés inventé à travers les ann
 Avec les avancées technologiques des dernières années de nouvelles utilisation de la Cryptologie ont fait surface. Une assez récente est le besoin d'exécuter du code sur des machines potentiellement dangereuses. Lorsque le code ne contient aucune informations importantes cela n'est pas un problème, mais lorsque le code contient des passwords ou des clefs cela devient un problème.\\
 
 \begin{Verbatim}[samepage=true]
-           .-----------------. 
-           |    ATTAQUANT    |
-           |  .-----------.  |  
-           |  |           |  |  
-           |  |  WHITEBOX |  | 
-           |  |           |  | 
-           |  .-----------.  |
-           |                 |
-           '-----------------'
+                 .-----------------. 
+                 |    ATTAQUANT    |
+                 |  .-----------.  |  
+                 |  |           |  |  
+                 |  |  WHITEBOX |  | 
+                 |  |           |  | 
+                 |  .-----------.  |
+                 |                 |
+                 '-----------------'
 \end{Verbatim}
 
 Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement en extraire la clef.\\
@@ -66,7 +66,7 @@ Avant d'expliquer une potentielle solution à ce problème, voici quelques illus
 
 \subsubsection{Backdoors}
 
-Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les enterprises/associations/gouvernements de leur choix. Imaginons maintenant que notre gouvernement veuille envoyer des instructions à ce backdoor sans qu'elles puissent être intercepter et écouté, parce que les instructions doivent rester secrète et/ou parce que l'intercepetion de telles instructions en clair pourrait élever des soupçons.\\
+Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les entreprises/associations/gouvernements de leur choix. Imaginons maintenant que notre gouvernement veuille envoyer des instructions à ce backdoor sans qu'elles puissent être intercepter et écouté, parce que les instructions doivent rester secrète et/ou parce que l'interception de telles instructions en clair pourrait élever des soupçons.\\
 
 Une des solutions disponible est d'encrypter ces instructions avec la clef publique/privée de ces backdoors avant de leur envoyer.\\
 
@@ -74,21 +74,21 @@ Personne ne peut lire ces instructions, personne ne peut envoyer d'instructions.
 
 \subsubsection{DRMs}
 
-Imaginons maintenant un système de distribution de film. On encrypte le film avec une clef et on l'envoit avec la clef en annexe. La clef en annexe est elle même encrypté avec la clef de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
+Imaginons maintenant un système de distribution de film. On encrypte le film avec une clef et on l'envoie avec la clef en annexe. La clef en annexe est elle même encrypté avec la clef de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
 Le logiciel propriétaire, qui est donc notre fameuse Whitebox, décrypte la clef, décrypte le film ET ajoute un hash de la clef dans le film.\\
 L'attaquant peut maintenant soit essayer d'extraire une des deux clefs du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera bien sur le hash intégré dans cet output et pourra être incriminé.
 
 
 \subsubsection{Autres utilisations}
 
-Il existe d'autres utilisations comme les mobile-agents ou les smartcards et surement bien d'autres encore qui n'ont pas encore été pensées...
+Il existe d'autres utilisations comme les mobile-agents ou les smartcards et sûrement bien d'autres encore qui n'ont pas encore été pensées...
 
 
 \subsection{Solution}
 
 C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clef.\\
 Il faut savoir que les différentes approches connues sont basées sur plus d'observations que de théorie, et qu'elles ont toutes étés crackés.\\
-Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empécher l'opération inverse c'est-à-dire l'encryption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait alors construire nous même des instructions à destination des backdoors.\\
+Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empêcher l'opération inverse c'est-à-dire l'encryption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait alors construire nous même des instructions à destination des backdoors.\\
 
 \newpage
 	
@@ -105,7 +105,7 @@ DES est un algorithme de chiffrement symétrique (ou chiffrement par bloc) qui u
 Bien qu'il soit recommandé de ne plus l'utiliser (la dernière version avant l'obsolescence datant de 1999), on peut encore parfois le trouver sous la forme de Triple DES.
 	
 L'intérêt principal d'utiliser DES dans un contexte de type WhiteBox est que cet algorithme a seulement besoin de transformations linéaires et de substitutions, ce qui facilite l'étude du principe. De plus l'algorithme de Triple DES étant encore parfois utilisé, il peut être intéressant de savoir en implémenter une version WhiteBox.
-	
+
 \subsection{Génération des 16 clés}	
 	
 La clé initiale est représentée sur 64 bits (à laquelle on retire 1 bit de parité à chaque octet). 
@@ -178,8 +178,8 @@ Plusieurs concepts ont étés introduits par Chow et cie dans leur article\footn
 
 \subsection{Partial Evaluation}
 
-L'évaluation partielle consiste à précalculer ce que l'on connait déjà puis à \textbf{mélanger l'opération du XOR} de la clef avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
-Dans DES 16 sous-clés sont générées à partir de la clé principale puis sont une à une XORé durant les 16 rounds de l'algorithme. Ces 16 clefs de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque rounds sont pré-générées et stockées dans des S-box (Substitution boxes) qu'on appelera \textbf{Lookup tables} par la suite.
+L'évaluation partielle consiste à précalculer ce que l'on connaît déjà puis à \textbf{mélanger l'opération du XOR} de la clef avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
+Dans DES 16 sous-clés sont générées à partir de la clé principale puis sont une à une XORé durant les 16 rounds de l'algorithme. Ces 16 clefs de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque rounds sont pré-générées et stockées dans des S-box (Substitution boxes) qu'on appellera \textbf{Lookup tables} par la suite.
 
 
 \subsection{Tabularizing}
@@ -353,7 +353,7 @@ L'article de Link et cie\footnote{http://eprint.iacr.org/2004/025.pdf} conseille
 
 Chaque sous-matrice va être la source d'une nouvelle lookup table qui sera créée par la multiplication de la sous-matrice avec toutes les possibilités d'input de 4bits.\\
 
-Ensuite chaque ligne de Lookup table donnera des outputs de 8bits qu'il faudrat XORer entre eux. Pour continuer la tabularization, chaque XOR est pré-calculé dans ce qu'on appelera des XOR tables.\\
+Ensuite chaque ligne de Lookup table donnera des outputs de 8bits qu'il faudra XORer entre eux. Pour continuer la tabularization, chaque XOR est pré-calculé dans ce qu'on appellera des XOR tables.\\
 
 Ce qui donne des \textbf{réseaux} de lookup tables :\\
 
