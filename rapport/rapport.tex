@@ -53,7 +53,7 @@ Avec les avancées technologiques des dernières années de nouvelles utilisatio
            |  |           |  | 
            |  .-----------.  |
            |                 |
-           ²-----------------²
+           '-----------------'
 \end{Verbatim}
 
 Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement en extraire la clef.\\
@@ -630,11 +630,11 @@ Toutes ces étapes vont être réalisée grâce à une matrice M3 qui va être d
 
 \section{Conclusion}
 
-No secure whitebox implementation known today
-
 Si vous voulez implémenter une whitebox dans votre programme. Cela demande des efforts, de la recherche, etc... Il faut que ça soit un projet important et il faut considérer les autres solutions possibles (utilisation d'une API, d'une clef publique, ...) avant de considérer la solution de la whitebox.
 
-La taille que prend une whitebox est considérablement plus important que la taille d'un cipher nu (link et cie : 2.5mb je crois ? il faut vérifier, c'est marqué dans la thèse).
+La taille que prend une whitebox est considérablement plus important que la taille d'un cipher nu. L'implémentation de Chow et al est de 4.5 MB.
+
+De plus, aucune implémentation sécurisée de whitebox n'est connue de nos jours.
 
 \newpage
 
