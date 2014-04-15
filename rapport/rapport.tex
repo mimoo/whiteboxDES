@@ -632,11 +632,13 @@ Toutes ces étapes vont être réalisée grâce à une matrice M3 qui va être d
 
 \section{Conclusion}
 
-L'implémentation une whitebox dans un programme demande des efforts, de la recherche, etc... Il faut que ça soit un projet important et il faut considérer les autres solutions possibles (utilisation d'une API, d'une clé publique, ...) avant de considérer la solution de la whitebox.
+L'implémentation une whitebox demande une recherche et des efforts considérables. Il faut considérer les autres solutions disponibles (utilisation d'une API, d'une clé publique, ...) avant de commencer à entreprendre la construction d'une whitebox.\\
 
-La taille que prend une whitebox est considérablement plus important que la taille d'un cipher nu. L'implémentation de Chow et al est de 4.5 MB.
+La taille que prend une whitebox est considérablement plus important que la taille d'un cipher nu. L'implémentation de Chow et al est de 4.5 MB par exemple. Une implémentation hardware est donc peu envisageable.\\
 
-De plus, aucune implémentation sécurisée de whitebox n'est connue de nos jours.
+La sécurité des techniques publiées par Chow et cie provient essentiellement de l'encryption des entrées/sorties et de leur nombre. Mais cela ne suffit pas, aucune implémentation de whitebox dont les techniques et les algorithmes sont connus, n'est sécurisée à ce jour.\\
+
+Dans le cas où le lecteur serait intéressé par une solution professionnel du type whitebox, ces techniques seront utiles mais certainement non-suffisante. D'autres sont surement utilisées mais non publiée afin de compliquer les attaques possibles.\\
 
 \newpage
 
