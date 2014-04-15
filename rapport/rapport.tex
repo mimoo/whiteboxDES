@@ -15,7 +15,7 @@
   \and Jacques Monin
   \and Hugo Bonnin}
 
-\title{Implémentation et Analyse d une White-box du DES}
+\title{Implémentation et Analyse d'une White-box du DES}
 
 \begin{document}
 
@@ -29,8 +29,8 @@
 
 \section{Introduction}
 
-La cryptographie est fondée depuis très longtemps sur le principe que deux personnes veulent converser entre elles sans pouvoir être écoutées (Man In The Middle).\\
-De nombreux block ciphers comme DES ou AES ont été inventés à travers les années et ont su rester solides contre la cryptanalyse. Ces travaux résident sur beaucoup de preuves mathématiques mais aussi sur beaucoup d'observations.
+La cryptographie est fondée depuis très longtemps sur ce principle simple : deux personnes veulent pouvoir communiquer entre elles sans pouvoir être écoutées (Man In The Middle).\\
+De nombreux block ciphers comme DES ou AES ont été inventés à travers l'histoire de la cryptographie et ont su rester solides contre la cryptanalyse jusqu'à un certain point.\\
 
 \begin{Verbatim}[samepage=true]
                    MAN IN THE MIDDLE
@@ -42,7 +42,7 @@ De nombreux block ciphers comme DES ou AES ont été inventés à travers les an
        '-----'                          '-------'
 \end{Verbatim}
 
-Avec les avancées technologiques des dernières années de nouvelles utilisation de la Cryptologie ont fait surface. Une assez récente est le besoin d'exécuter du code sur des machines potentiellement dangereuses. Lorsque le code ne contient aucune informations importantes cela n'est pas un problème, mais lorsque le code contient des passwords ou des clefs cela devient un problème.\\
+Avec les avancées technologiques des dernières années, de nouveaux besoin en cryptographie ont fait surface. Récemment, le besoin d'exécuter du code contenant des informations sensibles sur des machines potentiellement dangereuses a créer de nouveaux domaines de recherche en Cryptologie.\\
 
 \begin{Verbatim}[samepage=true]
                  .-----------------. 
@@ -56,7 +56,7 @@ Avec les avancées technologiques des dernières années de nouvelles utilisatio
                  '-----------------'
 \end{Verbatim}
 
-Man at the end : l'attaquant à un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement en extraire la clef.\\
+\textbf{Man at the end} : l'attaquant a un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement ce qui nous intéresse : en extraire la clé.\\
 
 
 \subsection{Utilisation}
@@ -68,15 +68,15 @@ Avant d'expliquer une potentielle solution à ce problème, voici quelques illus
 
 Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les entreprises/associations/gouvernements de leur choix. Imaginons maintenant que notre gouvernement veuille envoyer des instructions à ce backdoor sans qu'elles puissent être interceptées et écoutées, parce que les instructions doivent rester secrètes et/ou parce que l'interception de telles instructions en clair pourrait élever des soupçons.\\
 
-Une des solutions disponible est d'encrypter ces instructions avec la clef publique/privée de ces backdoors avant de leur envoyer.\\
+Une des solutions disponible est d'encrypter ces instructions avec la clé publique/privée de ces backdoors avant de leur envoyer.\\
 
 Personne ne peut lire ces instructions, personne ne peut envoyer d'instructions.
 
 \subsubsection{DRMs}
 
-Imaginons maintenant un système de distribution de film. On encrypte le film avec une clef et on l'envoie avec la clef en annexe. La clef en annexe est elle même encrypté avec la clef de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
-Le logiciel propriétaire, qui est donc notre fameuse Whitebox, décrypte la clef, décrypte le film ET ajoute un hash de la clef dans le film.\\
-L'attaquant peut maintenant soit essayer d'extraire une des deux clefs du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera bien sur le hash intégré dans cet output et pourra être incriminé.
+Imaginons maintenant un système de distribution de film. On encrypte le film avec une clé et on l'envoie avec la clé en annexe. La clé en annexe est elle même encrypté avec la clé de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
+Le logiciel propriétaire, qui est donc notre fameuse Whitebox, décrypte la clé, décrypte le film ET ajoute un hash de la clé dans le film.\\
+L'attaquant peut maintenant soit essayer d'extraire une des deux clés du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera bien sur le hash intégré dans cet output et pourra être incriminé.
 
 
 \subsubsection{Autres utilisations}
@@ -86,9 +86,10 @@ Il existe d'autres utilisations comme les mobile-agents ou les smartcards et sû
 
 \subsection{Solution}
 
-C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clef.\\
-Il faut savoir que les différentes approches connues sont basées sur plus d'observations que de théorie, et qu'elles ont toutes étés crackées.\\
-Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empêcher l'opération inverse c'est-à-dire l'encryption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait alors construire nous même des instructions à destination des backdoors.\\
+C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clé.\\
+Barak et cie ont prouvés qu'un obfuscateur parfait n'existait pas dans un article intitulé ``On the (Im)possibility of Obfuscating Programs''\footnote{http://www.iacr.org/archive/crypto2001/21390001.pdf}\\
+Cela ne nous empèche pas de nous en approcher. Seulement, peu de théorie a encore vu le jours et les techniques que nous expliqueront par la suite, et qui ont vu le jour dans l'article de Chow et cie, sont basés sur nos connaissances actuelles des attaques et les observations faites sur la modification des algorithmes de bases pour affaiblir ces attaques. Il faut noter que l'état de l'art, sans obfuscation pure, c'est-à-dire en dévoilant les techniques et l'algorithme utilisé, ne fournit pas de solution incrackable actuellement (on trouve la clé en l'ordre de quelques secondes). Ces solutions sont néanmoins utilisés commercialement lorsque les algorithmes et techniques utilisées sont méconnus, et rendent donc la tache beaucoup plus difficile.\\
+Pour finir sur notre explication, une Whitebox est généralement utilisé dans la decryption. Il faut donc, en plus de blocker l'extraction d'une clé, empêcher l'opération inverse. C'est-à-dire l'encryption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clé on pourrait alors construire nous même des instructions à destination des backdoors.\\
 
 \newpage
 	
@@ -96,7 +97,7 @@ Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decrypti
 
 Avant de nous lancer dans l'implémentation de la version WhiteBox de DES (Data Encryption Standard), nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub : \url{https://github.com/mimoo/DES}).
 	
-Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation. Si vous êtes déjà familier avec ce cipher vous pouvez rapidement lire cette partie.
+Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation. Si vous êtes déjà familier avec ce cipher vous pouvez vous passer de cette partie.
 
 \subsection{Historique et intérêt}
 
@@ -172,14 +173,14 @@ L'algorithme de DES peut se décomposer en 3 grandes étapes :
 
 \section{Principes et concepts fondamentaux}
 
-Les Whitebox, en leur définition actuelle, sont des blackbox destinées à la décryption dans lesquelles les clefs sont cachées et le processus est assez complexe pour empêcher son inversion.\\
-Plusieurs concepts ont étés introduits par Chow et cie dans leur article\footnote{http://crypto.stanford.edu/DRM2002/whitebox.pdf}. Voici les trois principaux concepts d'une implémentation whitebox :
+Les Whitebox, en leur définition actuelle, sont des blackbox destinées à la décryption dans lesquelles les clés sont cachées et le processus assez complexe pour empêcher son inversion.\\
+Plusieurs concepts ont étés introduits par Chow et cie dans leur article\footnote{http://crypto.stanford.edu/DRM2002/whitebox.pdf}. Voici les trois principaux concepts :
 
 
 \subsection{Partial Evaluation}
 
-L'évaluation partielle consiste à pré-calculer ce que l'on connaît déjà puis à \textbf{mélanger l'opération du XOR} de la clef avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
-Dans DES, 16 sous-clés sont générées à partir de la clé principale puis sont XORées une à une durant les 16 rounds de l'algorithme. Ces 16 clefs de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque rounds sont pré-générés et stockés dans des S-box (Substitution boxes) qu'on appellera \textbf{Lookup tables} par la suite.
+L'évaluation partielle consiste à pré-calculer ce que l'on connaît déjà puis à \textbf{mélanger l'opération du XOR} de la clé avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
+Dans DES, 16 sous-clés sont générées à partir de la clé principale puis sont XORées une à une durant les 16 rounds de l'algorithme. Ces 16 clés de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque rounds sont pré-générés et stockés dans des S-box (Substitution boxes) qu'on appellera \textbf{Lookup tables} par la suite.
 
 
 \subsection{Tabularizing}
@@ -198,11 +199,11 @@ La tabularisation consiste à transformer toutes les autres opérations en \text
 
 \subsection{Input/Output Encoding}
 
-Une fois que toutes les opérations ont étés transformées en Lookup tables, il est encore facile de retrouver les opération initiales et donc d'en extraire la clef. Une façon de rendre ce travail trop fastidieux est de délinéariser ces opérations en encodant les entrées et sorties de ces Lookup tables.\\
+Une fois que toutes les opérations ont étés transformées en Lookup tables, il est encore facile de retrouver les opération initiales et donc d'en extraire la clé. Une façon de rendre ce travail trop fastidieux est de délinéariser ces opérations en encodant les entrées et sorties de ces Lookup tables.\\
 
 Soit $L_1$ et $L_2$ deux Lookup tables se suivant :\\
-$sortie = L_2(L_1(input))$\\
-On peut encrypter la sortie de $L_1$ avec une clé $k_1$ et décrypter l'entrée de $L_2$ avec cette même clef. C'est un \textbf{cipher de Vernam} :\\
+$output = L_2(L_1(input))$\\
+On peut encrypter la sortie de $L_1$ avec une clé $k_1$ et décrypter l'entrée de $L_2$ avec cette même clé. C'est un \textbf{cipher de Vernam} :\\
 On remplace donc $L_1(input)$ par $L_1'(input) = L_1(input) \oplus k_1$\\
 et $L_2(input)$ par $L_2'(input) = L_2(input \oplus k_1)$\\
 Ce qui donne : $output = L_2'((L_1'(input)))$.\\
@@ -251,7 +252,8 @@ $Whitebox = E \circ DES(input) \circ G$
 
 \section{Implémentation}
 
-Toutes les Lookup tables seront créées par un programme Ltablesgen.c prenant une clé de 64bits en entrée et seront générées dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
+Notre implémentation d'une whitebox DES en C est disponible sur notre github : \url{https://github.com/mimoo/whiteboxDES}).\\
+Toutes les Lookup tables seront créées par un programme \textbf{Ltablesgen.c} prenant une clé de 64bits en entrée et seront générées dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
 
 \subsection{Bypass et Combined Function Encoding}
 
@@ -284,7 +286,7 @@ Au minimum la mémoire contient 64bits. On va donc garder cet état de 96 bits t
 
 \subsection{Partial Evaluation}
 
-Les 16 sous-clés sont d'abord pré-évaluées. Puis on pré-évalue l'opération du xor avec la clef suivi de la substitution que l'on stocke dans des Lookup Tables (différentes à chaque itération puisque elles influencées par les différentes clés).
+Les 16 sous-clés sont d'abord pré-évaluées. Puis on pré-évalue l'opération du xor avec la clé suivi de la substitution que l'on stocke dans des Lookup Tables (différentes à chaque itération puisque elles influencées par les différentes clés).
 
 
 \subsection{Tabularisation}
@@ -487,7 +489,7 @@ state 2:    *              state 2 (96 bits)            *
 Pour ce faire, nous allons calculer 12 Lookup Tables qui prendront 8 bits chacun ce qui recouvrira les 96 bits d'input et qui seront composées de :
 \bigskip
 \begin{enumerate}
-\item 8 lookup tables non linéaires qui permettent le xor avec la clef et la substitution en les pré-calculant grâce à la formule :
+\item 8 lookup tables non linéaires qui permettent le xor avec la clé et la substitution en les pré-calculant grâce à la formule :
 
 \medskip
 \begin{center}
@@ -630,7 +632,7 @@ Toutes ces étapes vont être réalisée grâce à une matrice M3 qui va être d
 
 \section{Conclusion}
 
-L'implémentation une whitebox dans un programme demande des efforts, de la recherche, etc... Il faut que ça soit un projet important et il faut considérer les autres solutions possibles (utilisation d'une API, d'une clef publique, ...) avant de considérer la solution de la whitebox.
+L'implémentation une whitebox dans un programme demande des efforts, de la recherche, etc... Il faut que ça soit un projet important et il faut considérer les autres solutions possibles (utilisation d'une API, d'une clé publique, ...) avant de considérer la solution de la whitebox.
 
 La taille que prend une whitebox est considérablement plus important que la taille d'un cipher nu. L'implémentation de Chow et al est de 4.5 MB.
 
