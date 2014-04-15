@@ -29,8 +29,8 @@
 
 \section{Introduction}
 
-La cryptographie est fondée depuis très longtemps sur ce principle simple : deux personnes veulent pouvoir communiquer entre elles sans pouvoir être écoutées (Man In The Middle).\\
-De nombreux block ciphers comme DES ou AES ont été inventés à travers l'histoire de la cryptographie et ont su rester solides contre la cryptanalyse jusqu'à un certain point.\\
+La cryptographie est fondée depuis très longtemps sur ce principle simple : deux personnes veulent pouvoir communiquer entre elles sans pouvoir être écoutées (attaque type Man in the middle).\\
+De nombreux block ciphers comme DES ou AES ont été inventés à travers l'histoire de la cryptographie et ont su rester solides contre la cryptanalyse, jusqu'à un certain point.\\
 
 \begin{Verbatim}[samepage=true]
                    MAN IN THE MIDDLE
@@ -42,7 +42,7 @@ De nombreux block ciphers comme DES ou AES ont été inventés à travers l'hist
        '-----'                          '-------'
 \end{Verbatim}
 
-Avec les avancées technologiques des dernières années, de nouveaux besoin en cryptographie ont fait surface. Récemment, le besoin d'exécuter du code contenant des informations sensibles sur des machines potentiellement dangereuses a créer de nouveaux domaines de recherche en Cryptologie.\\
+Avec les avancées technologiques des dernières années, de nouveaux besoins en cryptographie ont fait surface. Récemment, le besoin d'exécuter du code contenant des informations sensibles sur des machines potentiellement dangereuses a créé de nouveaux domaines de recherche en Cryptologie.\\
 
 \begin{Verbatim}[samepage=true]
                  .-----------------. 
@@ -56,7 +56,7 @@ Avec les avancées technologiques des dernières années, de nouveaux besoin en 
                  '-----------------'
 \end{Verbatim}
 
-\textbf{Man at the end} : l'attaquant a un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au systèmes, voir les accès mémoire, émuler des parties du programme... et finalement ce qui nous intéresse : en extraire la clé.\\
+\textbf{Man at the end} : l'attaquant a un accès physique au système. Il peut l'inspecter, lui donner les entrées qu'il veut et analyser les sorties, désassembler le logiciel (IDA), voir les appels au système, voir les accès mémoire, émuler des parties du programme... et finalement ce qui nous intéresse : en extraire la clé.\\
 
 
 \subsection{Utilisation}
@@ -66,30 +66,30 @@ Avant d'expliquer une potentielle solution à ce problème, voici quelques illus
 
 \subsubsection{Backdoors}
 
-Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les entreprises/associations/gouvernements de leur choix. Imaginons maintenant que notre gouvernement veuille envoyer des instructions à ce backdoor sans qu'elles puissent être interceptées et écoutées, parce que les instructions doivent rester secrètes et/ou parce que l'interception de telles instructions en clair pourrait élever des soupçons.\\
+Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les entreprises/associations/gouvernements de leur choix. Imaginons maintenant qu'il veuille envoyer des instructions à ce backdoor sans qu'elles puissent être interceptées et écoutées, parce que les instructions doivent rester secrètes et/ou parce que l'interception de telles instructions en clair pourrait élever des soupçons.\\
 
-Une des solutions disponible est d'encrypter ces instructions avec la clé publique/privée de ces backdoors avant de leur envoyer.\\
+Une des solutions disponibles est d'encrypter ces instructions avec la clé publique/privée de ces backdoors avant de leur envoyer.\\
 
 Personne ne peut lire ces instructions, personne ne peut envoyer d'instructions.
 
 \subsubsection{DRMs}
 
-Imaginons maintenant un système de distribution de film. On encrypte le film avec une clé et on l'envoie avec la clé en annexe. La clé en annexe est elle même encrypté avec la clé de l'utilisateur qui souhaite voir le film. Cette méthode est utilisé pour éviter d'encrypter le film à chaque utilisateur.\\
+Imaginons maintenant un système de distribution de film. On encrypte le film avec une clé et on l'envoie avec la clé en annexe. La clé en annexe est elle même encryptée avec la clé de l'utilisateur qui souhaite voir le film. Cette méthode est utilisée pour éviter d'encrypter le film à chaque utilisateur.\\
 Le logiciel propriétaire, qui est donc notre fameuse Whitebox, décrypte la clé, décrypte le film ET ajoute un hash de la clé dans le film.\\
-L'attaquant peut maintenant soit essayer d'extraire une des deux clés du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera bien sur le hash intégré dans cet output et pourra être incriminé.
+L'attaquant peut maintenant soit essayer d'extraire une des deux clés du programme, soit capturer la sortie vidéo pour copier le film. En copiant la sortie vidéo il copiera le hash intégré dans cet output et pourra être incriminé.
 
 
 \subsubsection{Autres utilisations}
 
-Il existe d'autres utilisations comme les mobile-agents ou les smartcards et sûrement bien d'autres encore qui n'ont pas encore été pensées...
+Il existe d'autres utilisations comme les mobile-agents ou les smartcards et sûrement bien d'autres encore qui n'ont pas encore été découvertes...
 
 
 \subsection{Solution}
 
-C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clé.\\
-Barak et cie ont prouvés qu'un obfuscateur parfait n'existait pas dans un article intitulé ``On the (Im)possibility of Obfuscating Programs''\footnote{http://www.iacr.org/archive/crypto2001/21390001.pdf}\\
-Cela ne nous empèche pas de nous en approcher. Seulement, peu de théorie a encore vu le jours et les techniques que nous expliqueront par la suite, et qui ont vu le jour dans l'article de Chow et cie, sont basés sur nos connaissances actuelles des attaques et les observations faites sur la modification des algorithmes de bases pour affaiblir ces attaques. Il faut noter que l'état de l'art, sans obfuscation pure, c'est-à-dire en dévoilant les techniques et l'algorithme utilisé, ne fournit pas de solution incrackable actuellement (on trouve la clé en l'ordre de quelques secondes). Ces solutions sont néanmoins utilisés commercialement lorsque les algorithmes et techniques utilisées sont méconnus, et rendent donc la tache beaucoup plus difficile.\\
-Pour finir sur notre explication, une Whitebox est généralement utilisé dans la decryption. Il faut donc, en plus de blocker l'extraction d'une clé, empêcher l'opération inverse. C'est-à-dire l'encryption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clé on pourrait alors construire nous même des instructions à destination des backdoors.\\
+C'est là qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clé.\\
+Barak et cie ont prouvé qu'un obfuscateur parfait n'existait pas dans un article intitulé ``On the (Im)possibility of Obfuscating Programs''\footnote{http://www.iacr.org/archive/crypto2001/21390001.pdf}\\
+Cela ne nous empêche pas de nous en approcher. Seulement, peu de théorie a encore vu le jour et les techniques que nous expliqueront par la suite, provenant de l'article de Chow et cie, sont basées sur nos connaissances actuelles des attaques et les observations faites sur la modification des algorithmes de base pour affaiblir ces attaques. Il faut noter que l'état de l'art, sans obfuscation pure, c'est-à-dire en dévoilant les techniques et l'algorithme utilisés, ne fournit pas de solution incrackable actuellement (on trouve la clé en l'ordre de quelques secondes). Ces solutions sont néanmoins utilisées commercialement lorsque les algorithmes et techniques utilisés sont méconnus, et rendent donc la tâche beaucoup plus difficile.\\
+Pour finir sur notre explication, une Whitebox est généralement utilisée dans la decryption. Il faut donc, en plus de bloquer l'extraction d'une clé, empêcher l'opération inverse. C'est-à-dire l'encryption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clé on pourrait alors construire nous même des instructions à destination des backdoors.\\
 
 \newpage
 	
@@ -97,11 +97,11 @@ Pour finir sur notre explication, une Whitebox est généralement utilisé dans 
 
 Avant de nous lancer dans l'implémentation de la version WhiteBox de DES (Data Encryption Standard), nous avons choisi d'implémenter notre propre version de DES afin de nous familiariser avec son fonctionnement (voir notre algorithme sur GitHub : \url{https://github.com/mimoo/DES}).
 	
-Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation. Si vous êtes déjà familier avec ce cipher vous pouvez vous passer de cette partie.
+Nous nous intéresserons donc ici au fonctionnement de DES, ainsi qu'à notre approche de son implémentation.
 
 \subsection{Historique et intérêt}
 
-DES est un algorithme de chiffrement symétrique (ou chiffrement par bloc) qui utilise des clés de 56 bits et manipule des blocs de 64 bits. Il a été développé par IBM au début des années 70 à la demande du National Bureau of Standards (NBS) qui proposait de trouver un moyen de sécuriser des informations sensibles, non classifiées, du gouvernement. En 1976, après consultation de la National Security Agency (NSA), Le NBS en sélectionne une version légèrement modifiée, qui sera publiée l'année suivante (le standard arrivant en 1979).
+DES est un algorithme de chiffrement symétrique (ou chiffrement par bloc) qui utilise des clés de 56 bits et manipule des blocs de 64 bits. Il a été développé par IBM au début des années 70 à la demande du National Bureau of Standards (NBS) qui proposait de trouver un moyen de sécuriser des informations sensibles, non classifiées, du gouvernement. En 1976, après consultation de la National Security Agency (NSA), le NBS en sélectionne une version légèrement modifiée, qui sera publiée l'année suivante (le standard arrivant en 1979).
 
 Bien qu'il soit recommandé de ne plus l'utiliser (la dernière version avant l'obsolescence datant de 1999), on peut encore parfois le trouver sous la forme de Triple DES.
 	
@@ -121,7 +121,7 @@ On commence par retirer les 8 bits de parité de la clé (1 bit à chaque octet)
 \item Permutation PC2 de 56 bits vers 48 bits qui correspond à la clé du même numéro que l'itération actuelle. On réutilise le bloc de 56 bits (d'avant la permutation PC2) pour la prochaine itération.
 \end{enumerate}
 
-Après ces étapes le bloc est chiffré. Pour déchiffrer ce dernier, on utilise le même algorithme, à ceci près que l'on change l'ordre d'utilisation des clés et que l'on inverse les deux blocs de gauche et de droite au début et à la fin de DES.
+Après ces étapes le bloc est enfin chiffré. Pour déchiffrer ce dernier, on utilise le même algorithme, à ceci près que l'on change l'ordre d'utilisation des clés et que l'on inverse les deux blocs de gauche et de droite au début et à la fin de DES.
 
 \begin{figure}[h]
 \centering
@@ -143,14 +143,14 @@ L'algorithme de DES peut se décomposer en 3 grandes étapes :
 \begin{itemize}
 \item Expansion du bloc de droite de 32 bits vers 48 bits (on copie 16 bits du bloc initial, le tout à l'aide d'un table d'expansion). 
 \item XOR entre le nouveau bloc de 48 bits et la clé correspondant au numéro d'itération actuelle.
-\item Le bloc de 48 bits est divisé en 8 blocs de 6 bits. Chacun de ces sous-blocs passe à travers une table de substitution (qui prend 6 bits en input et donne 4 bits en output). Il y a en tout 8 tables de substitutions, une pour chaque sous-bloc. La valeur en binaire des 4 bits du milieu détermine l'indice de colonne de la table et la valeur binaire des 2 bits extérieurs l'indice de ligne. Le bloc obtenu en fusionnant les 8 sorties de 4 bits a alors une taille de 32 bits.
+\item Le bloc de 48 bits est divisé en 8 blocs de 6 bits. Chacun de ces sous-blocs passe à travers une table de substitution (qui prend 6 bits en input et donne 4 bits en output). Il y a en tout 8 tables de substitution, une pour chaque sous-bloc. La valeur en binaire des 4 bits du milieu détermine l'indice de colonne de la table et la valeur binaire des 2 bits extérieurs l'indice de ligne. Le bloc obtenu en fusionnant les 8 sorties de 4 bits a alors une taille de 32 bits.
 \item Permutation sur ce bloc (les bits sont changés de place).
 \item XOR entre ce bloc et le bloc de gauche.
 \item Les deux blocs sont échangés (le bloc de gauche devient celui de droite et inversement).
 \end{itemize}
 
 
-\item Enfin une fusion des deux blocs, suivie d'une permutation finale, inverse de la permutation initiale.
+\item Enfin, une fusion des deux blocs, suivie d'une permutation finale, inverse de la permutation initiale.
 \end{enumerate}
 
 \begin{figure}[h]
@@ -173,14 +173,14 @@ L'algorithme de DES peut se décomposer en 3 grandes étapes :
 
 \section{Principes et concepts fondamentaux}
 
-Les Whitebox, en leur définition actuelle, sont des blackbox destinées à la décryption dans lesquelles les clés sont cachées et le processus assez complexe pour empêcher son inversion.\\
-Plusieurs concepts ont étés introduits par Chow et cie dans leur article\footnote{http://crypto.stanford.edu/DRM2002/whitebox.pdf}. Voici les trois principaux concepts :
+Les Whitebox, telles que définies actuellement, sont des Blackbox destinées à la décryption, à l'intérieur desquelles les clés sont cachées et le processus est assez complexe pour empêcher son inversion.\\
+Plusieurs concepts ont été introduits par Chow et cie dans leur article\footnote{http://crypto.stanford.edu/DRM2002/whitebox.pdf}. Voici les trois principaux concepts :
 
 
 \subsection{Partial Evaluation}
 
 L'évaluation partielle consiste à pré-calculer ce que l'on connaît déjà puis à \textbf{mélanger l'opération du XOR} de la clé avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
-Dans DES, 16 sous-clés sont générées à partir de la clé principale puis sont XORées une à une durant les 16 rounds de l'algorithme. Ces 16 clés de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque rounds sont pré-générés et stockés dans des S-box (Substitution boxes) qu'on appellera \textbf{Lookup tables} par la suite.
+Dans DES, 16 sous-clés sont générées à partir de la clé principale puis sont XORées une à une durant les 16 rounds de l'algorithme. Ces 16 clés de 48bits et les différents résultats de leurs XORs, puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque round sont pré-générés et stockés dans des S-box (Substitution boxes) qu'on appellera \textbf{Lookup tables} par la suite.
 
 
 \subsection{Tabularizing}
