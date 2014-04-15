@@ -29,8 +29,8 @@
 
 \section{Introduction}
 
-La cryptographie est fondé depuis très longtemps sur le principe que deux personnes veulent converser entre elles sans pouvoir être écouté (Man In The Middle).\\
-De nombreux block cipher comme DES ou AES ont étés inventé à travers les années et ont su rester solide contre la cryptanalise. Ces travaux résident sur beaucoup de preuves mathématiques mais aussi sur beaucoup d'observations.
+La cryptographie est fondée depuis très longtemps sur le principe que deux personnes veulent converser entre elles sans pouvoir être écoutées (Man In The Middle).\\
+De nombreux block ciphers comme DES ou AES ont été inventés à travers les années et ont su rester solides contre la cryptanalyse. Ces travaux résident sur beaucoup de preuves mathématiques mais aussi sur beaucoup d'observations.
 
 \begin{Verbatim}[samepage=true]
                    MAN IN THE MIDDLE
@@ -66,7 +66,7 @@ Avant d'expliquer une potentielle solution à ce problème, voici quelques illus
 
 \subsubsection{Backdoors}
 
-Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les entreprises/associations/gouvernements de leur choix. Imaginons maintenant que notre gouvernement veuille envoyer des instructions à ce backdoor sans qu'elles puissent être intercepter et écouté, parce que les instructions doivent rester secrète et/ou parce que l'interception de telles instructions en clair pourrait élever des soupçons.\\
+Imaginons que le gouvernement français veuille fabriquer un backdoor dormant et infecter diverses machines dans les entreprises/associations/gouvernements de leur choix. Imaginons maintenant que notre gouvernement veuille envoyer des instructions à ce backdoor sans qu'elles puissent être interceptées et écoutées, parce que les instructions doivent rester secrètes et/ou parce que l'interception de telles instructions en clair pourrait élever des soupçons.\\
 
 Une des solutions disponible est d'encrypter ces instructions avec la clef publique/privée de ces backdoors avant de leur envoyer.\\
 
@@ -87,7 +87,7 @@ Il existe d'autres utilisations comme les mobile-agents ou les smartcards et sû
 \subsection{Solution}
 
 C'est la qu'intervient l'idée de la Whitebox. Le but est de rendre l'extraction d'une information importante impossible. Dans notre cas une clef.\\
-Il faut savoir que les différentes approches connues sont basées sur plus d'observations que de théorie, et qu'elles ont toutes étés crackés.\\
+Il faut savoir que les différentes approches connues sont basées sur plus d'observations que de théorie, et qu'elles ont toutes étés crackées.\\
 Il faut aussi noter qu'une Whitebox est généralement utilisé dans la decryption et qu'il faut donc, en plus de blocker l'extraction d'une clef, empêcher l'opération inverse c'est-à-dire l'encryption. Dans le cas du backdoor, si l'on arrivait à encrypter sans connaître la clef on pourrait alors construire nous même des instructions à destination des backdoors.\\
 
 \newpage
@@ -178,13 +178,13 @@ Plusieurs concepts ont étés introduits par Chow et cie dans leur article\footn
 
 \subsection{Partial Evaluation}
 
-L'évaluation partielle consiste à précalculer ce que l'on connaît déjà puis à \textbf{mélanger l'opération du XOR} de la clef avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
-Dans DES 16 sous-clés sont générées à partir de la clé principale puis sont une à une XORé durant les 16 rounds de l'algorithme. Ces 16 clefs de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque rounds sont pré-générées et stockées dans des S-box (Substitution boxes) qu'on appellera \textbf{Lookup tables} par la suite.
+L'évaluation partielle consiste à pré-calculer ce que l'on connaît déjà puis à \textbf{mélanger l'opération du XOR} de la clef avec une autre opération, dans le cas de DES on mélange cette opération avec les substitutions après le XOR.\\
+Dans DES, 16 sous-clés sont générées à partir de la clé principale puis sont XORées une à une durant les 16 rounds de l'algorithme. Ces 16 clefs de 48bits et les différents résultats de leurs XORs puis de leurs substitutions avec les $2^{48}$ différents vecteurs possibles à chaque rounds sont pré-générés et stockés dans des S-box (Substitution boxes) qu'on appellera \textbf{Lookup tables} par la suite.
 
 
 \subsection{Tabularizing}
 
-La tabularization consiste à transformer toutes les autres opérations en \textbf{Lookup tables}.
+La tabularisation consiste à transformer toutes les autres opérations en \textbf{Lookup tables}.
 
 \begin{verbatim}
   Entrée                 S-box              Sortie
@@ -212,7 +212,7 @@ Ce qui donne : $output = L_2'((L_1'(input)))$.\\
 
 \subsection{Randomization}
 
-Comme l'encryption des entrées/sorties. On peut aussi \textbf{mélanger} les bits sortant d'une opération, puis les remettre dans l'ordre avant la prochaine.\\
+Comme l'encryption des entrées/sorties, on peut aussi \textbf{mélanger} les bits sortant d'une opération, puis les remettre dans l'ordre avant la prochaine.\\
 
 Par exemple, si $L_1$ et $L_2$ sont deux lookup tables se suivant :\\
 $output = L_2 \circ L_1(input)$\\
@@ -222,7 +222,7 @@ $L_2 \circ E^-1 \circ E \circ L_1(input)$
 
 \subsection{Mixing Bijection}
 
-La création des Lookup tables dans la tabularization se fait à partir de matrices représentant les opérations du cipher. Souvent ces matrices contiennent beaucoup plus de 0 que de 1 ce qui rend les lookup tables trop simples et ce qui crée donc un nouveau problème. Pour éviter ce genre de problème on crée deux opérations au lieu d'une. La première composé d'une bijection. La deuxième composé de son inverse multiplié par l'opération qu'on veut complexifier.\\
+La création des Lookup tables dans la tabularisation se fait à partir de matrices représentant les opérations du cipher. Souvent ces matrices contiennent beaucoup plus de 0 que de 1 ce qui rend les lookup tables trop simples et ce qui crée donc un nouveau problème. Pour éviter ce genre de problème on crée deux opérations au lieu d'une. La première composée d'une bijection. La deuxième composée de son inverse multiplié par l'opération qu'on veut complexifier.\\
 Soit $M_1$ la matrice d'une des opérations que l'on transformera en lookup table plus tard. On peut la multiplier par une autre matrice $G$ choisie pertinament pour augmenter le bruit dans $M_1$ (un nombre de 0 et de 1 qui parait aléatoire). De fait que l'opération devienne alors $G \cdot M_1$. Il faut bien sur annuler $G$ ensuite en créant une seconde opération $G^{-1}$.\\
 L'opération devient alors : $G^{-1} \cdot (G \cdot M_1)$ où $G \cdot M_1$ est pré-évalué comme une unique opération.
 
@@ -238,7 +238,7 @@ Lorsque deux opérations sont évalués en même temps, on peut les faire évalu
 
 \subsection{Split-Path Encoding}
 
-lorsqu'on donne un input de n bit, et que l'on reçoit un output de m bits tel que $m < n$ on a une perte d'information. Pour répondre à ce problème on append une fonction prenant le même input pour augmenter le nombre de bit de sorties (faire un schéma ou une formule)
+Lorsque l'on donne un input de n bit, et que l'on reçoit un output de m bits tel que $m < n$ on a une perte d'information. Pour répondre à ce problème on lui concatène une fonction prenant le même input pour augmenter le nombre de bit de sorties.
 
 
 \subsection{External Encoding}
@@ -251,23 +251,23 @@ $Whitebox = E \circ DES(input) \circ G$
 
 \section{Implémentation}
 
-Toutes les Lookuptables seront généré par un programme Ltablesgen.c prenant une clé de 64bits en entrée et générant toutes les Lookup tables dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
+Toutes les Lookup tables seront créées par un programme Ltablesgen.c prenant une clé de 64bits en entrée et seront générées dans un fichier qui sera utilisé pour compiler la whitebox plus tard.
 
 \subsection{Bypass et Combined Function Encoding}
 
 \begin{Verbatim}
 
-  **************    **************
-  *    L(r)    *    *     R(r)   *
-  **************    **************
-  |     .------------|  32b
-  |     |            v
-  |     |  .-------------------.
-  32b | 32b |  |       E-box       |
-  |     |  '-------------------'
-  |     |            |  48b
-  v     v            v
-  Mem1  Mem2         Mem3
+      **************    **************
+      *    L(r)    *    *     R(r)   *
+      **************    **************
+        |     .------------|  32b
+        |     |            v
+        |     |  .-------------------.
+    32b | 32b |  |       E-box       |
+        |     |  '-------------------'
+        |     |            |  48b
+        v     v            v
+       Mem1  Mem2         Mem3
 \end{Verbatim}
 
 Ci-dessus la première partie d'un round de la fonction DES. On peut voir que :
@@ -284,24 +284,24 @@ Au minimum la mémoire contient 64bits. On va donc garder cet état de 96 bits t
 
 \subsection{Partial Evaluation}
 
-Les 16 sous-clés sont d'abord pré-évalués. Puis on pré-évalue l'opération du xor avec la clef suivit de la substitution que l'on stocke dans des Lookup Tables (bien sur différentes à chaque rounds puisque influencé par les différentes clés).
+Les 16 sous-clés sont d'abord pré-évaluées. Puis on pré-évalue l'opération du xor avec la clef suivi de la substitution que l'on stocke dans des Lookup Tables (différentes à chaque itération puisque elles influencées par les différentes clés).
 
 
-\subsection{Tabularization}
+\subsection{Tabularisation}
 
 La prochaine étape consiste à transformer toutes les opérations en Lookup table. Pour ce faire on met d'abord sous forme de matrice chaque opération. Le découpage des opérations sous forme de matrice est expliqué plus loin.\\
 
 
 \begin{Verbatim}[samepage=true]
-           .----.     .-------------------.     .----.
-           |    |     |                   |     |    |
-           |    |     |                   |     |    |
-           |    |     |                   |     |    |
-           | Y0 |  =  |         M         |  x  | X0 |
-           |    |     |                   |     |    |
-           |    |     |                   |     |    |
-           |    |     |                   |     |    |
-           '----'     '-------------------'     '----'
+       .----.     .-------------------.     .----.
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       | Y0 |  =  |         M         |  x  | X0 |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       '----'     '-------------------'     '----'
 
 \end{Verbatim}
 
@@ -309,26 +309,26 @@ Un \textbf{premier problème} survient :\\
 
 Ces matrices contienent généralement beaucoup trop de zéros (identités, permutations, ...).\\
 On utilise d'abord la technique des \textbf{Mixing Bijection} pour séparer la matrice en deux matrices plus complexes (et donc en deux opérations). Mais cela ne suffit pas.\\
-Pour éviter d'avoir trop de Lookup tables nulles et réduire le champ de recherche pour l'attaquant, chaque matrice est découpé en \textbf{blocs de sous-matrices}.\\
+Pour éviter d'avoir trop de Lookup tables nulles et réduire le champ de recherche pour l'attaquant, chaque matrice est découpée en \textbf{blocs de sous-matrices}.\\
 Les multiplications des sous-matrices au vecteur associé sont ensuite transformées en Lookup tables.\\
 
 \begin{Verbatim}[samepage=true]
 
-           .----.     .---------.---------.     .----.
-           |    |     |    |    |    |    |     | X0 |
-           | Y0 |     |  A | B  | C  |  D |     .----|
-           |    |     |    |    |    |    |     | X1 |
-           .----.  =  .---------.---------.  x  .----.
-           |    |     |    E    |    F    |     | X2 |
-           | Y1 |     .---------.---------.     .----.
-           |    |     |    H    |    I    |     | X3 |
-           '----'     '---------'---------'     '----'
+       .----.     .---------.---------.     .----.
+       |    |     |    |    |    |    |     | X0 |
+       | Y0 |     |  A | B  | C  |  D |     .----|
+       |    |     |    |    |    |    |     | X1 |
+       .----.  =  .---------.---------.  x  .----.
+       |    |     |    E    |    F    |     | X2 |
+       | Y1 |     .---------.---------.     .----.
+       |    |     |    H    |    I    |     | X3 |
+       '----'     '---------'---------'     '----'
            
 \end{Verbatim}
 
 avec Y0 = A*X0 $\oplus$ B*X1 $\oplus$ C*X2 $\oplus$ D*X3
 
-Un \textbf{second problème} intervient :\\
+Un \textbf{second problème} survient :\\
 
 On ne peut pas faire des Lookup tables trop grosses car leur taille augmente exponentiellement :\\
 
@@ -337,7 +337,7 @@ Pour 16 bits d'entrées, il y a $2^{16}$ possibilités. Donc la taille de la Loo
 Avec notre exemple simplifié, en utilisant des Lookup table prenant 8bits en entrée, et donc en multipliant par deux le nombre de Lookup table, on réduit la taille de notre fichier final par $(2^{16} - 2^8 + 2^8) * sizeof(output)$ pour chaque Lookup table.
 etc...\\
 
-L'article de Link et cie\footnote{http://eprint.iacr.org/2004/025.pdf} conseille, pour plus de sécurité, de choisir des blocs de $8x4$ à la place de $8x8$ que conseille Chow et al.\\
+L'article de Link et cie\footnote{http://eprint.iacr.org/2004/025.pdf} conseille, pour plus de sécurité, de choisir des blocs de 8x4 à la place de 8x8 que conseille Chow et al.\\
 
 
 
@@ -353,7 +353,7 @@ L'article de Link et cie\footnote{http://eprint.iacr.org/2004/025.pdf} conseille
 
 Chaque sous-matrice va être la source d'une nouvelle lookup table qui sera créée par la multiplication de la sous-matrice avec toutes les possibilités d'input de 4bits.\\
 
-Ensuite chaque ligne de Lookup table donnera des outputs de 8bits qu'il faudra XORer entre eux. Pour continuer la tabularization, chaque XOR est pré-calculé dans ce qu'on appellera des XOR tables.\\
+Ensuite chaque ligne de Lookup table donnera des outputs de 8bits qu'il faudra XORer entre eux. Pour continuer la tabularisation, chaque XOR est pré-calculé dans ce qu'on appellera des XOR tables.\\
 
 Ce qui donne des \textbf{réseaux} de lookup tables :\\
 
@@ -412,7 +412,7 @@ La suite explique comment les opérations ont été réduites en 3 matrices $M_1
 \subsubsection{Étape préliminaire}
 
 Avant que les 16 rounds ne s'exécutent, il est nécessaire que les bits d'input subissent une permutation initiale suivie d'une expansion de l'input de 64 bits en 96 bits qui permettra le bypass.
-Ces deux opération seront réalisées par une matrice M1 qui ne sera utilisée qu'une fois juste avant les 16 rounds et qui réalisera ceci :
+Ces deux opérations seront réalisées par une matrice M1 qui ne sera utilisée qu'une fois juste avant les 16 rounds et qui réalisera ceci :
 
 \begin{Verbatim}[samepage=true]
 
@@ -487,7 +487,7 @@ state 2:    *              state 2 (96 bits)            *
 Pour ce faire, nous allons calculer 12 Lookup Tables qui prendront 8 bits chacun ce qui recouvrira les 96 bits d'input et qui seront composées de :
 \bigskip
 \begin{enumerate}
-\item 8 lookup tables non linéaires qui permettent le xor avec la clef et la substitution en les précalculant grâce à la formule :
+\item 8 lookup tables non linéaires qui permettent le xor avec la clef et la substitution en les pré-calculant grâce à la formule :
 
 \medskip
 \begin{center}
@@ -499,29 +499,29 @@ Une permutation est faite sur les données, chaque lookup table non linéaire va
 
 \begin{Verbatim}[samepage=true]
 
-             L(r-1)                   X(r-1)
-           .--|--|------------|---|---|---|---|---|-----.
-           |  |  |            |   |   |   |   |   |     |
-           |  |  |  .---------o   |   |   |   |   |     |
-           |  |  |  |         |   |   |   |   |   |     |   
-           |  |  |  |         |   |   |   |   |   |     |  
-           |  |  |  |  .------|---|---|---|---|---o     | 
-           |  |  |  |  |      |   |   |   |   |   |     | 
-           |  |  |  |  |      |   |   |   |   |   | k(j)|  
-           |  |  |  |  |      +---+---+---+---+---+-----|  
-           |  |  |  |  |      |   |   |   |   |   |     | 
-           |  |  |  |  |      |   |   |   |   |   |     | 
-           |  |  |  |  |    .-----------------------.   |              
-           |  |  |  |  |     \                     /    |              
-           |  |  |  |  |      \        S(j)       /     |              
-           |  |  |  |  |       \                 /      |               
-           |  |  |  |  |        '---------------'       |               
-           |  |  |  |  |          |   |   |   |         |     
-           |  |  |  |  |          |   |   |   |         | 
-           |  |  |  |  |          |   |   |   |         |   
-           '--|--|--|--|----------|---|---|---|---------'
-              v  v  v  v          v   v   v   v 
-            L(r-1)  R(r-1)            Y(r)
+  L(r-1)                   X(r-1)
+.--|--|------------|---|---|---|---|---|-----.
+|  |  |            |   |   |   |   |   |     |
+|  |  |  .---------o   |   |   |   |   |     |
+|  |  |  |         |   |   |   |   |   |     |   
+|  |  |  |         |   |   |   |   |   |     |  
+|  |  |  |  .------|---|---|---|---|---o     | 
+|  |  |  |  |      |   |   |   |   |   |     | 
+|  |  |  |  |      |   |   |   |   |   | k(j)|  
+|  |  |  |  |      +---+---+---+---+---+-----|  
+|  |  |  |  |      |   |   |   |   |   |     | 
+|  |  |  |  |      |   |   |   |   |   |     | 
+|  |  |  |  |    .-----------------------.   |              
+|  |  |  |  |     \                     /    |              
+|  |  |  |  |      \        S(j)       /     |              
+|  |  |  |  |       \                 /      |               
+|  |  |  |  |        '---------------'       |               
+|  |  |  |  |          |   |   |   |         |     
+|  |  |  |  |          |   |   |   |         | 
+|  |  |  |  |          |   |   |   |         |   
+'--|--|--|--|----------|---|---|---|---------'
+   v  v  v  v          v   v   v   v 
+  L(r-1)  R(r-1)            Y(r)
 
 \end{Verbatim}	
 
@@ -538,30 +538,30 @@ $T_i^r = b_0 b_1||b_2 b_7||S_j(b_2 b_3 b_5 b_6 b_7 \oplus k_i^r)$
 Après permutation, les lookup tables linéaires prendront en paramètre 4 bits de la partie gauchede L et 4 bits de la partie des bits non étendus de R. Elles sont sous la forme :
 
 \begin{Verbatim}[samepage=true]
-                                           _____
-                      L(r-1)               R(r-1)
-            .-----|---|---|---|--------|---|---|---|-----.
-            |     |   |   |   |        |   |   |   |     |
-            |     |   |   |   |        |   |   |   |     |
-            |     |   |   |   |        |   |   |   |     |  
-            |     |   |   |   |        |   |   |   |     | 
-            |     |   |   |   |        |   |   |   |     |
-            |     |   |   |   |        |   |   |   |     |
-            |     |   |   |   |        |   |   |   |     |
-            |     |   |   |   |        |   |   |   |     | 
-            |     |   |   |   |        |   |   |   |     | 
-            |     |   |   |   |        |   |   |   |     | 
-            |     |   |   |   |        |   |   |   |     |             
-            |     |   |   |   |        |   |   |   |     |              
-            |     |   |   |   |        |   |   |   |     |             
-            |     |   |   |   |        |   |   |   |     |               
-            |     |   |   |   |        |   |   |   |     |                
-            |     |   |   |   |        |   |   |   |     |     
-            |     |   |   |   |        |   |   |   |     | 
-            |     |   |   |   |        |   |   |   |     |  
-            '-----|---|---|---|--------|---|---|---|-----'
-                  v   v   v   v        v   v   v   v 
-                      L(r-1)               R(r-1)
+                               _____
+          L(r-1)               R(r-1)
+.-----|---|---|---|--------|---|---|---|-----.
+|     |   |   |   |        |   |   |   |     |
+|     |   |   |   |        |   |   |   |     |
+|     |   |   |   |        |   |   |   |     |  
+|     |   |   |   |        |   |   |   |     | 
+|     |   |   |   |        |   |   |   |     |
+|     |   |   |   |        |   |   |   |     |
+|     |   |   |   |        |   |   |   |     |
+|     |   |   |   |        |   |   |   |     | 
+|     |   |   |   |        |   |   |   |     | 
+|     |   |   |   |        |   |   |   |     | 
+|     |   |   |   |        |   |   |   |     |             
+|     |   |   |   |        |   |   |   |     |              
+|     |   |   |   |        |   |   |   |     |             
+|     |   |   |   |        |   |   |   |     |               
+|     |   |   |   |        |   |   |   |     |                
+|     |   |   |   |        |   |   |   |     |     
+|     |   |   |   |        |   |   |   |     | 
+|     |   |   |   |        |   |   |   |     |  
+'-----|---|---|---|--------|---|---|---|-----'
+      v   v   v   v        v   v   v   v 
+          L(r-1)               R(r-1)
  
 \end{Verbatim}	
 
@@ -607,7 +607,7 @@ state 3:   *   L(r+1)   * *       X(r+1)      * *r(r+1)*
 
 Comme pour l'étape précédente, nous voulons transformer les différentes opérations de cette étape en look up tables.
 
-Pour ce faire, nous allons modéliser les différentes opérations en matrice puis la décomposer puisque la combinaison de la Permutation et du xor est une fonction affine.
+Pour ce faire, nous allons modéliser les différentes opérations en matrice puis la décomposer puisque la combinaison de la permutation et du xor est une fonction affine.
 
 Ces calculs vont être modélisé par M2 qui est une matrice (96,96) et qui réalise :
 \begin{enumerate}
@@ -630,7 +630,7 @@ Toutes ces étapes vont être réalisée grâce à une matrice M3 qui va être d
 
 \section{Conclusion}
 
-Si vous voulez implémenter une whitebox dans votre programme. Cela demande des efforts, de la recherche, etc... Il faut que ça soit un projet important et il faut considérer les autres solutions possibles (utilisation d'une API, d'une clef publique, ...) avant de considérer la solution de la whitebox.
+L'implémentation une whitebox dans un programme demande des efforts, de la recherche, etc... Il faut que ça soit un projet important et il faut considérer les autres solutions possibles (utilisation d'une API, d'une clef publique, ...) avant de considérer la solution de la whitebox.
 
 La taille que prend une whitebox est considérablement plus important que la taille d'un cipher nu. L'implémentation de Chow et al est de 4.5 MB.
 
