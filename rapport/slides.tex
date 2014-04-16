@@ -38,10 +38,12 @@
 \section{A quoi ça sert ?}
 
 \begin{frame}{A quoi ça sert ?}
-  \begin{itemize}
-  \item Nouveau concept
-  \item Loin d'être parfait
-  \end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{./images/kezako.jpg}
+  \end{figure}
+
 \end{frame}
 
 \subsection{Man In The Middle}
@@ -50,9 +52,7 @@
 
   \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.50]{./images/mimt.jpg}
-    \caption{Man In The Middle}
-    \label{fig:keygen}
+    \includegraphics[scale=0.50]{./images/alice_bob.png}
   \end{figure}
 
 \end{frame}
@@ -70,8 +70,6 @@
  \begin{figure}[h]
     \centering
     \includegraphics[scale=0.50]{./images/drms.png}
-    \caption{DRMs}
-    \label{fig:keygen}
   \end{figure}
 
 \end{frame}
@@ -85,26 +83,40 @@
   \begin{figure}[h]
     \centering
     \includegraphics[scale=0.30]{./images/blackbox.png}
-    \caption{Cas typique}
-    \label{fig:keygen}
   \end{figure}
 
   \begin{figure}[h]
     \centering
     \includegraphics[scale=0.30]{./images/whitebox.png}
-    \caption{Nouveau cas}
-    \label{fig:keygen}
   \end{figure}
 
 \end{frame}
 
 \subsection{DES}
+\begin{frame}{Algorithme DES}
+\begin{itemize}
+\item Le but est de transformer toutes ces opérations
+\begin{figure}[h]
+\centering
+%\caption{Schéma d'une itération de DES}
+\label{fig:DES-round}
+\end{figure}
+\end{itemize}
+\end{frame}
 
 \subsection{Github}
 
 \section{Concepts}
 
 \subsection{Partial Evaluation}
+\begin{frame}{Partial evaluation}
+\begin{itemize}
+\item Regrouper le XOR entre le bloc et la clé avec l'opération de substitution.
+\item On peut ensuite précalculer toutes les sorties possibles de cette opération.
+\item Les tables créées sont les seules du programme à être modifiées lorsqu'une nouvelle clé est utlisée.
+\end{itemize}
+\end{frame}
+
 
 \subsection{Tabularization}
 
