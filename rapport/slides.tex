@@ -240,7 +240,6 @@ $T_i^r = b_0 b_1 b_2 b_3||b_4 b_5 b_6 b_7$
 000000010000000000000000000000000000000000000000100000000000000000000000000000000000000000000000
 }
 
-
 $G^{-1} \cdot (G \cdot M_1)$ où $G \cdot M_1$
 \end{center}
 
@@ -249,19 +248,19 @@ $G^{-1} \cdot (G \cdot M_1)$ où $G \cdot M_1$
 \subsection{Bypass}
 
 \begin{frame}{Bypass}
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.30]{images/bypass.png}
-\caption{Encoding}
-\end{figure}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.30]{images/bypass.png}
+    \caption{Encoding}
+  \end{figure}
 \end{frame}
 
 \subsection{Combined Function Encoding}
 
-\begin{frame}{Mixing Bijection}
-\begin{center}
-$G^{-1} \cdot (G \cdot M_1)$ où $G \cdot M_1$
-\end{center}
+\begin{frame}{Combined Function}
+  \begin{center}
+    $(P||Q)(input_P||input_Q)$.
+  \end{center}
 \end{frame}
 
 \subsection{Split-Path Encoding}
@@ -269,6 +268,13 @@ $G^{-1} \cdot (G \cdot M_1)$ où $G \cdot M_1$
 \begin{frame}[fragile]{Split-Path Encoding}
 \begin{Verbatim}[samepage=true]
     Entrée                 S-box              Sortie
+               .--------------------.
+0011||0010 --> |...| 0011||0010 |...|
+               |----------------|---|
+               |...|    0001    |...| --> 0001
+               '--------------------'
+                         | 
+                         v
                .--------------------.
 0011||0010 --> |...| 0011||0010 |...|
                |----------------|---|
