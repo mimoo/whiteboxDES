@@ -11,6 +11,7 @@
 
 \usepackage[french]{babel}
 \usepackage[utf8x]{inputenc}
+\usepackage{fancyvrb}
 
 \author{David Wong
   \and Jacques Monin
@@ -65,9 +66,39 @@
 
 \subsection{Partial Evaluation}
 
-\subsection{Tabularization}
+\subsection{Tabularization}{Tabularization}
+
+\begin{frame}[fragile] 
+
+\begin{Verbatim}[samepage=true]
+       .----.     .-------------------.     .----.
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       | Y0 |  =  |         M         |  x  | X0 |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       '----'     '-------------------'     '----'
+
+       .----.     .----.----.----.----.     .----.
+       |    |     |    |    |    |    |     | X0 |
+       | Y0 |     | A  | B  | C  | D  |     .----|
+       |    |     |    |    |    |    |     | X1 |
+       .----.  =  .----.----.----.----.  x  .----.
+       |    |     |    |    |    |    |     | X2 |
+       | Y1 |     | E  | F  | G  | H  |     .----.
+       |    |     |    |    |    |    |     | X3 |
+       '----'     '----'----'----'----'     '----'
+\end{Verbatim}
+
+\end{frame}
 
 \subsection{Input/Output Encoding}
+
+\begin{frame}
+\includegraphics[scale=0.50]{images/encoding.png}
+\end{frame}
 
 \section{Concepts secondaires}
 
