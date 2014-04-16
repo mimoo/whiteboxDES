@@ -136,15 +136,24 @@
 \begin{frame}{Partial evaluation}
 \begin{itemize}
 \item Regrouper le XOR entre le bloc et la clé avec l'opération de substitution.
-\item On peut ensuite précalculer toutes les sorties possibles de cette opération.
-\item Les tables créées sont les seules du programme à être modifiées lorsqu'une nouvelle clé est utlisée.
+\item On peut ensuite pré-calculer toutes les sorties possibles de cette opération.
+\item Les tables créées sont les seules du programme à être modifiées lorsqu'une nouvelle clé est utilisée.
 \end{itemize}
 \end{frame}
 
 
 \subsection{Tabularization}
 
-\begin{frame}{Tabularization}
+\begin{frame}[fragile]{Tabularization}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.60]{images/tabu.png}
+\caption{Tabularisation}
+\label{fig:keygen}
+\end{figure}
+\end{frame}
+
+\begin{frame}{Décomposition de Matrice}
 \begin{figure}[h]
 \centering
 \includegraphics[scale=0.50]{images/decompo_matrice.png}
@@ -153,17 +162,15 @@
 \end{figure}
 \end{frame}
 
-\begin{figure}[h]
-\centering
-\includegraphics[scale=0.50]{images/decompo_matrice.png}
-\caption{Décomposition de Matrice}
-\label{fig:keygen}
-\end{figure}
-
 \subsection{Input/Output Encoding}
 
-\begin{frame}
-\includegraphics[scale=0.50]{images/encoding.png}
+\begin{frame}{Input / Output Encoding}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.5]{images/encoding.png}
+\caption{Encoding}
+\label{fig:keygen}
+\end{figure}
 \end{frame}
 
 \section{Concepts secondaires}
@@ -182,5 +189,15 @@
 
 \section{Conclusion}
 
+\begin{frame}{Conclusion}
+  
+  \begin{itemize}
+  \item Beaucoup d'effort pour d'autres solutions (API, clés publiques)
+  \item Taille importante
+  \item La non-connaissance des algorithmes est ``trop'' importante.
+  \item Utilisé profesionnellement
+  \end{itemize}
+
+\end{frame}
 
 \end{document}
