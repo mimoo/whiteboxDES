@@ -30,6 +30,7 @@
   \titlepage
 \end{frame}
 
+
 \begin{frame}{Plan}
   \tableofcontents
 \end{frame}
@@ -58,20 +59,8 @@
 
 \subsection{Man At The End}
 
-\begin{frame}[fragile]{Man At The End}
+\begin{frame}
 
-\begin{Verbatim}[samepage=true]
-                 .-----------------. 
-                 |    ATTAQUANT    |
-                 |  .-----------.  |  
-                 |  |           |  |  
-                 |  | PROGRAMME |  | 
-                 |  |           |  | 
-                 |  '-----------'  |
-                 |                 |
-                 '-----------------'
-\end{Verbatim}
-  
 \end{frame}
 
 \subsection{Exemples}
@@ -109,10 +98,11 @@
   \item Le but est de transformer toutes ces opérations
     \begin{figure}[h]
       \centering
-      % \caption{Schéma d'une itération de DES}
+      \includegraphics[scale=0.45]{./images/des_slides.png}
       \label{fig:DES-round}
     \end{figure}
   \end{itemize}
+
 \end{frame}
 
 \subsection{Github}
@@ -140,33 +130,23 @@
 \end{frame}
 
 
-\subsection{Tabularization}{Tabularization}
+\subsection{Tabularization}
 
-\begin{frame}[fragile] 
-
-\begin{Verbatim}[samepage=true]
-       .----.     .-------------------.     .----.
-       |    |     |                   |     |    |
-       |    |     |                   |     |    |
-       |    |     |                   |     |    |
-       | Y0 |  =  |         M         |  x  | X0 |
-       |    |     |                   |     |    |
-       |    |     |                   |     |    |
-       |    |     |                   |     |    |
-       '----'     '-------------------'     '----'
-
-       .----.     .----.----.----.----.     .----.
-       |    |     |    |    |    |    |     | X0 |
-       | Y0 |     | A  | B  | C  | D  |     .----|
-       |    |     |    |    |    |    |     | X1 |
-       .----.  =  .----.----.----.----.  x  .----.
-       |    |     |    |    |    |    |     | X2 |
-       | Y1 |     | E  | F  | G  | H  |     .----.
-       |    |     |    |    |    |    |     | X3 |
-       '----'     '----'----'----'----'     '----'
-\end{Verbatim}
-
+\begin{frame}{Tabularization}
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.50]{images/decompo_matrice.png}
+\caption{Décomposition de Matrice}
+\label{fig:keygen}
+\end{figure}
 \end{frame}
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=0.50]{images/decompo_matrice.png}
+\caption{Décomposition de Matrice}
+\label{fig:keygen}
+\end{figure}
 
 \subsection{Input/Output Encoding}
 
