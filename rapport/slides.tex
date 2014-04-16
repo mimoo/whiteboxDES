@@ -11,6 +11,8 @@
 
 \usepackage[french]{babel}
 \usepackage[utf8x]{inputenc}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
 
 \author{David Wong
   \and Jacques Monin
@@ -28,7 +30,6 @@
   \titlepage
 \end{frame}
 
-
 \begin{frame}{Plan}
   \tableofcontents
 \end{frame}
@@ -36,26 +37,77 @@
 \section{A quoi ça sert ?}
 
 \begin{frame}{A quoi ça sert ?}
-
+  \begin{itemize}
+  \item Nouveau concept
+  \item Loin d'être parfait
+  \end{itemize}
 \end{frame}
 
 \subsection{Man In The Middle}
 
-\begin{frame}
+\begin{frame}{Base de la cryptographie}
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.50]{./images/alice_bob.png}
+    \caption{Man In The Middle}
+    \label{fig:keygen}
+  \end{figure}
 
 \end{frame}
 
 \subsection{Man At The End}
 
+\begin{frame}[fragile]{Man At The End}
+
+\begin{Verbatim}[samepage=true]
+                 .-----------------. 
+                 |    ATTAQUANT    |
+                 |  .-----------.  |  
+                 |  |           |  |  
+                 |  | PROGRAMME |  | 
+                 |  |           |  | 
+                 |  '-----------'  |
+                 |                 |
+                 '-----------------'
+\end{Verbatim}
+  
+\end{frame}
+
 \subsection{Exemples}
 
-\subsubsection{Backdoors}
+\begin{frame}{Exemples}
 
-\subsubsection{DRMs}
+ \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.50]{./images/drms.png}
+    \caption{DRMs}
+    \label{fig:keygen}
+  \end{figure}
+
+\end{frame}
 
 \section{Whitebox}
 
 \subsection{Définition}
+
+\begin{frame}{Définition}
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.30]{./images/blackbox.png}
+    \caption{Cas typique}
+    \label{fig:keygen}
+  \end{figure}
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.30]{./images/whitebox.png}
+    \caption{Nouveau cas}
+    \label{fig:keygen}
+  \end{figure}
+
+\end{frame}
 
 \subsection{DES}
 \begin{frame}{Algorithme DES}
@@ -83,9 +135,39 @@
 \end{frame}
 
 
-\subsection{Tabularization}
+\subsection{Tabularization}{Tabularization}
+
+\begin{frame}[fragile] 
+
+\begin{Verbatim}[samepage=true]
+       .----.     .-------------------.     .----.
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       | Y0 |  =  |         M         |  x  | X0 |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       |    |     |                   |     |    |
+       '----'     '-------------------'     '----'
+
+       .----.     .----.----.----.----.     .----.
+       |    |     |    |    |    |    |     | X0 |
+       | Y0 |     | A  | B  | C  | D  |     .----|
+       |    |     |    |    |    |    |     | X1 |
+       .----.  =  .----.----.----.----.  x  .----.
+       |    |     |    |    |    |    |     | X2 |
+       | Y1 |     | E  | F  | G  | H  |     .----.
+       |    |     |    |    |    |    |     | X3 |
+       '----'     '----'----'----'----'     '----'
+\end{Verbatim}
+
+\end{frame}
 
 \subsection{Input/Output Encoding}
+
+\begin{frame}
+\includegraphics[scale=0.50]{images/encoding.png}
+\end{frame}
 
 \section{Concepts secondaires}
 
