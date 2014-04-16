@@ -244,32 +244,10 @@
 \subsection{Bypass}
 
 \begin{frame}[fragile]{Bypass}
-
-  \begin{Verbatim}[samepage=true]
-    L(r-1)                   X(r-1)
-    .--|--|------------|---|---|---|---|---|-----.
-    |  |  |            |   |   |   |   |   |     |
-    |  |  |  .---------o   |   |   |   |   |     |
-    |  |  |  |         |   |   |   |   |   |     |   
-    |  |  |  |         |   |   |   |   |   |     |  
-    |  |  |  |  .------|---|---|---|---|---o     | 
-    |  |  |  |  |      |   |   |   |   |   |     | 
-    |  |  |  |  |      |   |   |   |   |   | k(j)|  
-    |  |  |  |  |      +---+---+---+---+---+-----|  
-    |  |  |  |  |      |   |   |   |   |   |     | 
-    |  |  |  |  |      |   |   |   |   |   |     | 
-    |  |  |  |  |    .-----------------------.   |              
-    |  |  |  |  |     \                     /    |              
-    |  |  |  |  |      \        S(j)       /     |              
-    |  |  |  |  |       \                 /      |               
-    |  |  |  |  |        '---------------'       |               
-    |  |  |  |  |          |   |   |   |         |     
-    |  |  |  |  |          |   |   |   |         | 
-    |  |  |  |  |          |   |   |   |         |   
-    '--|--|--|--|----------|---|---|---|---------'
-    v  v  v  v          v   v   v   v 
-    L(r-1)  R(r-1)            Y(r)
-  \end{Verbatim}	
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{./images/state2.png}
+  \end{figure}
 
   \begin{itemize}
   \item On empêche l'identification facile des opérations
