@@ -236,7 +236,6 @@
 000000010000000000000000000000000000000000000000100000000000000000000000000000000000000000000000
 }
 
-
 $G^{-1} \cdot (G \cdot M_1)$ où $G \cdot M_1$
 \end{center}
 
@@ -244,18 +243,33 @@ $G^{-1} \cdot (G \cdot M_1)$ où $G \cdot M_1$
 
 \subsection{Bypass}
 
-\begin{frame}{Bypass}
 \begin{itemize}
 \item La mémoire contiendra au maximum 96 bits
 \item On garde un état constant de 96 bits
 \end{itemize}
+
 \end{frame}
+
+
+\subsection{Combined Function Encoding}
+
+\begin{frame}{Combined Function}
+  \begin{center}
+    $(P||Q)(input_P||input_Q)$.
+  \end{center}
 
 \subsection{Split-Path Encoding}
 
 \begin{frame}[fragile]{Split-Path Encoding}
 \begin{Verbatim}[samepage=true]
     Entrée                 S-box              Sortie
+               .--------------------.
+0011||0010 --> |...| 0011||0010 |...|
+               |----------------|---|
+               |...|    0001    |...| --> 0001
+               '--------------------'
+                         | 
+                         v
                .--------------------.
 0011||0010 --> |...| 0011||0010 |...|
                |----------------|---|
