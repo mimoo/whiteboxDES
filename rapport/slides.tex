@@ -31,9 +31,9 @@
 \end{frame}
 
 
-\begin{frame}{Plan}
-  \tableofcontents
-\end{frame}
+%\begin{frame}{Plan}
+%  \tableofcontents
+%\end{frame}
 
 \section{A quoi ça sert ?}
 
@@ -174,7 +174,32 @@
 
 \section{Concepts secondaires}
 
+\begin{frame}[fragile]{Concepts secondaires}
+\begin{Verbatim}[samepage=true]
+   *********************************************
+   *              state 2 (96 bits)            *
+   *********************************************
+      |      |      |                       |
+      v      v      v          ...          v
+ 
+   ?????????????????????????????????????????????
+ 
+      |      |      |          ...          |
+      v      v      v                       v
+   *********************************************
+   *              state 3 (96 bits)            *
+   *********************************************
+\end{Verbatim}
+\end{frame}
+
 \subsection{Randomization}
+
+\begin{frame}{Randomization}
+  \begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{./images/randomization.png}
+  \end{figure}
+\end{frame}
 
 \subsection{Mixing Bijection}
 
@@ -184,7 +209,23 @@
 
 \subsection{Split-Path Encoding}
 
+\begin{frame}[fragile]{Split-Path Encoding}
+\begin{Verbatim}[samepage=true]
+    Entrée                 S-box              Sortie
+               .--------------------.
+0011||0010 --> |...| 0011||0010 |...|
+               |----------------|---|
+               |...|  0001xxxx  |...| --> 0001||1001
+               '--------------------'
+\end{Verbatim}
+  
+\end{frame}
+
 \subsection{External Encoding}
+
+\begin{frame}{External Encoding}
+  $Whitebox = E \circ DES(input) \circ G$
+\end{frame}
 
 \section{Conclusion}
 
