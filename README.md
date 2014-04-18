@@ -4,20 +4,21 @@ whiteboxDES
 This is an explanation of How Whitebox can be created,
 It follows [Chow et al's paper][1] on the subject.
 
-To see it, browse `rapport/`. You can find a Markdown version in [french][2] or [english][3].
+.tex of rapport and slides are in  `rapport/`.
 
-And a LaTeX/pdf version in [french][6].
+the pdf version of the rapport is [here][2].
 
-You can also browse `src/` to see the example we build using C and [DES][4].
+The slides of our presentation are [here][7]
+
+You can also browse `src/` to see the whitebox we build using C and [DES][4].
 
 It uses our previous implementation of [DES in C][5].
 
 [1]: http://www.scs.carleton.ca/%7Epaulv/papers/whitedes1.ps
-[2]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport-fr.md
-[3]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport-en.md
+[2]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport.pdf
 [4]: http://en.wikipedia.org/wiki/Data_Encryption_Standard
 [5]: https://github.com/mimoo/DES
-[6]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport.tex
+[7]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/slides.pdf
 
 
 Author
@@ -30,7 +31,9 @@ Author
 To Do List
 ----------
 
-* create encodings for the network of XOR tables.
+* Create encodings for the network of XOR tables.
+* Split-Pathing for the XOR tables
+* Mixing-bijections for M_0, M_1, M_2 and
 
 How to use the C implementation
 -------------------------------
@@ -58,12 +61,12 @@ key must be in binary format.
 Tools used
 ----------
 
-* [github][1]
-* [trello][2]
-* [flowdock][3]
-* [penflip][4]
+* [github][g]
+* [trello][t]
+* [flowdock][f]
+* [penflip][p]
 
-[1]: http://www.github.com
-[2]: http://www.trello.com
-[3]: http://www.flowdock.com
-[4]: https://www.penflip.com/
+[g]: http://www.github.com
+[t]: http://www.trello.com
+[f]: http://www.flowdock.com
+[p]: https://www.penflip.com/
