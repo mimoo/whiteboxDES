@@ -1,24 +1,13 @@
-whiteboxDES
-===========
+Whitebox DES
+============
 
-This is an explanation of How Whitebox can be created,
+This is an explanation on how a whitebox can be implemented,
 It follows [Chow et al's paper][1] on the subject.
 
-.tex of rapport and slides are in  `rapport/`.
-
-the pdf version of the rapport is [here][2].
-
-The slides of our presentation are [here][7]
-
-You can also browse `src/` to see the whitebox we build using C and [DES][4].
-
-It uses our previous implementation of [DES in C][5].
+It uses our previous implementation of [DES in C][2].
 
 [1]: http://www.scs.carleton.ca/%7Epaulv/papers/whitedes1.ps
-[2]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/rapport.pdf
-[4]: http://en.wikipedia.org/wiki/Data_Encryption_Standard
-[5]: https://github.com/mimoo/DES
-[7]: https://github.com/mimoo/whiteboxDES/blob/master/rapport/slides.pdf
+[2]: https://github.com/mimoo/DES
 
 
 Author
@@ -57,16 +46,3 @@ use `make` to build the lookup table generator:
     $ ./Ltablesgen key
 
 key must be in binary format.
-
-Tools used
-----------
-
-* [github][g]
-* [trello][t]
-* [flowdock][f]
-* [penflip][p]
-
-[g]: http://www.github.com
-[t]: http://www.trello.com
-[f]: http://www.flowdock.com
-[p]: https://www.penflip.com/
