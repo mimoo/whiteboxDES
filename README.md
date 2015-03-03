@@ -8,14 +8,6 @@ It uses our previous implementation of [DES in C][2].
 
 [1]: http://www.scs.carleton.ca/%7Epaulv/papers/whitedes1.ps
 [2]: https://github.com/mimoo/DES
-
-
-Author
-------
-
-* David Wong
-* Hugo Bonnin
-* Jacques Monin
  
 To Do List
 ----------
